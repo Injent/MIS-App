@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/cardPadding">
+
+
+        <TextView
+            android:id="@+id/fieldType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/clear_sans_medium"
+            android:text="Information type"
+            android:textColor="@color/lightGrayText"
+            android:textSize="@dimen/hintFont" />
+
+        <TextView
+            android:id="@+id/fieldValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/clear_sans_medium"
+            android:text="Value"
+            android:textColor="@color/grayText"
+            android:textSize="@dimen/mediumFont" />
+    </LinearLayout>
+</layout>

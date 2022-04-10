@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">МИС Вызовов</string>
+
+    <!-- Titles -->
+    <string name="patientList">Лист пациентов</string>
+    <string name="medCard">Медицинская карта</string>
+    <string name="auth">Авторизация</string>
+    <string name="settings">Настройки</string>
+    <string name="protocol">Протокол</string>
+    <string name="protocolList">Протоколы лечения</string>
+
+    <!-- Sections -->
+    <string name="complaints">Жалобы</string>
+    <string name="regularUpdates">Регулярные обновления</string>
+    <string name="resultOfInspection">Результат осмотра</string>
+    <string name="infoAboutPatient">Информация о пациенте</string>
+    <string name="conclusion">Заключение</string>
+    <string name="treatment">Лечение</string>
+    <string name="templates">Шаблоны протоколов</string>
+    <string name="listOfPatients">Лист пациентов</string>
+
+    <!-- Hints -->
+    <string name="regularUpdatesDesc">Получать регулярные обновления базы данных пациентов раз в 5 ч</string>
+    <string name="writeResultOfInspection">Напишите результаты осмотра…</string>
+    <string name="writeConclusion">Напишите заключение…</string>
+    <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
+    <string name="patientsProtocol">Заполнение клинического протокола пациента</string>
+
+    <!-- Actions -->
+    <string name="actionAuth">Авторизоваться</string>
+    <string name="backToHome">Назад</string>
+    <string name="updateList">Обновить лист (временно)</string>
+    <string name="actionProtocol">Протокол</string>
+    <string name="backToPatientCard">Назад</string>
+    <string name="saveProtocol">Сохранить протокол</string>
+    <string name="saveAsPdf">Сохранить\nкак .pdf</string>
+
+    <!-- Toasts -->
+    <string name="successfulAuth">Успешная авторизация</string>
+
+    <!-- Field types -->
+    <string name="email">Эл. почта</string>
+    <string name="password">Пароль</string>
+
+    <!-- Errors -->
+    <string name="noInternetConnection">Отсутствует интернет соединение</string>
+    <string name="userNotFound">Пользователь не найден</string>
+    <string name="unknownError">Возникла неизвестная ошибка</string>
+
+    <string-array name="fieldTypes">
+        <item>Дата заполнения мед. карты</item>
+        <item>Ф.И.О.</item>
+        <item>Пол</item>
+        <item>Дата рождения</item>
+        <item>Место регистрации</item>
+        <item>Местность</item>
+        <item>Полис ОМС: серия, номер</item>
+        <item>СНИЛС</item>
+        <item>Наим. страховой. мед. организации</item>
+        <item>Код категории льготы</item>
+        <item>Документ: серия, номер</item>
+        <item>Контакты</item>
+    </string-array>
+</resources>

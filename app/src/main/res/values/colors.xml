@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- System Colors -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+
+    <!-- Interface elements -->
+    <color name="background">#FFFFFFFF</color>
+    <color name="darkBackground">#fafafa</color>
+    <color name="line">#EAEAEA</color>
+    <color name="green">#3ba55d</color>
+    <color name="gray">#e8e8e8</color>
+    <color name="lightBlue">#0a95ff</color>
+    <color name="statusBar">#4D000000</color>
+    <color name="transparentDarkGlass">#34000000</color>
+    <color name="transparentLightGlass">#34FFFFFF</color>
+
+    <color name="gradientDarkGreen">#17a366</color>
+    <color name="gradientLightGreen">#11bc9c</color>
+
+    <!-- Text -->
+    <color name="focused">#d3ecf0</color>
+    <color name="highlight">#AD95CAFF</color>
+    <color name="error">#FD2C4B</color>
+
+    <!-- Font colors -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="hintWhite">#a5f8e1</color>
+    <color name="darkGrayText">#3e495b</color>
+    <color name="grayText">#6C7C8A</color>
+    <color name="lowGray">#8398AA</color>
+    <color name="lightGrayText">#c7cbd8</color>
+
+</resources>

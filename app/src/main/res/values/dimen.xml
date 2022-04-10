@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Interface elements dp -->
+    <dimen name="lineWidth">2dp</dimen>
+    <dimen name="minDp">48dp</dimen>
+    <dimen name="cardCorners">10dp</dimen>
+    <dimen name="cardElevation">5dp</dimen>
+    <dimen name="cardPadding">8dp</dimen>
+    <dimen name="cardShadow">2dp</dimen>
+    <dimen name="round">20dp</dimen>
+    <dimen name="thickLine">1dp</dimen>
+    <dimen name="buttonCorners">30dp</dimen>
+    <dimen name="listCorners">15dp</dimen>
+    <dimen name="icSize">24dp</dimen>
+    <dimen name="maxWidth">250dp</dimen>
+    <dimen name="displayPadding">16dp</dimen>
+    <dimen name="lineMarginTitle">16dp</dimen>
+    <dimen name="patientListDp">256dp</dimen>
+    <dimen name="editTextPadding">6dp</dimen>
+    <dimen name="defaultDp">16dp</dimen>
+
+    <!-- Font Size -->
+    <dimen name="titleFont">24sp</dimen>
+    <dimen name="mediumFont">18sp</dimen>
+    <dimen name="headerFont">16sp</dimen>
+    <dimen name="hintFont">14sp</dimen>
+
+</resources>

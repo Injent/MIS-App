@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/layout/fragment_protocol_temp.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/back_arrow.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/background_gradient.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/button.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/button_numpad.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/button_pressed.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/button_unpressed.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/card.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/email_ic_selector.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/help_text.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_download.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_email.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_email_focused.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_file.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_help.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_notif_off.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_notif_on.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_offline_download_off.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_offline_download_on.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_pincode.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_pincode_focused.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/ic_profile.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/list.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/loading.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/patientcard_gradient_background.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/pincode_ic_selector.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/round_ripple.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/scroll.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/status_bar_done.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/status_bar_process.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/switch_notifications_thumb.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/switch_notifications_thumb_off.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/switch_notifications_thumb_on.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/switch_offline_thumb.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/switch_offline_thumb_off.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/switch_offline_thumb_on.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/switch_track.xml" value="0.3769230769230769" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/drawable/transparent_glass.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/activity_main.xml" value="0.1699074074074074" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/as.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/fragment_patient_card.xml" value="0.33" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/fragment_protocol.xml" value="0.33" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/fragment_protocol_temp.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/fragment_settings.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/fragment_sign_in.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/patient_card_item.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/patient_list_item.xml" value="0.5" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/protocol_temp_fragment.xml" value="0.32592592592592595" />
+        <entry key="app/src/main/res/drawable/ic_notif_off.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/ic_notif_on.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/ic_offline_download_off.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/ic_offline_download_on.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/switch_notifications_thumb_off.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/switch_notifications_thumb_on.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/switch_offline_thumb_off.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/switch_offline_thumb_on.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/switch_track.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/fragment_patient_card.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/fragment_protocol.xml" value="0.46907574704656013" />
+        <entry key="app/src/main/res/layout/fragment_protocol_temp.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/patient_list_item.xml" value="0.3515625" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

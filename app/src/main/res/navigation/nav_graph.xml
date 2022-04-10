@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.injent.miscalls.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_patientCardFragment"
+            app:destination="@id/patientCardFragment"
+            app:enterAnim="@anim/left_in_slide"
+            app:exitAnim="@anim/down_out_slide" />
+        <action
+            android:id="@+id/action_homeFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/left_in_slide"
+            app:exitAnim="@anim/up_out_slide" />
+    </fragment>
+    <fragment
+        android:id="@+id/patientCardFragment"
+        android:name="com.injent.miscalls.ui.patientcard.PatientCardFragment"
+        android:label="fragment_patient_card"
+        tools:layout="@layout/fragment_patient_card">
+        <action
+            android:id="@+id/action_patientCardFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/up_in_slide"
+            app:exitAnim="@anim/right_out_slide" />
+        <action
+            android:id="@+id/action_patientCardFragment_to_protocolFragment"
+            app:destination="@id/protocolFragment"
+            app:enterAnim="@anim/left_in_slide"
+            app:exitAnim="@anim/left_out_slide" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.injent.miscalls.ui.auth.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.injent.miscalls.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/down_in_slide"
+            app:exitAnim="@anim/right_out_slide" />
+    </fragment>
+    <fragment
+        android:id="@+id/protocolFragment"
+        android:name="com.injent.miscalls.ui.protocol.ProtocolFragment"
+        android:label="fragment_protocol"
+        tools:layout="@layout/fragment_protocol" >
+        <action
+            android:id="@+id/action_protocolFragment_to_patientCardFragment"
+            app:destination="@id/patientCardFragment"
+            app:enterAnim="@anim/right_in_slide"
+            app:exitAnim="@anim/right_out_slide" />
+    </fragment>
+</navigation>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical"
+        android:padding="@dimen/displayPadding"
+        tools:layout_editor_absoluteX="12dp"
+        tools:layout_editor_absoluteY="12dp">
+
+        <TextView
+            android:id="@+id/titleSettingsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/clear_sans_bold"
+            android:text="@string/settings"
+            android:textColor="@color/darkGrayText"
+            android:textSize="@dimen/titleFont" />
+
+        <View
+            android:id="@+id/settingsLineTop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lineWidth"
+            android:layout_marginTop="@dimen/lineMarginTitle"
+            android:background="@color/line" />
+
+        <TextView
+            android:id="@+id/backHomeFromSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/minDp"
+            android:fontFamily="@font/clear_sans_medium"
+            android:gravity="center|left"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="@string/backToHome"
+            android:textColor="@color/lowGray"
+            android:textSize="@dimen/hintFont"
+            app:drawableStartCompat="@drawable/back_arrow" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/regularUpdatesSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:thumb="@drawable/switch_offline_thumb"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:track="@drawable/switch_track" />
+
+                    <TextView
+                        android:id="@+id/regularUpdatesDb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/clear_sans_medium"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/regularUpdates"
+                        android:textColor="@color/grayText"
+                        android:textSize="@dimen/mediumFont"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/regularUpdatesDesc"
+                        android:layout_width="290dp"
+                        android:layout_height="38dp"
+                        android:fontFamily="@font/clear_sans_medium"
+                        android:text="@string/regularUpdatesDesc"
+                        android:textColor="@color/lightGrayText"
+                        android:textSize="@dimen/hintFont"
+                        app:layout_constraintStart_toStartOf="@+id/regularUpdatesDb"
+                        app:layout_constraintTop_toBottomOf="@+id/regularUpdatesDb" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/clearBase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="300dp"
+                    android:background="@drawable/button"
+                    android:text="Очистить базу (временное решение)" />
+
+                <Button
+                    android:id="@+id/logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/button"
+                    android:text="Выход (временное решение)" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</layout>
