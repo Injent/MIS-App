@@ -54,13 +54,6 @@ public class PatientCardFragment extends Fragment {
 
 
         //Navigation
-        TextView back = binding.backHomeFromPatientCard;
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                back();
-            }
-        });
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this,
                 new OnBackPressedCallback(true) {

@@ -1,6 +1,9 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -14,9 +17,7 @@ import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.PatientDatabase;
 import com.injent.miscalls.domain.HomeRepository;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -38,30 +39,41 @@ public class HomeViewModel extends ViewModel {
         homeRepository = new HomeRepository();
     }
 
-    public void setDbDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    public void setNewDbDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy / HH:mm", Locale.getDefault());
         String currentDate = sdf.format(new Date());
         dbDate.setValue(currentDate);
-        HomeFragment.getInstance().setDbDate();
+
+        SharedPreferences sp = HomeFragment.getInstance().requireActivity()
+                .getSharedPreferences(App.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("dbDate",dbDate.getValue());
+        editor.apply();
     }
 
     public String getDbDate() {
-        if (dbDate.getValue() == null || dbDate.getValue().isEmpty()) {
-            dbDate.setValue(HomeFragment.getInstance().getDbDate());
+        if (dbDate.getValue() == null) {
+            SharedPreferences sp = HomeFragment.getInstance().requireActivity()
+                    .getSharedPreferences(App.PREFERENCES_NAME, Context.MODE_PRIVATE);
+            dbDate.setValue(sp.getString("dbDate", "Лист не обновлялся"));
         }
         return dbDate.getValue();
+    }
+
+    public LiveData<String> getDbDateLiveData() {
+        return dbDate;
     }
 
     public LiveData<List<Patient>> getPatientListLiveData() {
         return patientList;
     }
 
-    public LiveData<Throwable> getPatientListError(){
-        return patientListError;
+    public void setList(List<Patient> list) {
+        patientList.setValue(list);
     }
 
-    public void setPatientList(List<Patient> patientList) {
-        this.patientList.setValue(patientList);
+    public LiveData<Throwable> getPatientListError(){
+        return patientListError;
     }
 
     public List<Patient> getPatientList() {
@@ -79,10 +91,10 @@ public class HomeViewModel extends ViewModel {
         homeRepository.getPatientList().enqueue(new Callback<List<Patient>>() {
             @Override
             public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful()) {
                     List<Patient> list = response.body();
-                    insertPatient(list.toArray(new Patient[0]));
-                    setDbDate();
+                    insertWithDropDb(list.toArray(new Patient[0]));
+                    setNewDbDate();
                 } else {
                     patientListError.postValue(new FailedDownloadDb(PatientDatabase.DB_NAME));
                 }
@@ -99,11 +111,15 @@ public class HomeViewModel extends ViewModel {
         homeRepository.deleteAll();
     }
 
-    public void deletePatient(Patient... patients) {
-        homeRepository.deletePatient(patients);
-    }
-
     public void insertPatient(Patient... patients) {
         homeRepository.insertPatient(patients);
+    }
+
+    public void updatePatient(Patient... patients) {
+        homeRepository.updatePatient(patients);
+    }
+
+    public void insertWithDropDb(Patient... patients) {
+        homeRepository.insertWithDropDb(patients);
     }
 }

@@ -30,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/updateListText"
+                android:id="@+id/dbDateUpdateText"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/minDp"
                 android:layout_marginLeft="@dimen/defaultDp"
@@ -42,7 +42,10 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:fadeScrollbars="false"
+                android:scrollbarThumbHorizontal="@null"
+                android:scrollbarThumbVertical="@null">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -52,13 +55,35 @@
                     android:padding="@dimen/displayPadding">
 
                     <LinearLayout
+                        android:id="@+id/updateListSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/transparent_glass"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/clear_sans_medium"
+                            android:padding="10dp"
+                            android:text="@string/dbUpdate"
+                            android:textColor="@color/gray"
+                            android:textSize="@dimen/hintFont" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginRight="12dp"
                         android:background="@drawable/transparent_glass"
-                        android:orientation="vertical"
                         android:clickable="true"
-                        android:focusable="true">
+                        android:focusable="true"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/patientListSection"
@@ -75,9 +100,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/transparent_glass"
-                        android:orientation="vertical"
                         android:clickable="true"
-                        android:focusable="true">
+                        android:focusable="true"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/templatesSection"
@@ -89,6 +114,7 @@
                             android:textColor="@color/gray"
                             android:textSize="@dimen/hintFont" />
                     </LinearLayout>
+
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -130,6 +156,22 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:fontFamily="@font/clear_sans_bold"
+            android:text="Error"
+            android:textAlignment="center"
+            android:textColor="@color/error"
+            android:textSize="@dimen/headerFont"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/loadingBar"
+            app:layout_constraintEnd_toEndOf="@+id/loadingBar"
+            app:layout_constraintStart_toStartOf="@+id/loadingBar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

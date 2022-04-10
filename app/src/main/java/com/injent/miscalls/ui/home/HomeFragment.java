@@ -21,8 +21,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
+import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 
@@ -40,10 +42,6 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
 
     private HomeViewModel homeViewModel;
-
-    public HomeFragment() {
-//        App application = (App) getActivity().getApplication();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -63,9 +61,15 @@ public class HomeFragment extends Fragment {
 
         authCheck();
 
+        if (!App.getInstance().isSigned()) return;
+
         if (!App.getInstance().isInitialized()) {
-            showLoading();
-            homeViewModel.downloadDb();
+            if (App.getInstance().isAutoUpdate()) {
+                showLoading();
+                homeViewModel.downloadDb();
+            } else if (getArguments() == null) {
+                displayList();
+            }
             App.getInstance().setInitialized(true);
         }
 
@@ -77,17 +81,28 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        binding.updateListSection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setArguments(null);
+                showLoading();
+                homeViewModel.downloadDb();
+            }
+        });
+
         homeViewModel.getPatientListLiveData().observe(this, new Observer<List<Patient>>() {
             @Override
             public void onChanged(List<Patient> patients) {
-                if (getArguments() == null)
+                if (getArguments() == null){
                     displayList();
+                }
             }
         });
 
         homeViewModel.getPatientListError().observe(this, new Observer<Throwable>() {
             @Override
             public void onChanged(Throwable throwable) {
+                hideLoading();
                 failed(throwable);
             }
         });
@@ -96,7 +111,14 @@ public class HomeFragment extends Fragment {
                 new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                //Do nothing
+                MainActivity.getInstance().confirmExit();
+            }
+        });
+
+        homeViewModel.getDbDateLiveData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                displayDbDate();
             }
         });
 
@@ -113,37 +135,33 @@ public class HomeFragment extends Fragment {
         hideLoading();
         List<Patient> patients = homeViewModel.getPatientList();
 
-        binding.updateListText.setText(homeViewModel.getDbDate());
+        displayDbDate();
 
         PatientAdapter adapter = new PatientAdapter(patients);
-        if (binding.patientsList.getAdapter() == null)
-            binding.patientsList.setAdapter(adapter);
-        else
-            binding.patientsList.getAdapter().notifyDataSetChanged();
+        binding.patientsList.setAdapter(adapter);
+
+        if (patients.isEmpty()) {
+            failed(new ListEmptyException());
+        } else {
+            hideErrorMessage();
+        }
     }
 
     public void failed(Throwable t){
         if (t instanceof FailedDownloadDb) {
             Toast.makeText(requireContext(),R.string.unknownError,Toast.LENGTH_SHORT).show();
         } else if (t instanceof NetworkErrorException){
+            displayList();
             Toast.makeText(requireContext(),R.string.noInternetConnection, Toast.LENGTH_SHORT).show();
+        } else if (t instanceof ListEmptyException) {
+            showErrorMessage(getResources().getString(R.string.emptyDbError));
         }
     }
 
-    public void setDbDate() {
-        SharedPreferences sp = requireActivity()
-                .getSharedPreferences(App.PREFERENCES_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("dbDate",homeViewModel.getDbDate());
-        editor.apply();
-    }
-
-    public String getDbDate() {
-        SharedPreferences sp = requireActivity()
-                .getSharedPreferences(App.PREFERENCES_NAME, Context.MODE_PRIVATE);
-        String date = sp.getString("dbDate","Лист пациентов не обновлялся");
-        return date;
-
+    @SuppressLint("SetTextI18n")
+    public void displayDbDate() {
+        binding.dbDateUpdateText.setText(getResources().getString(R.string.updated) + " "
+                + homeViewModel.getDbDate());
     }
 
     public void authCheck() {
@@ -153,6 +171,9 @@ public class HomeFragment extends Fragment {
         if (!signed) {
             Navigation.findNavController(requireView())
                     .navigate(R.id.action_homeFragment_to_signInFragment);
+            App.getInstance().setSigned(false);
+        } else {
+            App.getInstance().setSigned(true);
         }
     }
 
@@ -162,5 +183,14 @@ public class HomeFragment extends Fragment {
 
     public void hideLoading() {
         binding.loadingBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void showErrorMessage(String message) {
+        binding.errorText.setText(message);
+        binding.errorText.setVisibility(View.VISIBLE);
+    }
+
+    private void hideErrorMessage() {
+        binding.errorText.setVisibility(View.INVISIBLE);
     }
 }

@@ -1,7 +1,9 @@
 package com.injent.miscalls.ui.auth;
 
 import android.accounts.NetworkErrorException;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -19,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.AuthModelIn;
 import com.injent.miscalls.databinding.FragmentSignInBinding;
@@ -68,7 +72,13 @@ public class SignInFragment extends Fragment {
                 displayError(throwable);
             }
         });
-
+        requireActivity().getOnBackPressedDispatcher().addCallback(this,
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        MainActivity.getInstance().confirmExit();
+                    }
+                });
     }
 
     public void actionAuth() {
@@ -111,4 +121,6 @@ public class SignInFragment extends Fragment {
     private void showLoading() {
         binding.authLoading.setVisibility(View.VISIBLE);
     }
+
+
 }

@@ -18,9 +18,10 @@
     <string name="treatment">Лечение</string>
     <string name="templates">Шаблоны протоколов</string>
     <string name="listOfPatients">Лист пациентов</string>
+    <string name="dbUpdate">Обновить список</string>
 
     <!-- Hints -->
-    <string name="regularUpdatesDesc">Получать регулярные обновления базы данных пациентов раз в 5 ч</string>
+    <string name="regularUpdatesDesc">Получать регулярные обновления базы данных пациентов</string>
     <string name="writeResultOfInspection">Напишите результаты осмотра…</string>
     <string name="writeConclusion">Напишите заключение…</string>
     <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
@@ -29,14 +30,19 @@
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
     <string name="backToHome">Назад</string>
-    <string name="updateList">Обновить лист (временно)</string>
-    <string name="actionProtocol">Протокол</string>
+    <string name="actionProtocol">Составить протокол</string>
     <string name="backToPatientCard">Назад</string>
     <string name="saveProtocol">Сохранить протокол</string>
     <string name="saveAsPdf">Сохранить\nкак .pdf</string>
+    <string name="logout">Выйти из учетной записи</string>
+    <string name="exit">Выход</string>
+    <string name="exitHint">Вы уверены что хотите выйти из приложения?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>
+    <string name="updated">Обновлен</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>
@@ -46,6 +52,7 @@
     <string name="noInternetConnection">Отсутствует интернет соединение</string>
     <string name="userNotFound">Пользователь не найден</string>
     <string name="unknownError">Возникла неизвестная ошибка</string>
+    <string name="emptyDbError">База данных пациентов не загружена!</string>
 
     <string-array name="fieldTypes">
         <item>Дата заполнения мед. карты</item>

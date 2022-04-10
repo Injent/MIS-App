@@ -7,6 +7,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class Patient implements Parcelable {
     @ColumnInfo(name = "firstname")
     public String firstname;
 
+    @SerializedName("middlename")
     @ColumnInfo(name = "middlename")
     public String middleName;
 

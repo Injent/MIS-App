@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 
 public interface MisAPI {
 
-    @GET("A59WiDdQ")
+    @GET("patients.json")
     Call<List<Patient>> patients();
 
     @POST("auth.php")

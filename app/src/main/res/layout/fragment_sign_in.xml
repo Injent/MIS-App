@@ -8,34 +8,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        android:orientation="vertical"
-        android:padding="@dimen/displayPadding">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/menuSignIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/clear_sans_bold"
-            android:text="@string/auth"
-            android:textColor="@color/darkGrayText"
-            android:textSize="@dimen/titleFont"
-            android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@+id/lineSignIn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/lineSignIn"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="@dimen/lineMarginTitle"
-            android:background="@color/line"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:elevation="@dimen/cardElevation"
+            android:orientation="vertical"
+            android:padding="@dimen/displayPadding">
+
+            <TextView
+                android:id="@+id/menuSignIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/clear_sans_bold"
+                android:text="@string/auth"
+                android:textColor="@color/darkGrayText"
+                android:textSize="@dimen/titleFont"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@+id/lineSignIn" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView"

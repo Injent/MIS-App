@@ -1,5 +1,6 @@
 package com.injent.miscalls.ui.protocol;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class ProtocolFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -40,14 +42,7 @@ public class ProtocolFragment extends Fragment {
 
         Patient finalPatient = patient;
 
-        binding.fullnameText.setText(patient.getShortInfo());
-
-        binding.backToPatientCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                back(finalPatient);
-            }
-        });
+        binding.fullnameText.setText(patient.getShortInfo() + " " + patient.getMiddleName());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this,
                 new OnBackPressedCallback(true) {

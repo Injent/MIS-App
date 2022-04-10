@@ -1,6 +1,7 @@
 package com.injent.miscalls;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import androidx.room.Room;
 
@@ -18,6 +19,8 @@ public class App extends Application {
     private PatientDao patientDao;
     private boolean initialized;
     private AuthModelIn user;
+    private boolean signed;
+    private boolean autoUpdate;
 
     public static App getInstance() {
         return instance.get();
@@ -37,6 +40,15 @@ public class App extends Application {
 
         patientDao = pdb.patientDao();
         //
+
+        SharedPreferences sp = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        if (sp.contains("init")) {
+            editor.putBoolean("autoUpdate", true);
+            editor.putBoolean("auth", false);
+            editor.putString("personalLink","");
+        }
+        autoUpdate = sp.getBoolean("autoUpdate", true);
     }
 
     public AuthModelIn getUser() {
@@ -58,4 +70,14 @@ public class App extends Application {
     public void setInitialized(boolean initialized) {
         this.initialized = initialized;
     }
+
+    public boolean isSigned() { return signed; }
+
+    public void setSigned(boolean signed) { this.signed = signed; }
+
+    public boolean isAutoUpdate() {
+        return autoUpdate;
+    }
+
+    public void setAutoUpdate(boolean autoUpdate) { this.autoUpdate = autoUpdate; }
 }
