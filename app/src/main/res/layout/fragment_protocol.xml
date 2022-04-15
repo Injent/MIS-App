@@ -61,31 +61,71 @@
                 android:textColor="@color/lightGrayText"
                 android:textSize="@dimen/hintFont" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/saveAsPdfCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="32dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:clipToPadding="false"
-                android:focusable="true"
-                app:cardCornerRadius="@dimen/cardCorners"
-                app:cardElevation="@dimen/cardElevation"
-                app:cardUseCompatPadding="true"
-                app:contentPadding="6dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/saveAsPdfText"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/saveAsPdfCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/saveAsPdf"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/lowGray"
-                    android:textSize="@dimen/headerFont"
-                    app:drawableStartCompat="@drawable/ic_file" />
-            </androidx.cardview.widget.CardView>
+                    android:background="?attr/actionBarItemBackground"
+                    android:clickable="true"
+                    android:clipToPadding="false"
+                    android:focusable="true"
+                    app:cardCornerRadius="@dimen/cardCorners"
+                    app:cardElevation="@dimen/cardElevation"
+                    app:cardUseCompatPadding="true"
+                    app:contentPadding="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:id="@+id/saveAsPdfText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/clear_sans_medium"
+                        android:text="@string/saveAsPdf"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/lowGray"
+                        android:textSize="@dimen/headerFont"
+                        app:drawableStartCompat="@drawable/ic_file" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/applyTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/actionBarItemBackground"
+                    android:clickable="true"
+                    android:clipToPadding="false"
+                    android:focusable="true"
+                    app:cardCornerRadius="@dimen/cardCorners"
+                    app:cardElevation="@dimen/cardElevation"
+                    app:cardUseCompatPadding="true"
+                    app:contentPadding="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:id="@+id/applyTempText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/clear_sans_medium"
+                        android:text="@string/applyTemp"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/lowGray"
+                        android:textSize="@dimen/headerFont"
+                        app:drawableStartCompat="@drawable/ic_temp_protocol_use" />
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
         </LinearLayout>
 
         <ScrollView
@@ -147,6 +187,33 @@
                     android:fontFamily="@font/clear_sans_medium"
                     android:gravity="start|top"
                     android:hint="@string/writeConclusion"
+                    android:inputType="textMultiLine"
+                    android:minHeight="@dimen/minDp"
+                    android:padding="@dimen/editTextPadding"
+                    android:textColor="@color/grayText"
+                    android:textColorHint="@color/lightGrayText"
+                    android:textSize="@dimen/hintFont" />
+
+                <TextView
+                    android:id="@+id/treatmentText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/clear_sans_medium"
+                    android:text="@string/treatment"
+                    android:textColor="@color/darkGrayText"
+                    android:textSize="@dimen/mediumFont" />
+
+                <EditText
+                    android:id="@+id/treatmentField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text"
+                    android:ems="10"
+                    android:fontFamily="@font/clear_sans_medium"
+                    android:gravity="start|top"
+                    android:hint="@string/treatmentHint"
                     android:inputType="textMultiLine"
                     android:minHeight="@dimen/minDp"
                     android:padding="@dimen/editTextPadding"

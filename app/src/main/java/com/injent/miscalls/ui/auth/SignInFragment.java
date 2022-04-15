@@ -1,9 +1,7 @@
 package com.injent.miscalls.ui.auth;
 
 import android.accounts.NetworkErrorException;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,7 +58,7 @@ public class SignInFragment extends Fragment {
             @Override
             public void onChanged(AuthModelIn user) {
                 hideLoading();
-                App.getInstance().setUser(user);
+                App.getInstance().setAuthModel(user);
                 successfulAuth();
             }
         });

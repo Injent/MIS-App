@@ -30,10 +30,15 @@
 
     <!-- Font colors -->
     <color name="white">#FFFFFFFF</color>
-    <color name="hintWhite">#a5f8e1</color>
+    <color name="hintWhite">#E6FFFFFF</color>
     <color name="darkGrayText">#3e495b</color>
     <color name="grayText">#6C7C8A</color>
     <color name="lowGray">#8398AA</color>
     <color name="lightGrayText">#c7cbd8</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
 
 </resources>

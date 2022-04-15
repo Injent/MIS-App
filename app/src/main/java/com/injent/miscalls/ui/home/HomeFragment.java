@@ -6,26 +6,35 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.data.patientlist.Patient;
+import com.injent.miscalls.data.User;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 
 import java.lang.ref.WeakReference;
@@ -56,6 +65,8 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        NavController navController = Navigation.findNavController(requireView());
+
         instance = new WeakReference<>(HomeFragment.this);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -64,29 +75,22 @@ public class HomeFragment extends Fragment {
         if (!App.getInstance().isSigned()) return;
 
         if (!App.getInstance().isInitialized()) {
-            if (App.getInstance().isAutoUpdate()) {
+            if (App.getInstance().getMode() == 0) {
                 showLoading();
-                homeViewModel.downloadDb();
+                homeViewModel.downloadPatientsDb();
             } else if (getArguments() == null) {
                 displayList();
             }
             App.getInstance().setInitialized(true);
+
         }
 
-        binding.profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(view)
-                        .navigate(R.id.action_homeFragment_to_settingsFragment);
-            }
-        });
-
-        binding.updateListSection.setOnClickListener(new View.OnClickListener() {
+        binding.patientListSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setArguments(null);
                 showLoading();
-                homeViewModel.downloadDb();
+                homeViewModel.downloadPatientsDb();
             }
         });
 
@@ -121,6 +125,38 @@ public class HomeFragment extends Fragment {
                 displayDbDate();
             }
         });
+
+        ImageView moreButton = requireView().findViewById(R.id.moreButton);
+
+        moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+
+        User user = App.getInstance().getAuthModel().getUser();
+
+        NavigationView navigationView = binding.navigationView;
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.settingsMenu: navController.navigate(R.id.action_homeFragment_to_settingsFragment);
+                    break;
+                    case R.id.about: homeViewModel.moveToSite(requireContext(), getText(R.string.aboutLink));
+                    break;
+                    case R.id.help: homeViewModel.moveToSite(requireContext(), getText(R.string.helpLink));
+                    break;
+                }
+                return false;
+            }
+        });
+        TextView fullName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
+        fullName.setText(user.getFullName());
+        TextView position = navigationView.getHeaderView(0).findViewById(R.id.proffesion);
+        position.setText(user.getPosition());
 
         if (getArguments() != null) {
             if (getArguments().getBoolean("updateList")) {

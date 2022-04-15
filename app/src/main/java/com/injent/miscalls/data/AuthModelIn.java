@@ -1,9 +1,13 @@
 package com.injent.miscalls.data;
 
 import com.google.gson.annotations.SerializedName;
-import com.injent.miscalls.data.templates.User;
 
 public class AuthModelIn {
+
+    public AuthModelIn(String token, User user) {
+        this.token = token;
+        this.user = user;
+    }
 
     @SerializedName("token")
     private String token;

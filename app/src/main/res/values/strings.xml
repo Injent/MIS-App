@@ -16,16 +16,25 @@
     <string name="infoAboutPatient">Информация о пациенте</string>
     <string name="conclusion">Заключение</string>
     <string name="treatment">Лечение</string>
+    <string name="savedProtocols">Сохраненные протоколы</string>
     <string name="templates">Шаблоны протоколов</string>
     <string name="listOfPatients">Лист пациентов</string>
     <string name="dbUpdate">Обновить список</string>
+
+    <string name="protocolMenu">Шаблоны протоколов</string>
+    <string name="savedProtocolsMenu">Сохраненные протоколы</string>
+    <string name="others">Разное</string>
+    <string name="aboutMenu">О нас</string>
+    <string name="helpMenu">Помощь</string>
 
     <!-- Hints -->
     <string name="regularUpdatesDesc">Получать регулярные обновления базы данных пациентов</string>
     <string name="writeResultOfInspection">Напишите результаты осмотра…</string>
     <string name="writeConclusion">Напишите заключение…</string>
+    <string name="treatmentHint">Напишите…</string>
     <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
     <string name="patientsProtocol">Заполнение клинического протокола пациента</string>
+    <string name="exitHint">Вы уверены что хотите выйти из приложения?</string>
 
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
@@ -34,15 +43,21 @@
     <string name="backToPatientCard">Назад</string>
     <string name="saveProtocol">Сохранить протокол</string>
     <string name="saveAsPdf">Сохранить\nкак .pdf</string>
+    <string name="applyTemp">Применить\nшаблон</string>
     <string name="logout">Выйти из учетной записи</string>
     <string name="exit">Выход</string>
-    <string name="exitHint">Вы уверены что хотите выйти из приложения?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+
+    <!-- Miscellaneous -->
+    <string name="managerName">Менеджер списка</string>
+    <string name="updateWhen">Обновлять</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>
     <string name="updated">Обновлен</string>
+    <string name="receivingDataOn">Обновление данных включено</string>
+    <string name="moveToSettings">Перейдите в настройки приложения для отключения</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>
@@ -53,6 +68,10 @@
     <string name="userNotFound">Пользователь не найден</string>
     <string name="unknownError">Возникла неизвестная ошибка</string>
     <string name="emptyDbError">База данных пациентов не загружена!</string>
+
+    <!-- Links -->
+    <string name="aboutLink">https://exitoso.ru/injent/about/</string>
+    <string name="helpLink">https://exitoso.ru/injent/help/</string>
 
     <string-array name="fieldTypes">
         <item>Дата заполнения мед. карты</item>
@@ -67,5 +86,11 @@
         <item>Код категории льготы</item>
         <item>Документ: серия, номер</item>
         <item>Контакты</item>
+    </string-array>
+
+    <string-array name="modes">
+        <item>При входе в приложение</item>
+        <item>Каждый час</item>
+        <item>Вручную</item>
     </string-array>
 </resources>
