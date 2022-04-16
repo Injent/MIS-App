@@ -7,6 +7,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         getWindow().setStatusBarColor(getResources().getColor(R.color.statusBar, getTheme()));
 
         instance = new WeakReference<>(MainActivity.this);
@@ -58,5 +60,13 @@ public class MainActivity extends AppCompatActivity {
     public void closeApp() {
         finish();
         System.exit(0);
+    }
+
+    public void enableFullScreen() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    }
+
+    public void disableFullScreen() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 }

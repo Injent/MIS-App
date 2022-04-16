@@ -79,21 +79,25 @@
                             android:id="@+id/textView4"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_marginEnd="@dimen/displayPadding"
+                            android:layout_weight="0"
                             android:fontFamily="@font/clear_sans_medium"
                             android:gravity="center_vertical"
                             android:text="@string/updateWhen"
                             android:textColor="@color/lowGray"
-                            android:textSize="@dimen/hintFont" />
+                            android:textSize="@dimen/headerFont" />
 
                         <Spinner
+
                             android:id="@+id/spinner"
-                            android:layout_width="250dp"
-                            android:layout_height="@dimen/minDp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:background="@drawable/card"
                             android:clickable="true"
                             android:focusable="true"
-                            android:gravity="start|center_vertical" />
+                            android:gravity="start|top"
+                            android:popupBackground="@drawable/popup_list" />
                     </LinearLayout>
 
                     <View

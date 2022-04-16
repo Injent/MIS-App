@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/patientcard_gradient_background"
+        android:background="@color/darkBackground"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -76,23 +76,21 @@
             <Button
                 android:id="@+id/protocolButton"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:layout_marginStart="32dp"
+                android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
                 android:background="@drawable/button"
                 android:fontFamily="@font/clear_sans_medium"
                 android:text="@string/actionProtocol"
                 android:textAllCaps="false"
                 android:textColor="@color/button_text_color"
-                android:textSize="@dimen/headerFont" />
+                android:textSize="@dimen/mediumFont" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/list"
+            android:background="@drawable/stroke_list"
             android:orientation="vertical"
             android:paddingLeft="@dimen/displayPadding"
             android:paddingRight="@dimen/displayPadding">

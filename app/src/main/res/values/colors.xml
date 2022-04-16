@@ -24,8 +24,8 @@
     <color name="gradientLightGreen">#11bc9c</color>
 
     <!-- Text -->
-    <color name="focused">#d3ecf0</color>
-    <color name="highlight">#AD95CAFF</color>
+    <color name="focused">#EDFDFF</color>
+    <color name="highlight">#AD03B0FF</color>
     <color name="error">#FD2C4B</color>
 
     <!-- Font colors -->
@@ -35,10 +35,11 @@
     <color name="grayText">#6C7C8A</color>
     <color name="lowGray">#8398AA</color>
     <color name="lightGrayText">#c7cbd8</color>
-    <color name="light_blue_600">#FF039BE5</color>
-    <color name="light_blue_900">#FF01579B</color>
-    <color name="light_blue_A200">#FF40C4FF</color>
-    <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
+
+    <!-- Gradients -->
+    <color name="startColor">#dbb8ff</color>
+    <color name="centerColor">#cb95ff</color>
+    <color name="endColor">#dbb8ff</color>
 
 </resources>

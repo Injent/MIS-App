@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
 import com.injent.miscalls.domain.HomeRepository;
@@ -34,6 +35,7 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private static final float TEXTVIEW_FONT = 14;
     private SettingsRepository repository;
+    private Spinner spinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +51,8 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         repository = new SettingsRepository();
+
+        MainActivity.getInstance().disableFullScreen();
 
         binding.clearBase.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,19 +90,13 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        Spinner spinner = binding.spinner;
-
+        spinner = binding.spinner;
         spinner.setAdapter(repository.getAdapter(requireContext()));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @SuppressLint("ResourceAsColor")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
                 repository.setMode(position);
-                TextView textView = (TextView) parent.getChildAt(position);
-                textView.setTextColor(R.color.grayText);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,TEXTVIEW_FONT);
-                textView.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.clear_sans_medium));
             }
 
             @Override

@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
@@ -66,6 +67,8 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         NavController navController = Navigation.findNavController(requireView());
+
+        MainActivity.getInstance().enableFullScreen();
 
         instance = new WeakReference<>(HomeFragment.this);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -174,6 +177,9 @@ public class HomeFragment extends Fragment {
         displayDbDate();
 
         PatientAdapter adapter = new PatientAdapter(patients);
+ //
+        if (binding.patientsList.getItemDecorationCount() == 0)
+            binding.patientsList.addItemDecoration(homeViewModel.getDivider(requireContext()));
         binding.patientsList.setAdapter(adapter);
 
         if (patients.isEmpty()) {

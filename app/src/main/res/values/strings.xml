@@ -17,12 +17,14 @@
     <string name="conclusion">Заключение</string>
     <string name="treatment">Лечение</string>
     <string name="savedProtocols">Сохраненные протоколы</string>
-    <string name="templates">Шаблоны протоколов</string>
+    <string name="sortByNearest">Сортировать по\nместоположению</string>
     <string name="listOfPatients">Лист пациентов</string>
-    <string name="dbUpdate">Обновить список</string>
+    <string name="updateList">Обновить список</string>
 
+    <!-- Menu -->
     <string name="protocolMenu">Шаблоны протоколов</string>
     <string name="savedProtocolsMenu">Сохраненные протоколы</string>
+    <string name="templates">Шаблоны протоколов</string>
     <string name="others">Разное</string>
     <string name="aboutMenu">О нас</string>
     <string name="helpMenu">Помощь</string>
@@ -52,6 +54,7 @@
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
     <string name="updateWhen">Обновлять</string>
+    <string name="listNotUpdated">Лист не обновлялся</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>

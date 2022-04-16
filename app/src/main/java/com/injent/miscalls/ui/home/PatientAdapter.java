@@ -1,5 +1,6 @@
 package com.injent.miscalls.ui.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
@@ -104,10 +106,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
         holder.binding.patientCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("patient",sortedList.get(holder.getAdapterPosition()));
-                Navigation.findNavController(view)
-                        .navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
+                PatientAdapter.this.onClick(view, holder);
             }
         });
     }
@@ -131,5 +130,13 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
         public void onClick(View view) {
             listener.onClick(view, getAdapterPosition());
         }
+    }
+
+    private void onClick(View view, PatientAdapter.ViewHolder holder) {
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("patient",sortedList.get(holder.getAdapterPosition()));
+        Navigation.findNavController(view)
+                .navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
     }
 }

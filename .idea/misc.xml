@@ -14,9 +14,17 @@
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/ic_list.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/ic_more.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/ic_profile.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/ic_round.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/ic_saved_protocols.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/ic_temp_protocol.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/ic_temp_protocol_use.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/list.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/patientcard_gradient_background.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/popup_list.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/rounded_corners.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/spinner_separator.xml" value="0.22135416666666666" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/square_button.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/stroke_list.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/layout/activity_splash.xml" value="0.35260416666666666" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/layout/fragment_home.xml" value="0.33" />

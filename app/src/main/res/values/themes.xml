@@ -14,15 +14,4 @@
         <!-- Customize your theme here. -->
         <item name="colorControlHighlight">@color/lightGrayText</item>
     </style>
-
-    <style name="Theme.MISLight.Fullscreen" parent="Theme.MISLight">
-        <item name="android:actionBarStyle">@style/Widget.Theme.MISLight.ActionBar.Fullscreen</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-    </style>
-
-    <style name="ThemeOverlay.MISCalls.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
-        <item name="fullscreenTextColor">@color/light_blue_A200</item>
-    </style>
 </resources>

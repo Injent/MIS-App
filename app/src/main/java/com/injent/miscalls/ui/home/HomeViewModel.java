@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.injent.miscalls.API.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
@@ -39,11 +40,19 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<Throwable> patientListError = new MutableLiveData<>();
 
     private MutableLiveData<String> dbDate = new MutableLiveData<>();
-    private MutableLiveData<HomeFragment.Section> selectedSection = new MutableLiveData<>();
 
     public HomeViewModel() {
         super();
         homeRepository = new HomeRepository();
+    }
+
+    public MaterialDividerItemDecoration getDivider(Context context) {
+        MaterialDividerItemDecoration divider
+                = new MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL);
+        divider.setDividerInsetStartResource(context,R.dimen.dividerInset);
+        divider.setDividerInsetEndResource(context, R.dimen.dividerInset);
+        divider.setDividerColorResource(context, R.color.line);
+        return divider;
     }
 
     public void setNewDbDate() {
@@ -62,20 +71,10 @@ public class HomeViewModel extends ViewModel {
         if (dbDate.getValue() == null) {
             SharedPreferences sp = HomeFragment.getInstance().requireActivity()
                     .getSharedPreferences(App.PREFERENCES_NAME, Context.MODE_PRIVATE);
-            dbDate.setValue(sp.getString("dbDate", "Лист не обновлялся"));
+            dbDate.setValue(sp.getString("dbDate", App.getInstance()
+                    .getString(R.string.listNotUpdated)));
         }
         return dbDate.getValue();
-    }
-
-    public LiveData<HomeFragment.Section> getSelectedSection() {
-        if (selectedSection.getValue() == null) {
-            selectedSection.setValue(HomeFragment.Section.PATIENT_LIST);
-        }
-        return selectedSection;
-    }
-
-    public void setSelectedSection(HomeFragment.Section section) {
-        selectedSection.setValue(section);
     }
 
     public LiveData<String> getDbDateLiveData() {

@@ -12,9 +12,9 @@
         android:id="@+id/imageView"
         android:layout_width="@dimen/minDp"
         android:layout_height="@dimen/minDp"
+        android:src="@drawable/ic_profile"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_profile" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/fullname"

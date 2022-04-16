@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,40 +14,40 @@ import androidx.annotation.Nullable;
 
 import com.injent.miscalls.R;
 
-public class SettingsAdapter extends ArrayAdapter {
+import java.util.List;
 
-    private String[] modes;
+public class SettingsAdapter extends BaseAdapter {
 
-    @Nullable
-    @Override
-    public String getItem(int position) {
-        return modes[position];
-    }
+    private Context context;
+    private List<String> modes;
 
-    public SettingsAdapter(@NonNull Context context, @NonNull String... modes) {
-        super(context, 0, modes);
+    public SettingsAdapter(Context context, List<String> modes) {
+        this.context = context;
         this.modes = modes;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return initView(position, convertView, parent);
+    public int getCount() {
+        return modes.size();
     }
 
     @Override
-    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return super.getDropDownView(position, convertView, parent);
+    public String getItem(int i) {
+        return modes.get(i);
     }
 
-    private View initView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mode_spinner_item,
-                    parent, false);
-        }
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
 
-        TextView textView = convertView.findViewById(R.id.modeText);
-        textView.setText(getItem(position));
-        return convertView;
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        View rootView = LayoutInflater.from(context).inflate(R.layout.mode_spinner_item,
+                viewGroup, false);
+
+        TextView textView = rootView.findViewById(R.id.modeText);
+        textView.setText(modes.get(i));
+        return rootView;
     }
 }

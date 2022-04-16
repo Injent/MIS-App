@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.databinding.FragmentPatientCardBinding;
@@ -41,6 +42,8 @@ public class PatientCardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.complaintField.setMovementMethod(new ScrollingMovementMethod());
+
+        MainActivity.getInstance().disableFullScreen();
 
         Patient patient = getArguments().getParcelable("patient");
 

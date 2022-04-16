@@ -7,6 +7,10 @@ import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.ui.settings.SettingsAdapter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class SettingsRepository {
 
     public void setMode(int mode) {
@@ -23,15 +27,13 @@ public class SettingsRepository {
     public SettingsAdapter getAdapter(Context context) {
         int currentMode = App.getInstance().getMode();
         String[] raw = context.getResources().getStringArray(R.array.modes);
-        String[] sorted = new String[raw.length];
-        sorted[0] = raw[currentMode];
+        List<String> sorted = new ArrayList<>();
+        sorted.add(raw[currentMode]);
         for (int i = 0; raw.length > i; i++) {
-            if (!raw[i].equals(sorted[i])) {
-                sorted[i] = raw[i];
+            if (!raw[i].equals(sorted.get(0))) {
+                sorted.add(raw[i]);
             }
         }
-        SettingsAdapter adapter = new SettingsAdapter(context,sorted);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
+        return new SettingsAdapter(context, sorted);
     }
 }
