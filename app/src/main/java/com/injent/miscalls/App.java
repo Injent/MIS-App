@@ -14,6 +14,9 @@ import com.injent.miscalls.data.AuthModelIn;
 import com.injent.miscalls.data.patientlist.PatientDao;
 import com.injent.miscalls.data.patientlist.PatientDatabase;
 import com.injent.miscalls.data.User;
+import com.injent.miscalls.data.templates.ProtocolDao;
+import com.injent.miscalls.data.templates.ProtocolDatabase;
+import com.injent.miscalls.domain.AuthRepository;
 import com.injent.miscalls.domain.ForegroundApp;
 
 import java.lang.ref.WeakReference;
@@ -22,14 +25,17 @@ public class App extends Application {
 
     private static WeakReference<App> instance;
 
+    public static final int FOREGROUND_TIME = 20;
     public static final String PREFERENCES_NAME = "settings";
     public static final String CHANNEL_ID = "service-v1";
     private PatientDatabase pdb;
     private PatientDao patientDao;
+    private ProtocolDao protocolDao;
+    private ProtocolDatabase protocolDatabase;
     private boolean initialized;
     private boolean signed;
     private static int mode;
-    private static AuthModelIn authModel;
+    private static User user;
 
     public static App getInstance() {
         return instance.get();
@@ -41,15 +47,19 @@ public class App extends Application {
 
         initialized = false;
 
-        authModel = new AuthModelIn("s", new User("Артур","Репин","Отчество","Врач-терапевт"));
-
         instance = new WeakReference<>(this);
 
         pdb = Room.databaseBuilder(getApplicationContext(),PatientDatabase.class,PatientDatabase.DB_NAME)
                 .allowMainThreadQueries()
                 .build();
 
+        protocolDatabase = Room.databaseBuilder(getApplicationContext(), ProtocolDatabase.class,
+                ProtocolDatabase.DB_NAME)
+                .allowMainThreadQueries()
+                .build();
+
         patientDao = pdb.patientDao();
+        protocolDao = protocolDatabase.protocolDao();
 
         SharedPreferences sp = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -60,6 +70,8 @@ public class App extends Application {
             editor.putInt("section",0);
             editor.apply();
         }
+        //Переделать в DB TODO
+        user = new User("user1","12345","Имя", "Фамилия","Отчество","Доктор","qedfqeofnqifnqnflqwkjfqwlkfbqwkljfbqwfjklbqwf");
         mode = sp.getInt("mode", 1);
 
         if (mode == 1) {
@@ -81,13 +93,17 @@ public class App extends Application {
         manager.createNotificationChannel(serviceChannel);
     }
 
-    public AuthModelIn getAuthModel() {
-        return authModel;
+    public ProtocolDatabase getProtocolDatabase() {
+        return protocolDatabase;
     }
 
-    public void setAuthModel(AuthModelIn model) {
-        this.authModel = model;
+    public void setProtocolDatabase(ProtocolDatabase protocolDatabase) {
+        this.protocolDatabase = protocolDatabase;
     }
+
+    public User getUser() { return user; }
+
+    public void setUser(User user) { App.user = user; }
 
     public PatientDatabase getPdb() { return pdb; }
 
@@ -107,11 +123,12 @@ public class App extends Application {
 
     public int getMode() { return mode; }
 
-    public void setMode(int mode) { this.mode = mode; }
+    public void setMode(int mode) { App.mode = mode; }
 
     public void startService() {
         Log.i("App", "FOREGROUND SERVICE STARTED");
         Intent service = new Intent(this, ForegroundApp.class);
+        service.putExtra("time",FOREGROUND_TIME);
         ContextCompat.startForegroundService(this, service);
     }
 

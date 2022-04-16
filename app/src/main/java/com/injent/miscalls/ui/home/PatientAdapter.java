@@ -1,6 +1,5 @@
 package com.injent.miscalls.ui.home;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,14 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.databinding.PatientListItemBinding;
 import com.injent.miscalls.data.patientlist.Patient;
+import com.injent.miscalls.databinding.PatientListItemBinding;
 
 import java.util.List;
 
@@ -23,6 +21,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
 
     private SortedList<Patient> sortedList;
     private OnPatientClickListener listener;
+    private boolean moved;
 
     public PatientAdapter(List<Patient> list) {
         sortedList = new SortedList<>(Patient.class, new SortedList.Callback<Patient>() {
@@ -133,7 +132,8 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
     }
 
     private void onClick(View view, PatientAdapter.ViewHolder holder) {
-
+        if (moved) return;
+        moved = true;
         Bundle bundle = new Bundle();
         bundle.putParcelable("patient",sortedList.get(holder.getAdapterPosition()));
         Navigation.findNavController(view)

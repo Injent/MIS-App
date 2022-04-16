@@ -13,11 +13,18 @@ import androidx.annotation.Nullable;
 
 import com.injent.miscalls.R;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class ForegroundApp extends Service {
+
+    ExecutorService es;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        es = Executors.newFixedThreadPool(1);
     }
 
     @Override
@@ -37,7 +44,9 @@ public class ForegroundApp extends Service {
                         .build();
 
         startForeground(1,notification);
-        return START_NOT_STICKY;
+        Run run = new Run(intent.getIntExtra("time", 1),startId);
+        es.execute(run);
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Nullable
@@ -49,5 +58,26 @@ public class ForegroundApp extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    class Run implements Runnable {
+
+        int time;
+        int startId;
+
+        public Run(int time, int startId) {
+            this.time = time;
+            this.startId = startId;
+        }
+
+        @Override
+        public void run() {
+            try {
+                TimeUnit.SECONDS.sleep(time);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            stopSelf(startId);
+        }
     }
 }

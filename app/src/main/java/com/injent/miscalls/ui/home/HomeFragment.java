@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,14 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
@@ -44,6 +42,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     public static WeakReference<HomeFragment> instance;
+    private NewPatientAdapter patientAdapter;
 
     public static HomeFragment getInstance() {
         return instance.get();
@@ -138,9 +137,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-        User user = App.getInstance().getAuthModel().getUser();
-
         NavigationView navigationView = binding.navigationView;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -156,16 +152,35 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+
+        //Display of full name and working position in nav view
+        User user = App.getInstance().getUser();
         TextView fullName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
         fullName.setText(user.getFullName());
         TextView position = navigationView.getHeaderView(0).findViewById(R.id.proffesion);
-        position.setText(user.getPosition());
+        position.setText(user.getWorkingPosition());
 
         if (getArguments() != null) {
             if (getArguments().getBoolean("updateList")) {
                 displayList();
             }
         }
+
+       binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        patientAdapter = new NewPatientAdapter(new NewPatientAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int pacientId) {
+                //Navigation.findNavController(requireView()).navigate(R.);
+            }
+        });
+        binding.patientsRecycler.setAdapter(patientAdapter);
+
+        homeViewModel.getPatientListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Patient>>() {
+            @Override
+            public void onChanged(List<Patient> patients) {
+                patientAdapter.submitList(patients);
+            }
+        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -178,9 +193,9 @@ public class HomeFragment extends Fragment {
 
         PatientAdapter adapter = new PatientAdapter(patients);
  //
-        if (binding.patientsList.getItemDecorationCount() == 0)
-            binding.patientsList.addItemDecoration(homeViewModel.getDivider(requireContext()));
-        binding.patientsList.setAdapter(adapter);
+        if (binding.patientsRecycler.getItemDecorationCount() == 0)
+            binding.patientsRecycler.addItemDecoration(homeViewModel.getDivider(requireContext()));
+        binding.patientsRecycler.setAdapter(adapter);
 
         if (patients.isEmpty()) {
             failed(new ListEmptyException());

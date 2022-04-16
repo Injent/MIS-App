@@ -23,6 +23,7 @@ import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.AuthModelIn;
+import com.injent.miscalls.data.User;
 import com.injent.miscalls.databinding.FragmentSignInBinding;
 
 public class SignInFragment extends Fragment {
@@ -54,11 +55,11 @@ public class SignInFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        viewModel.getAuthorized().observe(this, new Observer<AuthModelIn>() {
+        viewModel.getAuthorized().observe(this, new Observer<User>() {
             @Override
-            public void onChanged(AuthModelIn user) {
+            public void onChanged(User user) {
                 hideLoading();
-                App.getInstance().setAuthModel(user);
+                App.getInstance().setUser(user);
                 successfulAuth();
             }
         });

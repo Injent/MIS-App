@@ -21,56 +21,72 @@ public class Patient implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
+    @SerializedName("card_number")
     @ColumnInfo(name = "card_number")
     public String cardNumber;
 
+    @SerializedName("edit_card_date")
     @ColumnInfo(name = "edit_card_date")
     public String editCardDate;
 
+    @SerializedName("complaints")
     @ColumnInfo(name = "complaints")
     public String complaints;
 
+    @SerializedName("benefit_category_code")
     @ColumnInfo(name = "benefit_category_code")
     public String benefitCategoryCode;
 
+    @SerializedName("insurance_company")
     @ColumnInfo(name = "insurance_company")
     public String insuranceCompany;
 
+    @SerializedName("inspected")
     @ColumnInfo(name = "inspected")
     public boolean inspected;
 
     //Personal Info
+    @SerializedName("firstname")
     @ColumnInfo(name = "firstname")
     public String firstname;
 
-    @SerializedName("middlename")
-    @ColumnInfo(name = "middlename")
+    @SerializedName("middle_name")
+    @ColumnInfo(name = "middle_name")
     public String middleName;
 
+    @SerializedName("lastname")
     @ColumnInfo(name = "lastname")
     public String lastname;
 
+    @SerializedName("sex")
     @ColumnInfo(name = "sex")
     public boolean sex;
 
+    @SerializedName("reg_address")
     @ColumnInfo(name = "reg_address")
     public String regAddress;
 
+    @SerializedName("terrain")
     @ColumnInfo(name = "terrain")
     public boolean terrain;
 
+    @SerializedName("phone_number")
     @ColumnInfo(name = "phone_number")
     public String phoneNumber;
 
+    @SerializedName("born_date")
     @ColumnInfo(name = "born_date")
     public String bornDate;
 
+    @SerializedName("document")
     @ColumnInfo(name = "document")
     public String document;
 
+    @SerializedName("snils")
     @ColumnInfo(name = "snils")
     public String snils;
 
+    @SerializedName("polis")
     @ColumnInfo(name = "polis")
     public String polis;
 

@@ -21,6 +21,7 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.PatientDatabase;
+import com.injent.miscalls.data.patientlist.QueryPatients;
 import com.injent.miscalls.domain.HomeRepository;
 
 import java.text.SimpleDateFormat;
@@ -105,7 +106,9 @@ public class HomeViewModel extends ViewModel {
             patientListError.postValue(new NetworkErrorException());
             return;
         }
-        homeRepository.getPatientList().enqueue(new Callback<List<Patient>>() {
+        QueryPatients queryPatients = new QueryPatients();
+        queryPatients.setToken(App.getInstance().getUser().getToken());
+        homeRepository.getPatientList(queryPatients).enqueue(new Callback<List<Patient>>() {
             @Override
             public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
                 if (response.isSuccessful()) {

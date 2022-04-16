@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.API.HttpManager;
 import com.injent.miscalls.data.AuthModelIn;
+import com.injent.miscalls.data.User;
 import com.injent.miscalls.domain.AuthRepository;
 
 import retrofit2.Call;
@@ -19,7 +20,7 @@ import retrofit2.Response;
 public class AuthViewModel extends ViewModel {
 
     private final AuthRepository authRepository;
-    private MutableLiveData<AuthModelIn> authorized = new MutableLiveData<>();
+    private MutableLiveData<User> authorized = new MutableLiveData<>();
     private MutableLiveData<Throwable> errorUser = new MutableLiveData<>();
 
     public AuthViewModel() {
@@ -33,13 +34,13 @@ public class AuthViewModel extends ViewModel {
             errorUser.postValue(new NetworkErrorException());
             return;
         }
-        Call<AuthModelIn> call = authRepository.auth(login, password);
-        call.enqueue(new Callback<AuthModelIn>() {
+        Call<User> call = authRepository.auth(login, password);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(@NonNull Call<AuthModelIn> call, @NonNull Response<AuthModelIn> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 switch (response.code()) {
                     case 200: {
-                        AuthModelIn authModelIn = response.body();
+                        User authModelIn = response.body();
                         authorized.postValue(authModelIn);
                     } break;
                     case 403: {
@@ -49,13 +50,13 @@ public class AuthViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(@NonNull Call<AuthModelIn> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 errorUser.postValue(t);
             }
         });
     }
 
-    public LiveData<AuthModelIn> getAuthorized() {
+    public LiveData<User> getAuthorized() {
         return authorized;
     }
 

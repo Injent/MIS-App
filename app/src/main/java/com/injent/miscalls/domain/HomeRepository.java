@@ -1,20 +1,16 @@
 package com.injent.miscalls.domain;
 
-import android.util.Log;
-
 import androidx.lifecycle.ViewModelProvider;
 
 import com.injent.miscalls.API.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.PatientDao;
+import com.injent.miscalls.data.patientlist.QueryPatients;
 import com.injent.miscalls.ui.home.HomeFragment;
 import com.injent.miscalls.ui.home.HomeViewModel;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,8 +21,8 @@ public class HomeRepository {
     public HomeRepository() {
     }
 
-    public Call<List<Patient>> getPatientList() {
-        return HttpManager.getMisAPI().patients();
+    public Call<List<Patient>> getPatientList(QueryPatients token) {
+        return HttpManager.getMisAPI().patients(token);
     }
 
     public void deleteAll() {
@@ -47,7 +43,6 @@ public class HomeRepository {
         }
         HomeViewModel homeViewModel = new ViewModelProvider(HomeFragment.getInstance())
                 .get(HomeViewModel.class);
-        Log.d("HomeRep","Value Sended");
         HomeFragment.getInstance().requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -91,7 +86,6 @@ public class HomeRepository {
         }
         HomeViewModel homeViewModel = new ViewModelProvider(HomeFragment.getInstance())
                 .get(HomeViewModel.class);
-        Log.d("HomeRep","Value Sended");
         HomeFragment.getInstance().requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
