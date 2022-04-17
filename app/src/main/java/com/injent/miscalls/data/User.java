@@ -3,6 +3,7 @@ package com.injent.miscalls.data;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
+import com.injent.miscalls.data.patientlist.QueryToken;
 
 public class User {
 
@@ -61,5 +62,9 @@ public class User {
         return workingPosition;
     }
 
-    public String getToken() { return token; }
+    public QueryToken getToken() {
+        QueryToken queryToken = new QueryToken();
+        queryToken.setToken(token);
+        return queryToken;
+    }
 }

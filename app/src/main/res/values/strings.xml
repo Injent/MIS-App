@@ -37,6 +37,9 @@
     <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
     <string name="patientsProtocol">Заполнение клинического протокола пациента</string>
     <string name="exitHint">Вы уверены что хотите выйти из приложения?</string>
+    <string name="protocolsDownloadHint"> Может потребоваться много места на устройстве</string>
+    <string name="protocolsDownloadDesc">Скачайте доступные шаблоны протоколов и используйте их при
+        заполнении клинического протокола.</string>
 
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
@@ -50,11 +53,13 @@
     <string name="exit">Выход</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="downloadProtocols">Скачать шаблоны протоколов</string>
 
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
     <string name="updateWhen">Обновлять</string>
     <string name="listNotUpdated">Лист не обновлялся</string>
+    <string name="downloading">Загрузка…</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>

@@ -1,48 +1,42 @@
 package com.injent.miscalls.data.templates;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class ProtocolTemp implements Parcelable {
+public class ProtocolTemp {
 
     public ProtocolTemp() {
     }
 
     @PrimaryKey(autoGenerate = true)
-    private Integer id;
+    private int id;
 
     @ColumnInfo(name = "name")
     private String name;
 
-    @ColumnInfo(name = "content")
-    private String content;
+    @ColumnInfo(name = "description")
+    private String description;
 
-    protected ProtocolTemp(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readInt();
-        }
-        name = in.readString();
-        content = in.readString();
+    @ColumnInfo(name = "treatment")
+    private String treatment;
+
+    @ColumnInfo(name = "conclusion")
+    private String conclusion;
+
+    public void setId(int id) { this.id = id; }
+
+    public String getTreatment() { return treatment; }
+
+    public void setTreatment(String treatment) { this.treatment = treatment; }
+
+    public String getConclusion() { return conclusion; }
+
+    public void setConclusion(String conclusion) {
+        this.conclusion = conclusion;
     }
-
-    public static final Creator<ProtocolTemp> CREATOR = new Creator<ProtocolTemp>() {
-        @Override
-        public ProtocolTemp createFromParcel(Parcel in) {
-            return new ProtocolTemp(in);
-        }
-
-        @Override
-        public ProtocolTemp[] newArray(int size) {
-            return new ProtocolTemp[size];
-        }
-    };
 
     public String getName() {
         return name;
@@ -52,32 +46,20 @@ public class ProtocolTemp implements Parcelable {
         this.name = name;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescription() {
+        return description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Integer getId() { return id; }
-
-    public void setId(Integer id) { this.id = id; }
+    public int getId() { return id; }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        if (id == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(id);
-        }
-        dest.writeString(name);
-        dest.writeString(content);
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof ProtocolTemp)
+            return ((ProtocolTemp) obj).getId() == id;
+        return false;
     }
 }

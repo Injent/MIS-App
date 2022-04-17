@@ -1,7 +1,9 @@
 package com.injent.miscalls.domain;
 
+import android.content.SharedPreferences;
+
 import com.injent.miscalls.API.HttpManager;
-import com.injent.miscalls.data.AuthModelIn;
+import com.injent.miscalls.App;
 import com.injent.miscalls.data.AuthModelOut;
 import com.injent.miscalls.data.User;
 
@@ -10,10 +12,18 @@ import retrofit2.Call;
 public class AuthRepository {
 
     public Call<User> auth(String login, String password){
-        //TODO
-        //Всегда будет входить при любых условиях
-        //Потому что пользователь всегда найден и
-        //логика должна осуществлсяться на сервере
         return HttpManager.getMisAPI().auth(new AuthModelOut(login, password));
+    }
+
+    public void setAuthed(boolean authed) {
+        SharedPreferences sp = App.getInstance().getSharedPreferences();
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("authed", authed);
+        editor.apply();
+        App.getInstance().setAuthed(authed);
+    }
+
+    public boolean isAuthed() {
+        return App.getInstance().isAuthed();
     }
 }

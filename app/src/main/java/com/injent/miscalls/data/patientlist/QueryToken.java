@@ -1,6 +1,6 @@
 package com.injent.miscalls.data.patientlist;
 
-public class QueryPatients {
+public class QueryToken {
 
     private String token;
 

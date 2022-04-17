@@ -56,6 +56,14 @@ public class AuthViewModel extends ViewModel {
         });
     }
 
+    public boolean isAuthed() {
+        return authRepository.isAuthed();
+    }
+
+    public void setAuthed(boolean authed) {
+        authRepository.setAuthed(authed);
+    }
+
     public LiveData<User> getAuthorized() {
         return authorized;
     }

@@ -1,8 +1,6 @@
 package com.injent.miscalls.data.patientlist;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -13,82 +11,154 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Patient implements Parcelable {
+public class Patient {
 
     public Patient() {
     }
 
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @SerializedName("id")
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    private int id;
 
     @SerializedName("card_number")
     @ColumnInfo(name = "card_number")
-    public String cardNumber;
+    private String cardNumber;
 
     @SerializedName("edit_card_date")
     @ColumnInfo(name = "edit_card_date")
-    public String editCardDate;
+    private String editCardDate;
 
     @SerializedName("complaints")
     @ColumnInfo(name = "complaints")
-    public String complaints;
+    private String complaints;
 
     @SerializedName("benefit_category_code")
     @ColumnInfo(name = "benefit_category_code")
-    public String benefitCategoryCode;
+    private String benefitCategoryCode;
 
     @SerializedName("insurance_company")
     @ColumnInfo(name = "insurance_company")
-    public String insuranceCompany;
+    private String insuranceCompany;
 
     @SerializedName("inspected")
     @ColumnInfo(name = "inspected")
-    public boolean inspected;
+    private boolean inspected;
 
     //Personal Info
     @SerializedName("firstname")
     @ColumnInfo(name = "firstname")
-    public String firstname;
+    private String firstname;
 
     @SerializedName("middle_name")
     @ColumnInfo(name = "middle_name")
-    public String middleName;
+    private String middleName;
 
     @SerializedName("lastname")
     @ColumnInfo(name = "lastname")
-    public String lastname;
+    private String lastname;
 
     @SerializedName("sex")
     @ColumnInfo(name = "sex")
-    public boolean sex;
+    private boolean sex;
 
     @SerializedName("reg_address")
     @ColumnInfo(name = "reg_address")
-    public String regAddress;
+    private String regAddress;
 
     @SerializedName("terrain")
     @ColumnInfo(name = "terrain")
-    public boolean terrain;
+    private boolean terrain;
 
     @SerializedName("phone_number")
     @ColumnInfo(name = "phone_number")
-    public String phoneNumber;
+    private String phoneNumber;
 
     @SerializedName("born_date")
     @ColumnInfo(name = "born_date")
-    public String bornDate;
+    private String bornDate;
 
     @SerializedName("document")
     @ColumnInfo(name = "document")
-    public String document;
+    private String document;
 
     @SerializedName("snils")
     @ColumnInfo(name = "snils")
-    public String snils;
+    private String snils;
 
     @SerializedName("polis")
     @ColumnInfo(name = "polis")
-    public String polis;
+    private String polis;
+
+    public int getId() { return id; }
+
+    public String getCardNumber() { return cardNumber; }
+
+    public String getComplaints() { return complaints; }
+
+    public boolean isInspected() { return inspected; }
+
+    public String getRegAddress() { return regAddress; }
+
+    public String getEditCardDate() { return editCardDate; }
+
+    public String getBenefitCategoryCode() { return benefitCategoryCode; }
+
+    public String getInsuranceCompany() { return insuranceCompany; }
+
+    public String getFirstname() { return firstname; }
+
+    public String getLastname() { return lastname; }
+
+    public boolean isSex() { return sex; }
+
+    public boolean isTerrain() { return terrain; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public String getBornDate() { return bornDate; }
+
+    public String getDocument() { return document; }
+
+    public String getSnils() { return snils; }
+
+    public String getPolis() { return polis; }
+
+    public void setId(int id) { this.id = id; }
+
+    public void setCardNumber(String cardNumber) { this.cardNumber = cardNumber; }
+
+    public void setEditCardDate(String editCardDate) { this.editCardDate = editCardDate; }
+
+    public void setComplaints(String complaints) { this.complaints = complaints; }
+
+    public void setBenefitCategoryCode(String benefitCategoryCode) { this.benefitCategoryCode = benefitCategoryCode; }
+
+    public void setInsuranceCompany(String insuranceCompany) { this.insuranceCompany = insuranceCompany; }
+
+    public void setInspected(boolean inspected) { this.inspected = inspected; }
+
+    public void setFirstname(String firstname) { this.firstname = firstname; }
+
+    public void setMiddleName(String middleName) { this.middleName = middleName; }
+
+    public void setLastname(String lastname) { this.lastname = lastname; }
+
+    public void setSex(boolean sex) { this.sex = sex; }
+
+    public void setRegAddress(String regAddress) { this.regAddress = regAddress; }
+
+    public void setTerrain(boolean terrain) { this.terrain = terrain; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public void setBornDate(String bornDate) { this.bornDate = bornDate; }
+
+    public void setDocument(String document) { this.document = document; }
+
+    public void setSnils(String snils) { this.snils = snils; }
+
+    public void setPolis(String polis) { this.polis = polis; }
 
     public List<String> getData() {
         List<String> list = new ArrayList<>();
@@ -122,81 +192,9 @@ public class Patient implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Patient)) return false;
-
-        Patient that = (Patient) o;
-
-        if (id != that.id) return false;
-        if (inspected != that.inspected) return false;
-        if (sex != that.sex) return false;
-        if (terrain != that.terrain) return false;
-        if (!cardNumber.equals(that.cardNumber)) return false;
-        if (!editCardDate.equals(that.editCardDate)) return false;
-        if (complaints != null ? !complaints.equals(that.complaints) : that.complaints != null)
-            return false;
-        if (benefitCategoryCode != null ? !benefitCategoryCode.equals(that.benefitCategoryCode) : that.benefitCategoryCode != null)
-            return false;
-        if (insuranceCompany != null ? !insuranceCompany.equals(that.insuranceCompany) : that.insuranceCompany != null)
-            return false;
-        if (!firstname.equals(that.firstname)) return false;
-        if (middleName != null && !middleName.equals(that.middleName)) return false;
-        if (!lastname.equals(that.lastname)) return false;
-        if (!regAddress.equals(that.regAddress)) return false;
-        if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null)
-            return false;
-        if (!bornDate.equals(that.bornDate)) return false;
-        if (!document.equals(that.document)) return false;
-        if (!snils.equals(that.snils)) return false;
-        return polis.equals(that.polis);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + cardNumber.hashCode();
-        result = 31 * result + editCardDate.hashCode();
-        result = 31 * result + (complaints != null ? complaints.hashCode() : 0);
-        result = 31 * result + (benefitCategoryCode != null ? benefitCategoryCode.hashCode() : 0);
-        result = 31 * result + (insuranceCompany != null ? insuranceCompany.hashCode() : 0);
-        result = 31 * result + (inspected ? 1 : 0);
-        result = 31 * result + firstname.hashCode();
-        if (middleName != null)
-            result = 31 * result + middleName.hashCode();
-        result = 31 * result + lastname.hashCode();
-        result = 31 * result + (sex ? 1 : 0);
-        result = 31 * result + regAddress.hashCode();
-        result = 31 * result + (terrain ? 1 : 0);
-        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
-        result = 31 * result + bornDate.hashCode();
-        result = 31 * result + document.hashCode();
-        result = 31 * result + snils.hashCode();
-        result = 31 * result + polis.hashCode();
-        return result;
-    }
-
-    protected Patient(Parcel in) {
-    }
-
-    public static final Creator<Patient> CREATOR = new Creator<Patient>() {
-        @Override
-        public Patient createFromParcel(Parcel in) {
-            return new Patient(in);
-        }
-
-        @Override
-        public Patient[] newArray(int size) {
-            return new Patient[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof Patient)
+            return ((Patient) obj).getId() == id;
+        return false;
     }
 }

@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.databinding.FragmentProtocolBinding;
+import com.injent.miscalls.domain.HomeRepository;
 
 public class ProtocolFragment extends Fragment {
 
@@ -37,26 +38,24 @@ public class ProtocolFragment extends Fragment {
         Patient patient = null;
 
         if (getArguments() != null) {
-            patient = getArguments().getParcelable("patient");
+            patient = new HomeRepository().getPatientById(getArguments().getInt("patientId",0));
         }
 
         Patient finalPatient = patient;
 
         binding.fullnameText.setText(patient.getShortInfo() + " " + patient.getMiddleName());
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(this,
-                new OnBackPressedCallback(true) {
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-                        back(finalPatient);
+                        back(finalPatient.getId());
                     }
-                });
+        });
     }
 
-    private void back(Patient patient) {
+    private void back(int patientId) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("patient", patient);
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_protocolFragment_to_patientCardFragment, bundle);
+        bundle.putInt("patientId", patientId);
+        Navigation.findNavController(requireView()).navigate(R.id.action_protocolFragment_to_patientCardFragment, bundle);
     }
 }

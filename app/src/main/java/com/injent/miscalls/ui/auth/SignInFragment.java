@@ -17,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
@@ -25,6 +26,7 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.AuthModelIn;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.databinding.FragmentSignInBinding;
+import com.injent.miscalls.domain.AuthRepository;
 
 public class SignInFragment extends Fragment {
 
@@ -45,6 +47,14 @@ public class SignInFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        if (viewModel.isAuthed()) {
+            navigateToHome();
+            return;
+        }
+
+        //Listeners
         binding.signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,8 +63,7 @@ public class SignInFragment extends Fragment {
             }
         });
 
-        viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
+        //Observers
         viewModel.getAuthorized().observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
@@ -71,16 +80,17 @@ public class SignInFragment extends Fragment {
                 displayError(throwable);
             }
         });
-        requireActivity().getOnBackPressedDispatcher().addCallback(this,
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
+
+        //On back pressed action
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
                         MainActivity.getInstance().confirmExit();
-                    }
-                });
+                }
+        });
     }
 
-    public void actionAuth() {
+    private void actionAuth() {
         String email = binding.emailField.getText().toString().trim();
         String password = binding.passwordField.getText().toString().trim();
         viewModel.auth(email, password);
@@ -93,25 +103,16 @@ public class SignInFragment extends Fragment {
         } else if (throwable instanceof NetworkErrorException) {
             binding.error.setText(R.string.noInternetConnection);
         } else {
-            binding.error.setText("Неизвестная ошибка");
+            binding.error.setText(R.string.unknownError);
         }
     }
 
     private void successfulAuth() {
-        Log.d("AuthFragment","SUCCESSFUL AUTH");
-
-        SharedPreferences sp = requireActivity()
-                    .getSharedPreferences("settings", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-
-        editor.putBoolean("auth", true);
-        editor.apply();
+        viewModel.setAuthed(true);
 
         Toast.makeText(requireContext(), R.string.successfulAuth, Toast.LENGTH_SHORT).show();
 
-        Navigation.findNavController(requireView())
-                    .navigate(R.id.action_signInFragment_to_homeFragment);
-
+        navigateToHome();
     }
 
     private void hideLoading() {
@@ -121,5 +122,10 @@ public class SignInFragment extends Fragment {
         binding.authLoading.setVisibility(View.VISIBLE);
     }
 
-
+    private void navigateToHome() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("updateList", true);
+        NavController navController = Navigation.findNavController(requireView());
+        navController.navigate(R.id.action_signInFragment_to_homeFragment, bundle);
+    }
 }

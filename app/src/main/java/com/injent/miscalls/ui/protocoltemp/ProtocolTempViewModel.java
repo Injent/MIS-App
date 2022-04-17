@@ -1,13 +1,58 @@
 package com.injent.miscalls.ui.protocoltemp;
 
-import androidx.lifecycle.AndroidViewModel;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.injent.miscalls.data.patientlist.FailedDownloadDb;
+import com.injent.miscalls.data.patientlist.QueryToken;
+import com.injent.miscalls.data.templates.ProtocolDatabase;
+import com.injent.miscalls.data.templates.ProtocolTemp;
+import com.injent.miscalls.domain.ProtocolTempRepository;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ProtocolTempViewModel extends ViewModel {
-    public ProtocolTempViewModel() {
 
+    private ProtocolTempRepository repository;
+    private MutableLiveData<List<ProtocolTemp>> protocols = new MutableLiveData<>();
+    private MutableLiveData<Throwable> protocolError = new MutableLiveData<>();
 
-        super();
+    public LiveData<List<ProtocolTemp>> getProtocolsLiveDate() {
+        return protocols;
     }
-    // TODO: Implement the ViewModel
+
+    public void setProtocols(List<ProtocolTemp> protocols) { this.protocols.setValue(protocols); }
+
+    public ProtocolTempViewModel() {
+        super();
+        repository = new ProtocolTempRepository();
+    }
+
+    public List<ProtocolTemp> getProtocolTemps() {
+        if (protocols.getValue() == null) {
+            protocols.setValue(repository.getProtocolTemps());
+        }
+        return protocols.getValue();
+    }
+
+    public void downloadProtocolTemps(QueryToken token) {
+        repository.getProtocolsFromServer(token).enqueue(new Callback<List<ProtocolTemp>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ProtocolTemp>> call, @NonNull Response<List<ProtocolTemp>> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ProtocolTemp>> call, @NonNull Throwable t) {
+                protocolError.postValue(new FailedDownloadDb(ProtocolDatabase.DB_NAME));
+            }
+        });
+    }
+
 }

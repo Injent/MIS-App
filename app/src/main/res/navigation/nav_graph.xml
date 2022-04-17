@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -25,6 +25,9 @@
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/left_in_slide"
             app:exitAnim="@anim/up_out_slide" />
+        <action
+            android:id="@+id/action_homeFragment_to_protocolTempFragment"
+            app:destination="@id/protocolTempFragment" />
     </fragment>
     <fragment
         android:id="@+id/patientCardFragment"
@@ -74,5 +77,14 @@
             app:destination="@id/patientCardFragment"
             app:enterAnim="@anim/right_in_slide"
             app:exitAnim="@anim/right_out_slide" />
+    </fragment>
+    <fragment
+        android:id="@+id/protocolTempFragment"
+        android:name="com.injent.miscalls.ui.protocoltemp.ProtocolTempFragment"
+        android:label="fragment_protocol_temp"
+        tools:layout="@layout/fragment_protocol_temp" >
+        <action
+            android:id="@+id/action_protocolTempFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

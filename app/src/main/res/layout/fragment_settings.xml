@@ -27,8 +27,8 @@
                 android:background="?attr/actionBarItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="4dp"
-                android:src="@drawable/back_arrow" />
+                android:padding="8dp"
+                android:src="@drawable/ic_back_arrow" />
 
             <TextView
                 android:id="@+id/titleSettingsText"

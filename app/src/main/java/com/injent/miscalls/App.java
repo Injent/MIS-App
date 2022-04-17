@@ -10,13 +10,11 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
-import com.injent.miscalls.data.AuthModelIn;
 import com.injent.miscalls.data.patientlist.PatientDao;
 import com.injent.miscalls.data.patientlist.PatientDatabase;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.templates.ProtocolDao;
 import com.injent.miscalls.data.templates.ProtocolDatabase;
-import com.injent.miscalls.domain.AuthRepository;
 import com.injent.miscalls.domain.ForegroundApp;
 
 import java.lang.ref.WeakReference;
@@ -33,7 +31,7 @@ public class App extends Application {
     private ProtocolDao protocolDao;
     private ProtocolDatabase protocolDatabase;
     private boolean initialized;
-    private boolean signed;
+    private boolean authed;
     private static int mode;
     private static User user;
 
@@ -65,21 +63,20 @@ public class App extends Application {
         SharedPreferences.Editor editor = sp.edit();
         if (sp.contains("init")) {
             editor.putInt("mode", 1);
-            editor.putBoolean("auth", false);
+            editor.putBoolean("authed", false);
             editor.putString("personalLink","");
             editor.putInt("section",0);
             editor.apply();
         }
-        //Переделать в DB TODO
-        user = new User("user1","12345","Имя", "Фамилия","Отчество","Доктор","qedfqeofnqifnqnflqwkjfqwlkfbqwkljfbqwfjklbqwf");
+        authed = sp.getBoolean("authed", false);
+//Временно TODO
+        authed = false;
         mode = sp.getInt("mode", 1);
 
         if (mode == 1) {
             createNotificationChannel();
             startService();
-        } else {
-            stopService();
-        }
+        } else stopService();
     }
 
     private void createNotificationChannel() {
@@ -93,13 +90,9 @@ public class App extends Application {
         manager.createNotificationChannel(serviceChannel);
     }
 
-    public ProtocolDatabase getProtocolDatabase() {
-        return protocolDatabase;
-    }
+    public ProtocolDao getProtocolDao() { return protocolDao; }
 
-    public void setProtocolDatabase(ProtocolDatabase protocolDatabase) {
-        this.protocolDatabase = protocolDatabase;
-    }
+    public ProtocolDatabase getProtocolDatabase() { return protocolDatabase; }
 
     public User getUser() { return user; }
 
@@ -109,21 +102,15 @@ public class App extends Application {
 
     public PatientDao getPatientDao() { return patientDao; }
 
-    public boolean isInitialized() {
-        return initialized;
-    }
+    public boolean isAuthed() { return authed; }
 
-    public void setInitialized(boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    public boolean isSigned() { return signed; }
-
-    public void setSigned(boolean signed) { this.signed = signed; }
+    public void setAuthed(boolean authed) { this.authed = authed; }
 
     public int getMode() { return mode; }
 
     public void setMode(int mode) { App.mode = mode; }
+
+    public SharedPreferences getSharedPreferences() { return getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE); }
 
     public void startService() {
         Log.i("App", "FOREGROUND SERVICE STARTED");

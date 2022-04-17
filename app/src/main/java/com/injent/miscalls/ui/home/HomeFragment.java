@@ -2,8 +2,8 @@ package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +26,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
@@ -42,22 +43,19 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     public static WeakReference<HomeFragment> instance;
-    private NewPatientAdapter patientAdapter;
+    private PatientAdapter patientAdapter;
 
     public static HomeFragment getInstance() {
         return instance.get();
     }
 
     private FragmentHomeBinding binding;
-
+    private NavController navController;
     private HomeViewModel homeViewModel;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,
-                container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         return binding.getRoot();
     }
 
@@ -65,28 +63,14 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        NavController navController = Navigation.findNavController(requireView());
-
-        MainActivity.getInstance().enableFullScreen();
-
         instance = new WeakReference<>(HomeFragment.this);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        authCheck();
+        //
+        MainActivity.getInstance().enableFullScreen();
+        navController = Navigation.findNavController(requireView());
 
-        if (!App.getInstance().isSigned()) return;
-
-        if (!App.getInstance().isInitialized()) {
-            if (App.getInstance().getMode() == 0) {
-                showLoading();
-                homeViewModel.downloadPatientsDb();
-            } else if (getArguments() == null) {
-                displayList();
-            }
-            App.getInstance().setInitialized(true);
-
-        }
-
+        //Listeners
         binding.patientListSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,12 +80,20 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        ImageView moreButton = requireView().findViewById(R.id.moreButton);
+        moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        //Observers
         homeViewModel.getPatientListLiveData().observe(this, new Observer<List<Patient>>() {
             @Override
             public void onChanged(List<Patient> patients) {
-                if (getArguments() == null){
-                    displayList();
-                }
+                patientAdapter.submitList(patients);
+                if (getArguments() == null) displayList();
             }
         });
 
@@ -113,14 +105,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(this,
-                new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                MainActivity.getInstance().confirmExit();
-            }
-        });
-
         homeViewModel.getDbDateLiveData().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -128,83 +112,75 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        ImageView moreButton = requireView().findViewById(R.id.moreButton);
-
-        moreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.drawerLayout.openDrawer(GravityCompat.START);
-            }
+        //On back pressed action
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        MainActivity.getInstance().confirmExit();
+                    }
         });
 
+        //Navigation view
         NavigationView navigationView = binding.navigationView;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.settingsMenu: navController.navigate(R.id.action_homeFragment_to_settingsFragment);
+                    case R.id.settingsMenu: navigateToSettings();
                     break;
-                    case R.id.about: homeViewModel.moveToSite(requireContext(), getText(R.string.aboutLink));
+                    case R.id.about: moveToSite(getText(R.string.aboutLink));
                     break;
-                    case R.id.help: homeViewModel.moveToSite(requireContext(), getText(R.string.helpLink));
+                    case R.id.help: moveToSite(getText(R.string.helpLink));
+                    break;
+                    case R.id.protocolTempsMenu: navigateToProtocolTemp();
                     break;
                 }
                 return false;
             }
         });
 
-        //Display of full name and working position in nav view
+        //Display of full name and working position in Navigation view
         User user = App.getInstance().getUser();
         TextView fullName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
         fullName.setText(user.getFullName());
         TextView position = navigationView.getHeaderView(0).findViewById(R.id.proffesion);
         position.setText(user.getWorkingPosition());
 
-        if (getArguments() != null) {
-            if (getArguments().getBoolean("updateList")) {
-                displayList();
-            }
+        //Display list?
+        if (getArguments() != null && getArguments().containsKey("updateList")) {
+            displayList();
         }
 
-       binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        patientAdapter = new NewPatientAdapter(new NewPatientAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int pacientId) {
-                //Navigation.findNavController(requireView()).navigate(R.);
-            }
-        });
-        binding.patientsRecycler.setAdapter(patientAdapter);
+        //RecycleView Material Divider
+        if (binding.patientsRecycler.getItemDecorationCount() == 0)
+            binding.patientsRecycler.addItemDecoration(getDivider());
 
-        homeViewModel.getPatientListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Patient>>() {
+        //RecycleView
+        binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        patientAdapter = new PatientAdapter(new PatientAdapter.OnItemClickListener() {
             @Override
-            public void onChanged(List<Patient> patients) {
-                patientAdapter.submitList(patients);
+            public void onClick(int patientId) {
+                navigateToPatientCard(patientId);
             }
         });
+
+        binding.patientsRecycler.setAdapter(patientAdapter);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void displayList() {
         Log.d("HomeFragment","LIST UPDATED");
         hideLoading();
         List<Patient> patients = homeViewModel.getPatientList();
 
-        displayDbDate();
-
-        PatientAdapter adapter = new PatientAdapter(patients);
- //
-        if (binding.patientsRecycler.getItemDecorationCount() == 0)
-            binding.patientsRecycler.addItemDecoration(homeViewModel.getDivider(requireContext()));
-        binding.patientsRecycler.setAdapter(adapter);
-
         if (patients.isEmpty()) {
             failed(new ListEmptyException());
         } else {
+            displayDbDate();
             hideErrorMessage();
         }
     }
 
-    public void failed(Throwable t){
+    private void failed(Throwable t){
         if (t instanceof FailedDownloadDb) {
             Toast.makeText(requireContext(),R.string.unknownError,Toast.LENGTH_SHORT).show();
         } else if (t instanceof NetworkErrorException){
@@ -217,37 +193,51 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     public void displayDbDate() {
-        binding.dbDateUpdateText.setText(getResources().getString(R.string.updated) + " "
-                + homeViewModel.getDbDate());
+        binding.dbDateUpdateText.setText(getResources().getString(R.string.updated) + " " + homeViewModel.getDbDate());
     }
 
-    public void authCheck() {
-        SharedPreferences sp = requireActivity()
-                .getSharedPreferences(App.PREFERENCES_NAME, Context.MODE_PRIVATE);
-        boolean signed = sp.getBoolean("auth", false);
-        if (!signed) {
-            Navigation.findNavController(requireView())
-                    .navigate(R.id.action_homeFragment_to_signInFragment);
-            App.getInstance().setSigned(false);
-        } else {
-            App.getInstance().setSigned(true);
-        }
-    }
-
-    public void showLoading() {
+    private void showLoading() {
         binding.loadingBar.setVisibility(View.VISIBLE);
     }
 
-    public void hideLoading() {
+    private void hideLoading() {
         binding.loadingBar.setVisibility(View.INVISIBLE);
     }
 
-    public void showErrorMessage(String message) {
+    private void showErrorMessage(String message) {
         binding.errorText.setText(message);
         binding.errorText.setVisibility(View.VISIBLE);
     }
 
     private void hideErrorMessage() {
         binding.errorText.setVisibility(View.INVISIBLE);
+    }
+
+    public MaterialDividerItemDecoration getDivider() {
+        MaterialDividerItemDecoration divider
+                = new MaterialDividerItemDecoration(requireContext(), MaterialDividerItemDecoration.VERTICAL);
+        divider.setDividerInsetStartResource(requireContext(),R.dimen.dividerInset);
+        divider.setDividerInsetEndResource(requireContext(), R.dimen.dividerInset);
+        divider.setDividerColorResource(requireContext(), R.color.line);
+        return divider;
+    }
+
+    private void navigateToPatientCard(int patientId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("patientId", patientId);
+        navController.navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
+    }
+
+    private void navigateToSettings() {
+        navController.navigate(R.id.action_homeFragment_to_settingsFragment);
+    }
+
+    private void navigateToProtocolTemp() {
+        navController.navigate(R.id.action_homeFragment_to_protocolTempFragment);
+    }
+
+    private void moveToSite(CharSequence link) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse((String) link));
+        requireActivity().startActivity(intent);
     }
 }
