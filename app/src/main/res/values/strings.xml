@@ -7,11 +7,13 @@
     <string name="auth">Авторизация</string>
     <string name="settings">Настройки</string>
     <string name="protocol">Протокол</string>
-    <string name="protocolList">Протоколы лечения</string>
+    <string name="protocolTemps">Шаблоны протоколов</string>
+    <string name="protocolEdit">Редактирование протокола</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
     <string name="regularUpdates">Регулярные обновления</string>
+    <string name="clearProtocolTemps">Сбросить шаблоны протоколов</string>
     <string name="resultOfInspection">Результат осмотра</string>
     <string name="infoAboutPatient">Информация о пациенте</string>
     <string name="conclusion">Заключение</string>
@@ -51,6 +53,8 @@
     <string name="applyTemp">Применить\nшаблон</string>
     <string name="logout">Выйти из учетной записи</string>
     <string name="exit">Выход</string>
+    <string name="exitFromEditing">Выйти из редактора протокола?</string>
+    <string name="dataWontSave">Данные не сохранятся!</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="downloadProtocols">Скачать шаблоны протоколов</string>
@@ -66,6 +70,8 @@
     <string name="updated">Обновлен</string>
     <string name="receivingDataOn">Обновление данных включено</string>
     <string name="moveToSettings">Перейдите в настройки приложения для отключения</string>
+    <string name="protocolTempSaved">Шаблон протокола сохранен</string>
+    <string name="protocolTempsCleared">Все шаблоны протоколов сброшены</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>
@@ -76,6 +82,8 @@
     <string name="userNotFound">Пользователь не найден</string>
     <string name="unknownError">Возникла неизвестная ошибка</string>
     <string name="emptyDbError">База данных пациентов не загружена!</string>
+    <string name="emptyServerProtocols">На сервере отсутсвтуют протоколы</string>
+    <string name="serverError">Ошибка сервера</string>
 
     <!-- Links -->
     <string name="aboutLink">https://exitoso.ru/injent/about/</string>

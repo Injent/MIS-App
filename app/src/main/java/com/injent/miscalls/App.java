@@ -47,11 +47,11 @@ public class App extends Application {
 
         instance = new WeakReference<>(this);
 
-        pdb = Room.databaseBuilder(getApplicationContext(),PatientDatabase.class,PatientDatabase.DB_NAME)
+        pdb = Room.databaseBuilder(this,PatientDatabase.class,PatientDatabase.DB_NAME)
                 .allowMainThreadQueries()
                 .build();
 
-        protocolDatabase = Room.databaseBuilder(getApplicationContext(), ProtocolDatabase.class,
+        protocolDatabase = Room.databaseBuilder(this, ProtocolDatabase.class,
                 ProtocolDatabase.DB_NAME)
                 .allowMainThreadQueries()
                 .build();

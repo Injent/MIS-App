@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/clear_sans_medium"
-            android:text="Information type"
+            android:textIsSelectable="true"
             android:textColor="@color/lightGrayText"
             android:textSize="@dimen/hintFont" />
 

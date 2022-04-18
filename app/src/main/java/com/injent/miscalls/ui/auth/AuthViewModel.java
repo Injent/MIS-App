@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.API.HttpManager;
-import com.injent.miscalls.data.AuthModelIn;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.domain.AuthRepository;
 
@@ -19,13 +18,13 @@ import retrofit2.Response;
 
 public class AuthViewModel extends ViewModel {
 
-    private final AuthRepository authRepository;
+    private final AuthRepository repository;
     private MutableLiveData<User> authorized = new MutableLiveData<>();
     private MutableLiveData<Throwable> errorUser = new MutableLiveData<>();
 
     public AuthViewModel() {
         super();
-        authRepository = new AuthRepository();
+        repository = new AuthRepository();
     }
 
     public void auth(String login, String password) {
@@ -34,7 +33,7 @@ public class AuthViewModel extends ViewModel {
             errorUser.postValue(new NetworkErrorException());
             return;
         }
-        Call<User> call = authRepository.auth(login, password);
+        Call<User> call = repository.auth(login, password);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
@@ -57,11 +56,11 @@ public class AuthViewModel extends ViewModel {
     }
 
     public boolean isAuthed() {
-        return authRepository.isAuthed();
+        return repository.isAuthed();
     }
 
     public void setAuthed(boolean authed) {
-        authRepository.setAuthed(authed);
+        repository.setAuthed(authed);
     }
 
     public LiveData<User> getAuthorized() {

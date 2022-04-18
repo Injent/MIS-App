@@ -68,7 +68,8 @@
                         android:gravity="center|left"
                         android:textColor="@color/hintWhite"
                         android:textSize="@dimen/hintFont"
-                        app:drawableStartCompat="@drawable/ic_download" />
+                        app:drawableStartCompat="@drawable/ic_clock"
+                        android:drawablePadding="8dp"/>
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"

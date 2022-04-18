@@ -17,9 +17,7 @@ public class SettingsRepository {
         SharedPreferences sp = App.getInstance().getSharedPreferences();
         SharedPreferences.Editor editor = sp.edit();
 
-        editor.putInt("mode",mode);
-        editor.apply();
-
+        editor.putInt("mode",mode).apply();
         App.getInstance().setMode(mode);
     }
 

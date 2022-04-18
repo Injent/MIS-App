@@ -23,9 +23,12 @@
     <color name="gradientDarkGreen">#17a366</color>
     <color name="gradientLightGreen">#11bc9c</color>
 
+    <color name="icClock">#0091FF</color>
+    <color name="icClear">#FF6F00</color>
+
     <!-- Text -->
     <color name="focused">#EDFDFF</color>
-    <color name="highlight">#AD03B0FF</color>
+    <color name="highlight">#3200E1FF</color>
     <color name="error">#FD2C4B</color>
 
     <!-- Font colors -->
@@ -38,8 +41,8 @@
     <color name="black_overlay">#66000000</color>
 
     <!-- Gradients -->
-    <color name="startColor">#dbb8ff</color>
-    <color name="centerColor">#cb95ff</color>
-    <color name="endColor">#dbb8ff</color>
+    <color name="startColor">#bbe1fe</color>
+    <color name="centerColor">#67c0ff</color>
+    <color name="endColor">#0999f9</color>
 
 </resources>

@@ -11,7 +11,8 @@ public class ProtocolTemp {
     public ProtocolTemp() {
     }
 
-    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = false)
     private int id;
 
     @ColumnInfo(name = "name")
@@ -25,6 +26,13 @@ public class ProtocolTemp {
 
     @ColumnInfo(name = "conclusion")
     private String conclusion;
+
+    @ColumnInfo(name = "inspection")
+    private String inspection;
+
+    public String getInspection() { return inspection; }
+
+    public void setInspection(String inspection) { this.inspection = inspection; }
 
     public void setId(int id) { this.id = id; }
 

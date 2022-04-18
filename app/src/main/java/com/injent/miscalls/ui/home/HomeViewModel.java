@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -65,7 +66,7 @@ public class HomeViewModel extends ViewModel {
 
     public List<Patient> getPatientList() {
         if (patientList.getValue() == null) {
-            patientList.setValue(App.getInstance().getPatientDao().getAll());
+            patientList.setValue(homeRepository.getAll());
         }
         return patientList.getValue();
     }
@@ -81,6 +82,7 @@ public class HomeViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     List<Patient> list = response.body();
                     homeRepository.insertWithDropDb(list != null ? list.toArray(new Patient[0]) : new Patient[0]);
+                    patientList.postValue(list);
                     setNewDbDate();
                 } else {
                     patientListError.postValue(new FailedDownloadDb(PatientDatabase.DB_NAME));

@@ -1,6 +1,7 @@
 package com.injent.miscalls.domain;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,6 +14,8 @@ import com.injent.miscalls.ui.home.HomeFragment;
 import com.injent.miscalls.ui.home.HomeViewModel;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -58,34 +61,6 @@ public class HomeRepository {
             @Override
             public void run() {
                 App.getInstance().getPdb().clearAllTables();
-                es.shutdown();
-            }
-        });
-    }
-
-    public void insertPatient(Patient... patients) {
-        PatientDao dao = App.getInstance().getPatientDao();
-        for (Patient patient : patients) {
-            dao.insert(patient);
-        }
-        HomeViewModel homeViewModel = new ViewModelProvider(HomeFragment.getInstance()).get(HomeViewModel.class);
-        HomeFragment.getInstance().requireActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                homeViewModel.setList(dao.getAll());
-            }
-        });
-    }
-
-    public void updatePatient(Patient... patients) {
-        PatientDao dao = App.getInstance().getPatientDao();
-        es.submit(new Runnable() {
-            @Override
-            public void run() {
-                for (Patient patient : patients) {
-                    dao.update(patient);
-                }
-                es.shutdown();
             }
         });
     }
@@ -93,7 +68,7 @@ public class HomeRepository {
     public Patient getPatientById(int id) {
         Future<Patient> patientFuture = es.submit(new Callable<Patient>() {
             @Override
-            public Patient call() throws Exception {
+            public Patient call() {
                 return dao.getPatientById(id);
             }
         });
@@ -102,35 +77,40 @@ public class HomeRepository {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        es.shutdown();
         return null;
     }
 
     public List<Patient> getAll() {
-        es.submit(new Runnable() {
+        Future<List<Patient>> listFuture = es.submit(new Callable<List<Patient>>() {
             @Override
-            public void run() {
-
+            public List<Patient> call() {
+                return dao.getAll();
             }
         });
+        try {
+            return listFuture.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    public void insertWithDropDb(Patient...patients) {
-        App.getInstance().getPdb().clearAllTables();
-
-        for (Patient patient : patients) {
-            dao.insert(patient);
-        }
-        HomeViewModel homeViewModel = new ViewModelProvider(HomeFragment.getInstance())
-                .get(HomeViewModel.class);
-        HomeFragment.getInstance().requireActivity().runOnUiThread(new Runnable() {
+    public Boolean insertWithDropDb(Patient...patients) {
+        Future<Boolean> booleanFuture = es.submit(new Callable<Boolean>() {
             @Override
-            public void run() {
-                homeViewModel.setList(dao.getAll());
+            public Boolean call() {
+                App.getInstance().getPdb().clearAllTables();
+                for (Patient patient : patients) {
+                    dao.insert(patient);
+                }
+                return true;
             }
         });
+        try {
+            return booleanFuture.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
-
-

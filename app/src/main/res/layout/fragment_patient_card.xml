@@ -115,6 +115,7 @@
                 android:fadeScrollbars="false"
                 android:scrollbarThumbVertical="@drawable/scroll"
                 android:scrollbars="vertical"
+                android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

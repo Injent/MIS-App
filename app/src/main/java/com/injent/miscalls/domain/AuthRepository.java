@@ -16,11 +16,10 @@ public class AuthRepository {
     }
 
     public void setAuthed(boolean authed) {
+        App.getInstance().setAuthed(authed);
         SharedPreferences sp = App.getInstance().getSharedPreferences();
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("authed", authed);
-        editor.apply();
-        App.getInstance().setAuthed(authed);
+        editor.putBoolean("authed", authed).apply();
     }
 
     public boolean isAuthed() {

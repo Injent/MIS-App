@@ -1,5 +1,7 @@
 package com.injent.miscalls.domain;
 
+import android.util.Log;
+
 import com.injent.miscalls.API.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.patientlist.QueryToken;
@@ -29,6 +31,15 @@ public class ProtocolTempRepository {
         return HttpManager.getMisAPI().protocolTemps(token);
     }
 
+    public void clearDb() {
+        es.submit(new Runnable() {
+            @Override
+            public void run() {
+                App.getInstance().getProtocolDatabase().clearAllTables();
+            }
+        });
+    }
+
     public ProtocolTemp getProtocolTempById(int id) {
         Future<ProtocolTemp> protocolTempFuture = es.submit(new Callable<ProtocolTemp>() {
             @Override
@@ -44,35 +55,40 @@ public class ProtocolTempRepository {
         return null;
     }
 
-    public void insertProtocolTemp(ProtocolTemp... protocolTemps) {
+    public void insertProtocol(ProtocolTemp protocolTemp) {
         es.submit(new Runnable() {
             @Override
             public void run() {
-                for (ProtocolTemp protocolTemp : protocolTemps) {
-                    dao.insert(protocolTemp);
-                }
-                es.shutdown();
+                dao.insert(protocolTemp);
             }
         });
     }
 
-    public void insertProtocolTempWithDropDb(ProtocolTemp... protocolTemps) {
-        es.submit(new Runnable() {
+    public Boolean insertProtocolTempWithDropDb(List<ProtocolTemp> list) {
+        Future<Boolean> booleanFuture = es.submit(new Callable<Boolean>() {
             @Override
-            public void run() {
+            public Boolean call() {
                 App.getInstance().getProtocolDatabase().clearAllTables();
-                for (ProtocolTemp protocolTemp : protocolTemps) {
-                    dao.insert(protocolTemp);
+                for (ProtocolTemp protocol : list) {
+                    dao.insert(protocol);
                 }
-                es.shutdown();
+                return true;
             }
         });
+        try {
+            return booleanFuture.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public List<ProtocolTemp> getProtocolTemps() {
         Future<List<ProtocolTemp>> listFuture = es.submit(new Callable<List<ProtocolTemp>>() {
             @Override
             public List<ProtocolTemp> call(){
+                for (ProtocolTemp p : dao.getAll()) {
+                }
                 return dao.getAll();
             }
         });

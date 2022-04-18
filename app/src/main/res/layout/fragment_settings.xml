@@ -28,6 +28,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="8dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_back_arrow" />
 
             <TextView
@@ -55,20 +56,26 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/regularUpdatesDbAction"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:background="?android:attr/selectableItemBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/displayPadding">
 
                     <TextView
                         android:id="@+id/regularUpdatesDb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawablePadding="8dp"
                         android:fontFamily="@font/clear_sans_medium"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
                         android:text="@string/regularUpdates"
                         android:textColor="@color/darkGrayText"
-                        android:textSize="@dimen/mediumFont" />
+                        android:textSize="@dimen/mediumFont"
+                        app:drawableStartCompat="@drawable/ic_clock"
+                        app:drawableTint="@color/icClock" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -108,25 +115,46 @@
                         android:background="@color/line" />
                 </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/logoutAction"
+                <LinearLayout
+                    android:id="@+id/clearProtocolTempsAction"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingTop="@dimen/displayPadding"
-                    android:paddingBottom="@dimen/displayPadding"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/displayPadding">
+
+                    <TextView
+                        android:id="@+id/clearProtocolTemps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/icClear"
+                        android:fontFamily="@font/clear_sans_medium"
+                        android:text="@string/clearProtocolTemps"
+                        android:textColor="@color/darkGrayText"
+                        android:textSize="@dimen/mediumFont"
+                        app:drawableStartCompat="@drawable/ic_clear" />
+
+                    <View
+                        android:id="@+id/line1"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/thickLine"
+                        android:layout_marginTop="@dimen/displayPadding"
+                        android:background="@color/line" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/logoutAction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/displayPadding"
+                    android:paddingBottom="@dimen/displayPadding">
 
                     <TextView
                         android:id="@+id/logoutText"
@@ -137,16 +165,11 @@
                         android:textColor="@color/error"
                         android:textSize="@dimen/mediumFont"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <Button
-                    android:id="@+id/clearBase"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="300dp"
-                    android:background="@drawable/button"
-                    android:text="Очистить базу (временное решение)" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:drawablePadding="8dp"
+                        app:drawableTint="@color/error"
+                        app:drawableStartCompat="@drawable/ic_logout" />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

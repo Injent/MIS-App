@@ -51,6 +51,13 @@ public class ProtocolFragment extends Fragment {
                         back(finalPatient.getId());
                     }
         });
+
+        binding.backFromProtocol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back(finalPatient.getId());
+            }
+        });
     }
 
     private void back(int patientId) {

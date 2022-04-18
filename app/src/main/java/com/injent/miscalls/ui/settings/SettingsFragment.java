@@ -1,33 +1,25 @@
 package com.injent.miscalls.ui.settings;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
-import com.injent.miscalls.domain.HomeRepository;
+import com.injent.miscalls.domain.AuthRepository;
+import com.injent.miscalls.domain.ProtocolTempRepository;
 import com.injent.miscalls.domain.SettingsRepository;
 
 public class SettingsFragment extends Fragment {
@@ -54,31 +46,18 @@ public class SettingsFragment extends Fragment {
 
         MainActivity.getInstance().disableFullScreen();
 
-        binding.clearBase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HomeRepository repository = new HomeRepository();
-                repository.deleteAll();
-                Toast.makeText(requireContext(),"Очищено",Toast.LENGTH_SHORT).show();
-            }
-        });
-
         binding.logoutAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sp = requireActivity()
-                        .getSharedPreferences(App.PREFERENCES_NAME, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("auth",false);
-                editor.apply();
-                back(false);
+                new AuthRepository().setAuthed(false);
+                navigateToAuth();
             }
         });
 
         binding.backFromSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                back(true);
+                back();
             }
         });
 
@@ -86,7 +65,7 @@ public class SettingsFragment extends Fragment {
                 new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                back(true);
+                back();
             }
         });
 
@@ -104,12 +83,24 @@ public class SettingsFragment extends Fragment {
                 //Nothing
             }
         });
+
+        binding.clearProtocolTempsAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ProtocolTempRepository().clearDb();
+                Toast.makeText(requireContext(),R.string.protocolTempsCleared, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void back(boolean update) {
+    private void back() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("updateList", update);
+        bundle.putBoolean("updateList", true);
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_settingsFragment_to_homeFragment, bundle);
+    }
+
+    private void navigateToAuth() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_settingsFragment_to_signInFragment);
     }
 }
