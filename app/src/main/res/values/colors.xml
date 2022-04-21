@@ -25,6 +25,8 @@
 
     <color name="icClock">#0091FF</color>
     <color name="icClear">#FF6F00</color>
+    <color name="uiGray">#e6e6e6</color>
+    <color name="uiLightGray">#f2f2f2</color>
 
     <!-- Text -->
     <color name="focused">#EDFDFF</color>

@@ -7,12 +7,12 @@
       android:pathData="M12.0623,12.0623m-11.7073,0a11.7073,11.7073 0,1 1,23.4146 0a11.7073,11.7073 0,1 1,-23.4146 0"
       android:strokeAlpha="1"
       android:strokeWidth="0.259683"
-      android:fillColor="#f2f2f2"
+      android:fillColor="@color/uiLightGray"
       android:strokeColor="@color/centerColor"/>
   <path
       android:pathData="M3.9091,18.5848a8.2426,2.8815 0,1 0,16.4851 0a8.2426,2.8815 0,1 0,-16.4851 0z"
-      android:fillColor="#e6e6e6" />
+      android:fillColor="@color/uiGray" />
   <path
       android:pathData="M12.241,10.0072m-4.6909,0a4.6909,4.6909 0,1 1,9.3818 0a4.6909,4.6909 0,1 1,-9.3818 0"
-      android:fillColor="#e6e6e6" />
+      android:fillColor="@color/uiGray" />
 </vector>

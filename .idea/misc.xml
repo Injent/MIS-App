@@ -4,20 +4,32 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/background_gradient.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/divider_layer.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/header_background.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_back_arrow.xml" value="0.37864583333333335" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_clock.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_download.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_email.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_pincode.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_profile.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_search.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ic_search_focused.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/list_divider.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/pincode_ic_selector.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/search.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/search_selector.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_home.xml" value="0.3364102564102564" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_patient_card.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_protocol.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_protocol_edit.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_protocol_temp.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_sign_in.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/patient_card_item.xml" value="0.20520833333333333" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/patient_list_item.xml" value="0.20520833333333333" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/protocol_temp_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/menu/navigation_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/menu/search.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/back_arrow.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/background_gradient.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls-main/app/src/main/res/drawable/button.xml" value="0.3828125" />

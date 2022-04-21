@@ -82,6 +82,9 @@
             app:destination="@id/patientCardFragment"
             app:enterAnim="@anim/right_in_slide"
             app:exitAnim="@anim/right_out_slide" />
+        <action
+            android:id="@+id/action_protocolFragment_to_protocolTempFragment"
+            app:destination="@id/protocolTempFragment" />
     </fragment>
     <fragment
         android:id="@+id/protocolTempFragment"
@@ -94,6 +97,9 @@
         <action
             android:id="@+id/action_protocolTempFragment_to_protocolEditFragment"
             app:destination="@id/protocolEditFragment" />
+        <action
+            android:id="@+id/action_protocolTempFragment_to_protocolFragment"
+            app:destination="@id/protocolFragment" />
     </fragment>
     <fragment
         android:id="@+id/protocolEditFragment"

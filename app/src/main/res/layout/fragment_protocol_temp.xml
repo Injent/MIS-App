@@ -36,15 +36,26 @@
                 android:layout_marginTop="@dimen/displayPadding"
                 android:layout_marginBottom="@dimen/displayPadding"
                 android:fontFamily="@font/clear_sans_bold"
+                android:maxLines="1"
                 android:text="@string/protocolTemps"
                 android:textColor="@color/darkGrayText"
                 android:textSize="@dimen/titleFont" />
         </LinearLayout>
 
         <SearchView
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/darkBackground" />
+            android:layout_marginStart="@dimen/displayPadding"
+            android:layout_marginTop="@dimen/displayPadding"
+            android:layout_marginEnd="@dimen/displayPadding"
+            android:background="@drawable/search"
+            android:clickable="true"
+            android:focusable="true"
+            android:queryBackground="@null"
+            android:queryHint="@string/search"
+            android:searchHintIcon="@drawable/ic_search_focused"
+            android:searchIcon="@drawable/ic_search" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/protocolRecycler"
@@ -52,8 +63,8 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/displayPadding"
             android:background="@null"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:overScrollMode="never">
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -142,7 +153,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/errorTextProtocols"

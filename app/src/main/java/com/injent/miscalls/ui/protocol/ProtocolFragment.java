@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -15,8 +16,11 @@ import androidx.navigation.Navigation;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.Patient;
+import com.injent.miscalls.data.templates.ProtocolTemp;
 import com.injent.miscalls.databinding.FragmentProtocolBinding;
 import com.injent.miscalls.domain.HomeRepository;
+import com.injent.miscalls.domain.ProtocolRepository;
+import com.injent.miscalls.domain.ProtocolTempRepository;
 
 public class ProtocolFragment extends Fragment {
 
@@ -36,9 +40,11 @@ public class ProtocolFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Patient patient = null;
+        int protocolTempId = -1;
 
         if (getArguments() != null) {
-            patient = new HomeRepository().getPatientById(getArguments().getInt("patientId",0));
+            patient = new HomeRepository().getPatientById(getArguments().getInt("patientId"));
+            protocolTempId = getArguments().getInt("protocolId", -1);
         }
 
         Patient finalPatient = patient;
@@ -58,11 +64,38 @@ public class ProtocolFragment extends Fragment {
                 back(finalPatient.getId());
             }
         });
+
+        binding.applyTemp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigateToProtocolSelect(finalPatient.getId());
+            }
+        });
+
+        if (protocolTempId > -1)
+            applyProtocolTemp(protocolTempId);
     }
 
     private void back(int patientId) {
         Bundle bundle = new Bundle();
         bundle.putInt("patientId", patientId);
         Navigation.findNavController(requireView()).navigate(R.id.action_protocolFragment_to_patientCardFragment, bundle);
+    }
+
+    private void navigateToProtocolSelect(int patientId) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("editMode", false);
+        bundle.putInt("patientId", patientId);
+        Navigation.findNavController(requireView()).navigate(R.id.action_protocolFragment_to_protocolTempFragment, bundle);
+    }
+
+    private void applyProtocolTemp(int protocolTempId) {
+        ProtocolTemp protocolTemp = new ProtocolTempRepository().getProtocolTempById(protocolTempId);
+
+        binding.treatmentField.setText(protocolTemp.getTreatment());
+        binding.conclusionField.setText(protocolTemp.getConclusion());
+        binding.resultOfInspectionField.setText(protocolTemp.getInspection());
+
+        Toast.makeText(requireContext(), getText(R.string.applyTemp) + " " + protocolTemp.getName(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,18 +1,26 @@
 package com.injent.miscalls.ui.protocoltemp;
 
 import android.accounts.NetworkErrorException;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -30,7 +38,11 @@ public class ProtocolTempFragment extends Fragment {
 
     private ProtocolTempViewModel viewModel;
     private FragmentProtocolTempBinding binding;
+    private ProtocolAdapter adapter;
     private int downloadProgress;
+    private NavController navController;
+    private boolean editMode;
+    private int patientId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,14 +54,23 @@ public class ProtocolTempFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ProtocolTempViewModel.class);
+        navController = Navigation.findNavController(requireView());
 
         MainActivity.getInstance().disableFullScreen();
 
+        if (getArguments() != null) {
+            editMode = getArguments().getBoolean("editMode");
+            patientId = getArguments().getInt("patientId");
+        }
+
         binding.protocolRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        ProtocolAdapter adapter = new ProtocolAdapter(new ProtocolAdapter.OnItemClickListener() {
+        adapter = new ProtocolAdapter(new ProtocolAdapter.OnItemClickListener() {
             @Override
             public void onClick(int protocolId) {
-                navigateToProtocolEdit(protocolId);
+                if (editMode)
+                    navigateToProtocolEdit(protocolId);
+                else
+                    navigateToProtocol(protocolId);
             }
         });
 
@@ -59,7 +80,7 @@ public class ProtocolTempFragment extends Fragment {
         viewModel.getProtocolsLiveDate().observe(this, new Observer<List<ProtocolTemp>>() {
             @Override
             public void onChanged(List<ProtocolTemp> protocolTemps) {
-                adapter.submitList(protocolTemps);
+                adapter.submitList(protocolTemps, true);
             }
         });
 
@@ -70,6 +91,8 @@ public class ProtocolTempFragment extends Fragment {
             }
         });
 
+        createSearchView();
+
         //Listeners
         binding.protocolDownloadAction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,12 +102,22 @@ public class ProtocolTempFragment extends Fragment {
             }
         });
 
-        binding.backFromProtocolTemps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateToHome();
-            }
-        });
+        if (editMode) {
+            binding.backFromProtocolTemps.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    navigateToHome();
+                }
+            });
+        } else {
+            binding.backFromProtocolTemps.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    navigateToProtocol();
+                }
+            });
+        }
+
 
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
@@ -115,13 +148,26 @@ public class ProtocolTempFragment extends Fragment {
     private void navigateToProtocolEdit(int protocolId) {
         Bundle bundle = new Bundle();
         bundle.putInt("protocolId", protocolId);
-        Navigation.findNavController(requireView()).navigate(R.id.action_protocolTempFragment_to_protocolEditFragment, bundle);
+        navController.navigate(R.id.action_protocolTempFragment_to_protocolEditFragment, bundle);
     }
 
     private void navigateToHome() {
         Bundle bundle = new Bundle();
         bundle.putBoolean("updateList", true);
-        Navigation.findNavController(requireView()).navigate(R.id.action_protocolTempFragment_to_homeFragment, bundle);
+        navController.navigate(R.id.action_protocolTempFragment_to_homeFragment, bundle);
+    }
+
+    private void navigateToProtocol(int protocolId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("protocolId", protocolId);
+        bundle.putInt("patientId", patientId);
+        navController.navigate(R.id.action_protocolTempFragment_to_protocolFragment, bundle);
+    }
+
+    private void navigateToProtocol() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("patientId", patientId);
+        navController.navigate(R.id.action_protocolTempFragment_to_protocolFragment, bundle);
     }
 
     private void showProtocolThings() {
@@ -148,11 +194,30 @@ public class ProtocolTempFragment extends Fragment {
     private void showError(CharSequence msg) {
         hideProtocolThings();
         hideProgress();
+        binding.protocolRecycler.setVisibility(View.GONE);
         binding.errorLayout.setVisibility(View.VISIBLE);
         binding.errorTextProtocols.setText(msg);
     }
 
-    private void hideError() {
-        binding.errorLayout.setVisibility(View.INVISIBLE);
+    @SuppressLint("ResourceAsColor")
+    private void createSearchView() {
+        int searchTextId = binding.search.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        EditText searchText = binding.search.findViewById(searchTextId);
+        searchText.setTypeface(ResourcesCompat.getFont(requireContext(),R.font.clear_sans_medium));
+        searchText.setTextColor(R.color.darkGrayText);
+        searchText.setTextSize(TypedValue.COMPLEX_UNIT_DIP,16);
+
+        binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
     }
 }

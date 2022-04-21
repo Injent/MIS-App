@@ -1,5 +1,6 @@
 package com.injent.miscalls.ui.settings;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class SettingsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View rootView = LayoutInflater.from(context).inflate(R.layout.mode_spinner_item,
+        @SuppressLint("ViewHolder") View rootView = LayoutInflater.from(context).inflate(R.layout.mode_spinner_item,
                 viewGroup, false);
 
         TextView textView = rootView.findViewById(R.id.modeText);

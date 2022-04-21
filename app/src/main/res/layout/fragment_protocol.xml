@@ -23,8 +23,9 @@
                 android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
                 android:padding="8dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_back_arrow"
-                android:foreground="?android:attr/selectableItemBackground"/>
+                android:background="?android:attr/actionBarItemBackground"/>
 
             <TextView
                 android:id="@+id/protocolTitle"

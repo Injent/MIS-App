@@ -64,11 +64,10 @@ public class SignInFragment extends Fragment {
         });
 
         //Observers
-        viewModel.getAuthorized().observe(this, new Observer<User>() {
+        viewModel.getAuthorized().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(User user) {
+            public void onChanged(Boolean authed) {
                 hideLoading();
-                App.getInstance().setUser(user);
                 successfulAuth();
             }
         });
@@ -124,7 +123,7 @@ public class SignInFragment extends Fragment {
 
     private void navigateToHome() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("updateList", true);
+        bundle.putBoolean("downloadDb", true);
         NavController navController = Navigation.findNavController(requireView());
         navController.navigate(R.id.action_signInFragment_to_homeFragment, bundle);
     }

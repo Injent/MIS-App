@@ -4,7 +4,7 @@
     <!-- Interface elements dp -->
     <dimen name="lineWidth">2dp</dimen>
     <dimen name="minDp">48dp</dimen>
-    <dimen name="cardCorners">2dp</dimen>
+    <dimen name="cardCorners">10dp</dimen>
     <dimen name="navBarCorners">20dp</dimen>
     <dimen name="cardElevation">3dp</dimen>
     <dimen name="cardPadding">8dp</dimen>

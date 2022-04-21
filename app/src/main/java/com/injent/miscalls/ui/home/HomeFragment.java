@@ -1,7 +1,6 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +17,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -26,30 +25,27 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.data.patientlist.Patient;
-import com.injent.miscalls.data.User;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
     public static WeakReference<HomeFragment> instance;
     private PatientAdapter patientAdapter;
-
-    public static HomeFragment getInstance() {
-        return instance.get();
-    }
 
     private FragmentHomeBinding binding;
     private NavController navController;
@@ -65,7 +61,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        instance = new WeakReference<>(HomeFragment.this);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         //
@@ -76,9 +71,7 @@ public class HomeFragment extends Fragment {
         binding.patientListSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setArguments(null);
-                showLoading();
-                homeViewModel.downloadPatientsDb();
+                downloadNewDb();
             }
         });
 
@@ -130,9 +123,9 @@ public class HomeFragment extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.settingsMenu: navigateToSettings();
                     break;
-                    case R.id.about: moveToSite(getText(R.string.aboutLink));
+                    case R.id.about: moveToSite(getText(R.string.aboutLink).toString());
                     break;
-                    case R.id.help: moveToSite(getText(R.string.helpLink));
+                    case R.id.help: moveToSite(getText(R.string.helpLink).toString());
                     break;
                     case R.id.protocolTempsMenu: navigateToProtocolTemp();
                     break;
@@ -149,8 +142,11 @@ public class HomeFragment extends Fragment {
         position.setText(user.getWorkingPosition());
 
         //Display list?
-        if (getArguments() != null && getArguments().containsKey("updateList")) {
-            displayList();
+        if (getArguments() != null) {
+            if (getArguments().containsKey("updateList"))
+                displayList();
+            else if (getArguments().containsKey("downloadDb"))
+                downloadNewDb();
         }
 
         //RecycleView Material Divider
@@ -215,12 +211,10 @@ public class HomeFragment extends Fragment {
         binding.errorText.setVisibility(View.INVISIBLE);
     }
 
-    public MaterialDividerItemDecoration getDivider() {
-        MaterialDividerItemDecoration divider
-                = new MaterialDividerItemDecoration(requireContext(), MaterialDividerItemDecoration.VERTICAL);
-        divider.setDividerInsetStartResource(requireContext(),R.dimen.dividerInset);
-        divider.setDividerInsetEndResource(requireContext(), R.dimen.dividerInset);
-        divider.setDividerColorResource(requireContext(), R.color.line);
+    public DividerItemDecoration getDivider() {
+        DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.divider_layer, requireContext().getTheme())));
+
         return divider;
     }
 
@@ -235,11 +229,19 @@ public class HomeFragment extends Fragment {
     }
 
     private void navigateToProtocolTemp() {
-        navController.navigate(R.id.action_homeFragment_to_protocolTempFragment);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("editMode", true);
+        navController.navigate(R.id.action_homeFragment_to_protocolTempFragment, bundle);
     }
 
-    private void moveToSite(CharSequence link) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse((String) link));
+    private void moveToSite(String link) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         requireActivity().startActivity(intent);
+    }
+
+    private void downloadNewDb() {
+        setArguments(null);
+        showLoading();
+        homeViewModel.downloadPatientsDb();
     }
 }

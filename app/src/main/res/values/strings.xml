@@ -58,6 +58,7 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="downloadProtocols">Скачать шаблоны протоколов</string>
+    <string name="search">Поиск</string>
 
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
@@ -72,6 +73,7 @@
     <string name="moveToSettings">Перейдите в настройки приложения для отключения</string>
     <string name="protocolTempSaved">Шаблон протокола сохранен</string>
     <string name="protocolTempsCleared">Все шаблоны протоколов сброшены</string>
+    <string name="appliedTemp">Применен шаблон</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>
