@@ -10,8 +10,9 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            MainActivity.getInstance().onForegroundService();
+        if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
+            Intent serviceIntent = new Intent(context, ForegroundServiceApp.class);
+            context.startForegroundService(serviceIntent);
         }
     }
 }

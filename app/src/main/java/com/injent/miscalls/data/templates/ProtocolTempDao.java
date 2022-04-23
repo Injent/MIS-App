@@ -11,7 +11,7 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface ProtocolDao {
+public interface ProtocolTempDao {
 
     @Query("SELECT * FROM ProtocolTemp")
     List<ProtocolTemp> getAll();

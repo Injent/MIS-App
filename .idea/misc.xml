@@ -132,9 +132,13 @@
         <entry key="app/src/main/res/drawable/switch_track.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3515625" />
         <entry key="app/src/main/res/layout/fragment_patient_card.xml" value="0.3515625" />
-        <entry key="app/src/main/res/layout/fragment_protocol.xml" value="0.46907574704656013" />
+        <entry key="app/src/main/res/layout/fragment_protocol.xml" value="0.3515625" />
         <entry key="app/src/main/res/layout/fragment_protocol_temp.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/fragment_saved_protocols.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.3515625" />
         <entry key="app/src/main/res/layout/patient_list_item.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/saved_protocols.xml" value="0.3515625" />
+        <entry key="app/src/main/res/menu/navigation_menu.xml" value="0.3515625" />
       </map>
     </option>
   </component>

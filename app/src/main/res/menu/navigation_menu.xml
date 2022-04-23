@@ -32,4 +32,8 @@
                 android:title="@string/helpMenu" />
         </menu>
     </item>
+
+    <item android:id="@+id/logoutMenu"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/logout" />
 </menu>

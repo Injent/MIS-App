@@ -1,7 +1,6 @@
 package com.injent.miscalls.ui.protocoltemp;
 
 import android.accounts.NetworkErrorException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -12,7 +11,7 @@ import com.injent.miscalls.API.HttpManager;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.QueryToken;
-import com.injent.miscalls.data.templates.ProtocolDatabase;
+import com.injent.miscalls.data.templates.ProtocolTempDatabase;
 import com.injent.miscalls.data.templates.ProtocolTemp;
 import com.injent.miscalls.domain.ProtocolTempFletcher;
 import com.injent.miscalls.domain.ProtocolTempRepository;
@@ -97,7 +96,7 @@ public class ProtocolTempViewModel extends ViewModel {
 
             @Override
             public void onFailure(@NonNull Call<List<ProtocolTemp>> call, @NonNull Throwable t) {
-                protocolError.postValue(new FailedDownloadDb(ProtocolDatabase.DB_NAME));
+                protocolError.postValue(new FailedDownloadDb(ProtocolTempDatabase.DB_NAME));
             }
         });
     }

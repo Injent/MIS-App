@@ -179,33 +179,6 @@
                     android:textSize="@dimen/hintFont" />
 
                 <TextView
-                    android:id="@+id/conclusionText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/conclusion"
-                    android:textColor="@color/darkGrayText"
-                    android:textSize="@dimen/mediumFont" />
-
-                <EditText
-                    android:id="@+id/conclusionField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text"
-                    android:ems="10"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:gravity="start|top"
-                    android:hint="@string/writeConclusion"
-                    android:inputType="textMultiLine"
-                    android:minHeight="@dimen/minDp"
-                    android:padding="@dimen/editTextPadding"
-                    android:textColor="@color/grayText"
-                    android:textColorHint="@color/lightGrayText"
-                    android:textSize="@dimen/hintFont" />
-
-                <TextView
                     android:id="@+id/treatmentText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -225,6 +198,33 @@
                     android:fontFamily="@font/clear_sans_medium"
                     android:gravity="start|top"
                     android:hint="@string/treatmentHint"
+                    android:inputType="textMultiLine"
+                    android:minHeight="@dimen/minDp"
+                    android:padding="@dimen/editTextPadding"
+                    android:textColor="@color/grayText"
+                    android:textColorHint="@color/lightGrayText"
+                    android:textSize="@dimen/hintFont" />
+
+                <TextView
+                    android:id="@+id/conclusionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/clear_sans_medium"
+                    android:text="@string/conclusion"
+                    android:textColor="@color/darkGrayText"
+                    android:textSize="@dimen/mediumFont" />
+
+                <EditText
+                    android:id="@+id/conclusionField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text"
+                    android:ems="10"
+                    android:fontFamily="@font/clear_sans_medium"
+                    android:gravity="start|top"
+                    android:hint="@string/writeConclusion"
                     android:inputType="textMultiLine"
                     android:minHeight="@dimen/minDp"
                     android:padding="@dimen/editTextPadding"

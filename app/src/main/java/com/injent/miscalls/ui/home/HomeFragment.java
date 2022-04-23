@@ -66,70 +66,50 @@ public class HomeFragment extends Fragment {
         MainActivity.getInstance().enableFullScreen();
 
         //Listeners
-        binding.patientListSection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                downloadNewDb();
-            }
-        });
+        binding.patientListSection.setOnClickListener(view12 -> downloadNewDb());
 
         ImageView moreButton = requireView().findViewById(R.id.moreButton);
-        moreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
+        moreButton.setOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
         //Observers
-        homeViewModel.getPatientListLiveData().observe(this, new Observer<List<Patient>>() {
-            @Override
-            public void onChanged(List<Patient> patients) {
-                patientAdapter.submitList(patients);
-                if (getArguments() == null) displayList();
-            }
+        homeViewModel.getPatientListLiveData().observe(this, patients -> {
+            patientAdapter.submitList(patients);
+            if (getArguments() == null) displayList();
         });
 
-        homeViewModel.getPatientListError().observe(this, new Observer<Throwable>() {
-            @Override
-            public void onChanged(Throwable throwable) {
-                hideLoading();
-                failed(throwable);
-            }
+        homeViewModel.getPatientListError().observe(this, throwable -> {
+            hideLoading();
+            failed(throwable);
         });
 
-        homeViewModel.getDbDateLiveData().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                displayDbDate();
-            }
-        });
+        homeViewModel.getDbDateLiveData().observe(this, s -> displayDbDate());
 
         //On back pressed action
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        MainActivity.getInstance().confirmExit();
-                    }
+            @Override
+            public void handleOnBackPressed() {
+                MainActivity.getInstance().confirmExit();
+            }
         });
 
         //Navigation view
         NavigationView navigationView = binding.navigationView;
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.settingsMenu: navigateToSettings();
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.settingsMenu:
+                    navigateToSettings();
                     break;
-                    case R.id.about: moveToSite(getText(R.string.aboutLink).toString());
+                case R.id.about:
+                    moveToSite(getText(R.string.aboutLink).toString());
                     break;
-                    case R.id.help: moveToSite(getText(R.string.helpLink).toString());
+                case R.id.help:
+                    moveToSite(getText(R.string.helpLink).toString());
                     break;
-                    case R.id.protocolTempsMenu: navigateToProtocolTemp();
+                case R.id.protocolTempsMenu:
+                    navigateToProtocolTemp();
                     break;
-                }
-                return false;
             }
+            return false;
         });
 
         //Display of full name and working position in Navigation view
@@ -153,12 +133,7 @@ public class HomeFragment extends Fragment {
 
         //RecycleView
         binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        patientAdapter = new PatientAdapter(new PatientAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int patientId) {
-                navigateToPatientCard(patientId);
-            }
-        });
+        patientAdapter = new PatientAdapter(this::navigateToPatientCard);
 
         binding.patientsRecycler.setAdapter(patientAdapter);
     }
@@ -175,12 +150,12 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void failed(Throwable t){
+    private void failed(Throwable t) {
         if (t instanceof FailedDownloadDb) {
-            Toast.makeText(requireContext(),R.string.unknownError,Toast.LENGTH_SHORT).show();
-        } else if (t instanceof NetworkErrorException){
+            Toast.makeText(requireContext(), R.string.unknownError, Toast.LENGTH_SHORT).show();
+        } else if (t instanceof NetworkErrorException) {
             displayList();
-            Toast.makeText(requireContext(),R.string.noInternetConnection, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.noInternetConnection, Toast.LENGTH_SHORT).show();
         } else if (t instanceof ListEmptyException) {
             showErrorMessage(getResources().getString(R.string.emptyDbError));
         }
@@ -218,7 +193,9 @@ public class HomeFragment extends Fragment {
     private void navigateToPatientCard(int patientId) {
         Bundle bundle = new Bundle();
         bundle.putInt("patientId", patientId);
-        navController.navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
+        if (navController.getCurrentDestination().getId() == R.id.homeFragment) {
+            navController.navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
+        }
     }
 
     private void navigateToSettings() {

@@ -7,9 +7,8 @@
     <string name="auth">Авторизация</string>
     <string name="settings">Настройки</string>
     <string name="protocol">Протокол</string>
-    <string name="protocolTemps">Шаблоны протоколов</string>
+    <string name="protocolTemps">Протоколы лечения</string>
     <string name="protocolEdit">Редактирование протокола</string>
-    <string name="medications">Медикаменты</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
@@ -23,11 +22,11 @@
     <string name="sortByNearest">Сортировать по\nместоположению</string>
     <string name="listOfPatients">Лист пациентов</string>
     <string name="updateList">Обновить список</string>
+    <string name="card">Карта</string>
 
     <!-- Menu -->
-    <string name="protocolMenu">Шаблоны протоколов</string>
+    <string name="protocolMenu">Протоколы лечения</string>
     <string name="savedProtocolsMenu">Сохраненные протоколы</string>
-    <string name="templates">Шаблоны протоколов</string>
     <string name="others">Разное</string>
     <string name="aboutMenu">О нас</string>
     <string name="helpMenu">Помощь</string>
@@ -53,15 +52,15 @@
     <string name="actionProtocol">Составить протокол</string>
     <string name="backToPatientCard">Назад</string>
     <string name="saveProtocol">Сохранить протокол</string>
-    <string name="saveAsPdf">Сохранить\nкак .pdf</string>
-    <string name="applyTemp">Применить\nшаблон</string>
+    <string name="saveAsPdf">Сохранить\nкак pdf</string>
+    <string name="applyTemp">Использовать\nпротокол</string>
     <string name="logout">Выйти из учетной записи</string>
     <string name="exit">Выход</string>
     <string name="editFile">Редактирование</string>
     <string name="saveFile">Сохранить файл?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="downloadProtocols">Скачать шаблоны протоколов</string>
+    <string name="downloadProtocols">Скачать протоколы лечения</string>
     <string name="search">Поиск</string>
     <string name="deleteProtocol">Удалить протокол %s?</string>
     <string name="cancel">Отмена</string>
@@ -79,9 +78,9 @@
     <string name="updated">Обновлен</string>
     <string name="receivingDataOn">Обновление данных включено</string>
     <string name="moveToSettings">Перейдите в настройки приложения для отключения</string>
-    <string name="protocolTempSaved">Шаблон протокола %s сохранен</string>
-    <string name="protocolTempsCleared">Все шаблоны протоколов сброшены</string>
-    <string name="appliedTemp">Применен шаблон</string>
+    <string name="protocolTempSaved">Протокол лечения %s сохранен</string>
+    <string name="protocolTempsCleared">Все протоколы сброшены сброшены</string>
+    <string name="appliedTemp">Применен протокол</string>
     <string name="protocolDeleted">Протокол %s удален</string>
 
     <!-- Field types -->

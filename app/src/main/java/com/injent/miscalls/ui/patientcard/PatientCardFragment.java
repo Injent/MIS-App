@@ -57,11 +57,18 @@ public class PatientCardFragment extends Fragment {
         binding.complaintField.setText(patient.getComplaints());
 
 
-        //Navigation
+        //Listeners
         binding.protocolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateToProtocol(patient.getId());
+            }
+        });
+
+        binding.backFromCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back();
             }
         });
 

@@ -1,11 +1,9 @@
 package com.injent.miscalls.domain;
 
-import android.util.Log;
-
 import com.injent.miscalls.API.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.patientlist.QueryToken;
-import com.injent.miscalls.data.templates.ProtocolDao;
+import com.injent.miscalls.data.templates.ProtocolTempDao;
 import com.injent.miscalls.data.templates.ProtocolTemp;
 
 import java.util.List;
@@ -19,11 +17,11 @@ import retrofit2.Call;
 
 public class ProtocolTempRepository {
 
-    private final ProtocolDao dao;
+    private final ProtocolTempDao dao;
     private final ExecutorService es;
 
     public ProtocolTempRepository() {
-        this.dao = App.getInstance().getProtocolDao();
+        this.dao = App.getInstance().getProtocolTempDao();
         this.es = Executors.newSingleThreadExecutor();
     }
 
@@ -35,7 +33,7 @@ public class ProtocolTempRepository {
         es.submit(new Runnable() {
             @Override
             public void run() {
-                App.getInstance().getProtocolDatabase().clearAllTables();
+                App.getInstance().getProtocolTempDatabase().clearAllTables();
             }
         });
     }
@@ -77,7 +75,7 @@ public class ProtocolTempRepository {
         Future<Boolean> booleanFuture = es.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() {
-                App.getInstance().getProtocolDatabase().clearAllTables();
+                App.getInstance().getProtocolTempDatabase().clearAllTables();
                 for (ProtocolTemp protocol : list) {
                     dao.insert(protocol);
                 }
@@ -96,8 +94,6 @@ public class ProtocolTempRepository {
         Future<List<ProtocolTemp>> listFuture = es.submit(new Callable<List<ProtocolTemp>>() {
             @Override
             public List<ProtocolTemp> call(){
-                for (ProtocolTemp p : dao.getAll()) {
-                }
                 return dao.getAll();
             }
         });

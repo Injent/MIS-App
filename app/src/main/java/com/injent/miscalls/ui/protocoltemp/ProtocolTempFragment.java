@@ -64,6 +64,9 @@ public class ProtocolTempFragment extends Fragment {
             patientId = getArguments().getInt("patientId");
         }
 
+        if (!editMode)
+            hideProtocolCreate();
+
         binding.protocolRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new ProtocolAdapter(new ProtocolAdapter.OnItemClickListener() {
             @Override
@@ -190,6 +193,11 @@ public class ProtocolTempFragment extends Fragment {
         binding.protocolRecycler.setVisibility(View.VISIBLE);
         binding.protocolTextThings.setVisibility(View.GONE);
         binding.protocolDownloadAction.setEnabled(false);
+    }
+
+    private void hideProtocolCreate() {
+        binding.addProtocolTemp.setVisibility(View.INVISIBLE);
+        binding.addProtocolTemp.setEnabled(false);
     }
 
     private void showProgress() {

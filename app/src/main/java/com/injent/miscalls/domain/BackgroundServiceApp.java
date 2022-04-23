@@ -18,13 +18,14 @@ public class BackgroundServiceApp extends Service {
                 while (true) {
                     Log.d("Background", "Service is running");
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }).start();
+
         return super.onStartCommand(intent, flags, startId);
     }
 

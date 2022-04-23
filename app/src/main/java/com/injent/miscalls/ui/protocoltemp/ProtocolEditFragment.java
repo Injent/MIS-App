@@ -180,7 +180,7 @@ public class ProtocolEditFragment extends Fragment {
     private String getProtocolName() {
         String fileName = binding.protocolName.getText().toString();
         if (fileName.isEmpty()) {
-            fileName = getString(R.string.noName) + " " + protocolTemp.getId();
+            fileName = getString(R.string.noName) + " " + protocolId;
         }
         return fileName;
     }
