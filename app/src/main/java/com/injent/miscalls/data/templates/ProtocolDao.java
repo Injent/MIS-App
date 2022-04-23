@@ -28,6 +28,6 @@ public interface ProtocolDao {
     @Update
     void update(ProtocolTemp protocol);
 
-    @Delete
-    void delete(ProtocolTemp protocol);
+    @Query("DELETE FROM ProtocolTemp WHERE id = :id")
+    void delete(int id);
 }

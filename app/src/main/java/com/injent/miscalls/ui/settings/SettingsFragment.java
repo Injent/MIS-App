@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
@@ -71,6 +72,7 @@ public class SettingsFragment extends Fragment {
 
         spinner = binding.spinner;
         spinner.setAdapter(repository.getAdapter(requireContext()));
+        spinner.setSelection(App.getInstance().getMode());
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

@@ -40,6 +40,15 @@ public class ProtocolTempRepository {
         });
     }
 
+    public void deleteProtocolTemp(int id) {
+        es.submit(new Runnable() {
+            @Override
+            public void run() {
+                dao.delete(id);
+            }
+        });
+    }
+
     public ProtocolTemp getProtocolTempById(int id) {
         Future<ProtocolTemp> protocolTempFuture = es.submit(new Callable<ProtocolTemp>() {
             @Override

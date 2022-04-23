@@ -24,10 +24,12 @@ public class ProtocolAdapter extends ListAdapter<ProtocolTemp, ProtocolAdapter.V
 
     private final OnItemClickListener listener;
     private List<ProtocolTemp> searchList;
+    private boolean editMode;
 
-    protected ProtocolAdapter(OnItemClickListener listener) {
+    protected ProtocolAdapter(OnItemClickListener listener, boolean editMode) {
         super(diffCallback);
         this.listener = listener;
+        this.editMode = editMode;
     }
 
     public void submitList(@Nullable List<ProtocolTemp> list, boolean searchList) {
@@ -58,7 +60,7 @@ public class ProtocolAdapter extends ListAdapter<ProtocolTemp, ProtocolAdapter.V
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setData(getItem(position));
+        holder.setData(getItem(position), editMode);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,9 +74,15 @@ public class ProtocolAdapter extends ListAdapter<ProtocolTemp, ProtocolAdapter.V
             this.listener = listener;
         }
 
-        public void setData(ProtocolTemp protocolTemp) {
+        public void setData(ProtocolTemp protocolTemp, boolean editMode) {
             binding.listProtocolName.setText(protocolTemp.getName());
             binding.listProtocolDesc.setText(protocolTemp.getDescription());
+
+            if (editMode) {
+                binding.modeImage.setImageResource(R.drawable.ic_edit);
+            } else {
+                binding.modeImage.setImageResource(R.drawable.ic_navigate_right);
+            }
 
             binding.protocolTempCard.setOnClickListener(new View.OnClickListener() {
                 @Override

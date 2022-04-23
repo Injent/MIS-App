@@ -10,7 +10,7 @@
         android:background="@color/darkBackground"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background"
@@ -22,16 +22,19 @@
                 android:id="@+id/backFromProtocolTemps"
                 android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
+                android:layout_marginStart="4dp"
+                android:background="?android:attr/actionBarItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="8dp"
                 android:src="@drawable/ic_back_arrow"
-                android:focusable="true"
-                android:clickable="true"
-                android:layout_marginStart="4dp"
-                android:background="?android:attr/actionBarItemBackground"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/titleProtocolTemp"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/displayPadding"
                 android:layout_marginBottom="@dimen/displayPadding"
@@ -39,8 +42,25 @@
                 android:maxLines="1"
                 android:text="@string/protocolTemps"
                 android:textColor="@color/darkGrayText"
-                android:textSize="@dimen/titleFont" />
-        </LinearLayout>
+                android:textSize="@dimen/titleFont"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/backFromProtocolTemps"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/addProtocolTemp"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:layout_marginEnd="4dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="?android:attr/actionBarItemBackground"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <SearchView
             android:id="@+id/search"

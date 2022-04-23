@@ -9,6 +9,7 @@
     <string name="protocol">Протокол</string>
     <string name="protocolTemps">Шаблоны протоколов</string>
     <string name="protocolEdit">Редактирование протокола</string>
+    <string name="medications">Медикаменты</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
@@ -42,6 +43,9 @@
     <string name="protocolsDownloadHint"> Может потребоваться много места на устройстве</string>
     <string name="protocolsDownloadDesc">Скачайте доступные шаблоны протоколов и используйте их при
         заполнении клинического протокола.</string>
+    <string name="protocolName">Название протокола</string>
+    <string name="protocolDesc">Описание протокола</string>
+    <string name="dataWillBeDeletedForever">Данные навсегда удалятся</string>
 
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
@@ -53,27 +57,32 @@
     <string name="applyTemp">Применить\nшаблон</string>
     <string name="logout">Выйти из учетной записи</string>
     <string name="exit">Выход</string>
-    <string name="exitFromEditing">Выйти из редактора протокола?</string>
-    <string name="dataWontSave">Данные не сохранятся!</string>
+    <string name="editFile">Редактирование</string>
+    <string name="saveFile">Сохранить файл?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="downloadProtocols">Скачать шаблоны протоколов</string>
     <string name="search">Поиск</string>
+    <string name="deleteProtocol">Удалить протокол %s?</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
 
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
     <string name="updateWhen">Обновлять</string>
     <string name="listNotUpdated">Лист не обновлялся</string>
     <string name="downloading">Загрузка…</string>
+    <string name="noName">Безымянный</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>
     <string name="updated">Обновлен</string>
     <string name="receivingDataOn">Обновление данных включено</string>
     <string name="moveToSettings">Перейдите в настройки приложения для отключения</string>
-    <string name="protocolTempSaved">Шаблон протокола сохранен</string>
+    <string name="protocolTempSaved">Шаблон протокола %s сохранен</string>
     <string name="protocolTempsCleared">Все шаблоны протоколов сброшены</string>
     <string name="appliedTemp">Применен шаблон</string>
+    <string name="protocolDeleted">Протокол %s удален</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>

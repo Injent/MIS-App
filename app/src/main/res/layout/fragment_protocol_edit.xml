@@ -48,32 +48,60 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/displayPadding"
             android:background="@color/darkBackground"
-            android:padding="@dimen/displayPadding">
+            android:paddingStart="@dimen/displayPadding"
+            android:paddingEnd="@dimen/displayPadding">
 
-            <TextView
+            <EditText
                 android:id="@+id/protocolName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/minDp"
+                android:layout_marginEnd="@dimen/displayPadding"
+                android:background="@null"
+                android:drawableStart="@drawable/ic_edit"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/lowGray"
                 android:fontFamily="@font/clear_sans_bold"
-                android:gravity="center_horizontal"
-                android:text="Protocol Name"
+                android:gravity="start|center_vertical"
+                android:hint="@string/protocolName"
                 android:textColor="@color/grayText"
+                android:textColorHighlight="@color/highlight"
+                android:textColorHint="@color/lightGrayText"
                 android:textSize="@dimen/mediumFont"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/protocolDelete"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <EditText
                 android:id="@+id/protocolDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/minDp"
+                android:background="@null"
+                android:drawableStart="@drawable/ic_edit"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/lightGrayText"
                 android:fontFamily="@font/clear_sans_medium"
-                android:gravity="center_horizontal"
-                android:text="Description"
+                android:gravity="start|center_vertical"
+                android:hint="@string/protocolDesc"
                 android:textColor="@color/lowGray"
+                android:textColorHighlight="@color/highlight"
+                android:textColorHint="@color/lightGrayText"
+                android:textSize="@dimen/hintFont"
                 app:layout_constraintEnd_toEndOf="@+id/protocolName"
                 app:layout_constraintStart_toStartOf="@+id/protocolName"
                 app:layout_constraintTop_toBottomOf="@+id/protocolName" />
+
+            <ImageView
+                android:id="@+id/protocolDelete"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:padding="8dp"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="?android:attr/actionBarItemBackground"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ScrollView

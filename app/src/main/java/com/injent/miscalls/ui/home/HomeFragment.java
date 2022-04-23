@@ -44,7 +44,6 @@ import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
-    public static WeakReference<HomeFragment> instance;
     private PatientAdapter patientAdapter;
 
     private FragmentHomeBinding binding;
@@ -62,10 +61,9 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
-        //
-        MainActivity.getInstance().enableFullScreen();
         navController = Navigation.findNavController(requireView());
+
+        MainActivity.getInstance().enableFullScreen();
 
         //Listeners
         binding.patientListSection.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +164,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void displayList() {
-        Log.d("HomeFragment","LIST UPDATED");
         hideLoading();
         List<Patient> patients = homeViewModel.getPatientList();
 

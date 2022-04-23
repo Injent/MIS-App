@@ -10,9 +10,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.API.HttpManager;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
+import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.QueryToken;
 import com.injent.miscalls.data.templates.ProtocolDatabase;
 import com.injent.miscalls.data.templates.ProtocolTemp;
+import com.injent.miscalls.domain.ProtocolTempFletcher;
 import com.injent.miscalls.domain.ProtocolTempRepository;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class ProtocolTempViewModel extends ViewModel {
     private MutableLiveData<List<ProtocolTemp>> protocols = new MutableLiveData<>();
     private MutableLiveData<Throwable> protocolError = new MutableLiveData<>();
     private MutableLiveData<ProtocolTemp> selectedProtocol = new MutableLiveData<>();
+    private MutableLiveData<ProtocolTemp> appliedProtocol = new MutableLiveData<>();
 
     public LiveData<ProtocolTemp> getSelectedProtocolLiveData() {
         return selectedProtocol;
@@ -40,6 +43,14 @@ public class ProtocolTempViewModel extends ViewModel {
 
     public void saveSelectedProtocol(ProtocolTemp protocolTemp) {
         repository.insertProtocol(protocolTemp);
+    }
+
+    public void applyProtocolTemp(ProtocolTemp protocolTemp, Patient patient) {
+        appliedProtocol.setValue(new ProtocolTempFletcher().fletch(protocolTemp, patient));
+    }
+
+    public LiveData<ProtocolTemp> getAppliedProtocolLiveData() {
+        return appliedProtocol;
     }
 
     public LiveData<List<ProtocolTemp>> getProtocolsLiveDate() {

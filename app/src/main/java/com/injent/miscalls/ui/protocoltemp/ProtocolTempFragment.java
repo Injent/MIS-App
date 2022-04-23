@@ -43,6 +43,7 @@ public class ProtocolTempFragment extends Fragment {
     private NavController navController;
     private boolean editMode;
     private int patientId;
+    private int protocolCount;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,11 +69,11 @@ public class ProtocolTempFragment extends Fragment {
             @Override
             public void onClick(int protocolId) {
                 if (editMode)
-                    navigateToProtocolEdit(protocolId);
+                    navigateToProtocolEdit(protocolId, false);
                 else
                     navigateToProtocol(protocolId);
             }
-        });
+        }, editMode);
 
         binding.protocolRecycler.setAdapter(adapter);
 
@@ -102,6 +103,13 @@ public class ProtocolTempFragment extends Fragment {
             }
         });
 
+        binding.addProtocolTemp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigateToProtocolEdit(protocolCount, true);
+            }
+        });
+
         if (editMode) {
             binding.backFromProtocolTemps.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,9 +134,9 @@ public class ProtocolTempFragment extends Fragment {
             }
         });
 
-        int size = viewModel.getProtocolTemps().size();
+        protocolCount = viewModel.getProtocolTemps().size();
 
-        if (size == 0) {
+        if (protocolCount == 0) {
             viewModel.setProtocolError(new ListEmptyException());
         }
     }
@@ -145,9 +153,10 @@ public class ProtocolTempFragment extends Fragment {
         }
     }
 
-    private void navigateToProtocolEdit(int protocolId) {
+    private void navigateToProtocolEdit(int protocolId, boolean newProtocol) {
         Bundle bundle = new Bundle();
         bundle.putInt("protocolId", protocolId);
+        bundle.putBoolean("newProtocol", newProtocol);
         navController.navigate(R.id.action_protocolTempFragment_to_protocolEditFragment, bundle);
     }
 

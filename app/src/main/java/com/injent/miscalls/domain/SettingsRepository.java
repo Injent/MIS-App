@@ -9,7 +9,12 @@ import com.injent.miscalls.ui.settings.SettingsAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class SettingsRepository {
 
@@ -22,15 +27,7 @@ public class SettingsRepository {
     }
 
     public SettingsAdapter getAdapter(Context context) {
-        int currentMode = App.getInstance().getMode();
-        String[] raw = context.getResources().getStringArray(R.array.modes);
-        List<String> sorted = new ArrayList<>();
-        sorted.add(raw[currentMode]);
-        for (String s : raw) {
-            if (!s.equals(sorted.get(0))) {
-                sorted.add(s);
-            }
-        }
-        return new SettingsAdapter(context, sorted);
+        List<String> modeList = Arrays.asList(context.getResources().getStringArray(R.array.modes));
+        return new SettingsAdapter(context, modeList);
     }
 }

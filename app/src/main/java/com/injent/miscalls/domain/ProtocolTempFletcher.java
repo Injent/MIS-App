@@ -11,48 +11,56 @@ import java.util.concurrent.Future;
 
 public class ProtocolTempFletcher {
 
-    public static final String[] patientInfo = new String[]{
-            "#имя",
-            "#фамилия",
-            "#отчество"
+    private final String[] key = new String[]{
+            "@имя",
+            "@фамилия",
+            "@отчество",
+            "@датарождения",
+            "@категория",
+            "@адрес"
     };
-
+    
     public ProtocolTemp fletch(ProtocolTemp temp, Patient patient) {
-        String treatment = temp.getTreatment();
-        String conclusion = temp.getConclusion();
-        String inspection = temp.getInspection();
         ExecutorService es = Executors.newSingleThreadExecutor();
-        Future<ProtocolTemp> tempFuture = es.submit(new Callable<ProtocolTemp>() {
+        Callable<ProtocolTemp> callable = new Callable<ProtocolTemp>() {
             @Override
             public ProtocolTemp call() {
-                conclusion.replaceAll(patientInfo[0], patient.getFirstname());
-                conclusion.replaceAll(patientInfo[1], patient.getLastname());
-                conclusion.replaceAll(patientInfo[2], patient.getMiddleName());
 
-                treatment.replaceAll(patientInfo[0], patient.getFirstname());
-                treatment.replaceAll(patientInfo[1], patient.getLastname());
-                treatment.replaceAll(patientInfo[2], patient.getMiddleName());
-
-                inspection.replaceAll(patientInfo[0], patient.getFirstname());
-                inspection.replaceAll(patientInfo[1], patient.getLastname());
-                inspection.replaceAll(patientInfo[2], patient.getMiddleName());
+                String[] values = new String[]{temp.getInspection(), temp.getTreatment(), temp.getConclusion()};
+                for (int i = 0; i < values.length; i++) {
+                    String replace = values[i]
+                            .replace(key[0], patient.getFirstname())
+                            .replace(key[1], patient.getLastname())
+                            .replace(key[2], patient.getMiddleName())
+                            .replace(key[3], patient.getBornDate())
+                            .replace(key[4], patient.getBenefitCategoryCode()
+                            .replace(key[5], patient.getRegAddress())
+                            );
+                    values[i] = replace;
+                }
 
                 ProtocolTemp protocolTemp = new ProtocolTemp();
-                protocolTemp.setTreatment(treatment);
-                protocolTemp.setConclusion(conclusion);
-                protocolTemp.setInspection(inspection);
+                protocolTemp.setId(temp.getId());
+                protocolTemp.setDescription(temp.getDescription());
+                protocolTemp.setName(temp.getName());
+                protocolTemp.setInspection(values[0]);
+                protocolTemp.setTreatment(values[1]);
+                protocolTemp.setConclusion(values[2]);
 
                 return protocolTemp;
             }
-        });
+        };
+        Future<ProtocolTemp> tempFuture = es.submit(callable);
 
-        if (tempFuture.isDone()) {
-            try {
-                return tempFuture.get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            return tempFuture.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
         }
         return temp;
+    }
+
+    public void fletchPdfFile() {
+
     }
 }

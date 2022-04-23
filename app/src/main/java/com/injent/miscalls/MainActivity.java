@@ -1,21 +1,11 @@
 package com.injent.miscalls;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.media.Image;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import com.google.android.material.navigation.NavigationView;
-import com.injent.miscalls.ui.home.HomeFragment;
 
 import java.lang.ref.WeakReference;
 
