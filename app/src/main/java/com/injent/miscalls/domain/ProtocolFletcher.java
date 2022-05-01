@@ -2,6 +2,7 @@ package com.injent.miscalls.domain;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.print.PDFPrint;
 
@@ -14,6 +15,9 @@ import com.tejpratapsingh.pdfcreator.utils.FileManager;
 import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -22,7 +26,21 @@ import java.util.concurrent.Future;
 
 public class ProtocolFletcher {
 
-    private ExecutorService es;
+    public static final String fileName = "pdf_template.html";
+
+    public ProtocolFletcher(Context context, Patient patient, User user) {
+        this.context = context;
+        this.patient = patient;
+        this.user = user;
+    }
+
+    public ProtocolFletcher(Patient patient) {
+        this.patient = patient;
+    }
+
+    Context context;
+    Patient patient;
+    User user;
 
     private final String[] key = new String[]{
             "@имя",
@@ -33,10 +51,9 @@ public class ProtocolFletcher {
             "@адрес"
     };
     
-    public ProtocolTemp fletchProtocol(ProtocolTemp temp, Patient patient) {
-        es = Executors.newSingleThreadExecutor();
+    public ProtocolTemp fletchProtocol(ProtocolTemp temp) {
+        ExecutorService es = Executors.newSingleThreadExecutor();
         Callable<ProtocolTemp> callable = () -> {
-
             String[] values = new String[]{temp.getInspection(), temp.getTreatment(), temp.getConclusion()};
             for (int i = 0; i < values.length; i++) {
                 String replace = values[i]
@@ -61,7 +78,6 @@ public class ProtocolFletcher {
             return protocolTemp;
         };
         Future<ProtocolTemp> tempFuture = es.submit(callable);
-
         try {
             return tempFuture.get();
         } catch (ExecutionException | InterruptedException e) {
@@ -71,9 +87,19 @@ public class ProtocolFletcher {
         return temp;
     }
 
-    public void fletchPdfFile(Context context, Protocol protocol, User user, Patient patient) {
-        String html = getProtocolTemp()
+    public void fletchPdfFile(Protocol protocol) throws IOException {
+
+        AssetManager assetManager = context.getAssets();
+        InputStream inputStream = assetManager.open(fileName);
+        Scanner scanner = new Scanner(inputStream);
+        StringBuilder stringBuilder = new StringBuilder();
+        while (scanner.hasNextLine()){
+            stringBuilder.append(scanner.nextLine());
+        }
+
+        String html = stringBuilder.toString()
                 .replace("$docfullname", user.getFullName())
+                .replace("$workingposition", user.getWorkingPosition())
                 .replace("$patientfullname", patient.getFullName())
                 .replace("$inspection",protocol.getInspection())
                 .replace("$treatment",protocol.getTreatment()
@@ -97,18 +123,5 @@ public class ProtocolFletcher {
                 e.printStackTrace();
             }
         });
-    }
-
-    public String getProtocolTemp() {
-        return " <!DOCTYPE html>\n" +
-                "<html>\n" +
-                "<body>\n" +
-                "\n" +
-                "<h1>РУССКИЙ</h1>\n" +
-                "<p>My first paragraph.</p>\n" +
-                " <a href='https://www.example.com'>This is a link</a>" +
-                "\n" +
-                "</body>\n" +
-                "</html> ";
     }
 }

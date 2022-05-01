@@ -108,4 +108,9 @@
         android:name="com.injent.miscalls.ui.savedprotocols.SavedProtocolsFragment"
         android:label="fragment_saved_protocols"
         tools:layout="@layout/fragment_saved_protocols" />
+    <fragment
+        android:id="@+id/saveProtocolEditFragment"
+        android:name="com.injent.miscalls.ui.savedprotocols.SaveProtocolEditFragment"
+        android:label="save_protocol_edit_fragment"
+        tools:layout="@layout/save_protocol_edit_fragment" />
 </navigation>

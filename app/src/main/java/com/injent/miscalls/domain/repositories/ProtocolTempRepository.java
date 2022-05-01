@@ -1,7 +1,7 @@
 package com.injent.miscalls.domain.repositories;
 
 import com.injent.miscalls.App;
-import com.injent.miscalls.api.HttpManager;
+import com.injent.miscalls.data.HttpManager;
 import com.injent.miscalls.data.patientlist.QueryToken;
 import com.injent.miscalls.data.templates.ProtocolTemp;
 import com.injent.miscalls.data.templates.ProtocolTempDao;

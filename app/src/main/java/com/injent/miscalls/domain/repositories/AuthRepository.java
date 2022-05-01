@@ -2,7 +2,7 @@ package com.injent.miscalls.domain.repositories;
 
 import android.content.SharedPreferences;
 
-import com.injent.miscalls.api.HttpManager;
+import com.injent.miscalls.data.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.AuthModelOut;
 import com.injent.miscalls.data.User;

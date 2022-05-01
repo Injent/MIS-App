@@ -12,4 +12,6 @@ public class Keys {
     public static final String UPDATE_LIST = "updateList";
     public static final String DOWNLOAD_DB = "downloadDb";
     public static final String NEW_PROTOCOL = "newProtocol";
+    public static final String DB_DATE = "dbDate";
+    public static final String MODE_SAVED_PROTOCOL_EDIT = "savedProtocolEdit";
 }

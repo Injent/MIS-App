@@ -1,4 +1,4 @@
-package com.injent.miscalls.api;
+package com.injent.miscalls.data;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.injent.miscalls.App;
+import com.injent.miscalls.api.MisAPI;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

@@ -42,8 +42,8 @@ public class ProtocolEditFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProtocolTempViewModel.class);
 
         if (getArguments() != null) {
-            newProtocol = getArguments().getBoolean(Keys.NEW_PROTOCOL);
             protocolId = getArguments().getInt(Keys.PROTOCOL_ID);
+            newProtocol = getArguments().getBoolean(Keys.NEW_PROTOCOL);
             if (newProtocol)
                 protocolTemp = new ProtocolTemp();
             else
@@ -72,7 +72,7 @@ public class ProtocolEditFragment extends Fragment {
         });
 
         //Observers
-        viewModel.getSelectedProtocolLiveData().observe(this, protocolTemp0 -> {
+        viewModel.getSelectedProtocolLiveData().observe(getViewLifecycleOwner(), protocolTemp0 -> {
             protocolTemp = protocolTemp0;
             loadData();
         });

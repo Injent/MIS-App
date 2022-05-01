@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.api.HttpManager;
+import com.injent.miscalls.data.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.domain.repositories.AuthRepository;

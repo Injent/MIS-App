@@ -111,4 +111,10 @@ public class SignInFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireView());
         navController.navigate(R.id.action_signInFragment_to_homeFragment, bundle);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

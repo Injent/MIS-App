@@ -13,13 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.Keys;
 import com.injent.miscalls.databinding.FragmentSavedProtocolsBinding;
 import com.injent.miscalls.ui.Section;
 import com.injent.miscalls.ui.SectionAdapter;
@@ -31,7 +31,6 @@ import java.util.Objects;
 public class SavedProtocolsFragment extends Fragment {
 
     private SavedProtocolAdapter protocolAdapter;
-    private SectionAdapter sectionAdapter;
     private SavedProtocolsViewModel viewModel;
     private FragmentSavedProtocolsBinding binding;
     private NavController navController;
@@ -52,7 +51,7 @@ public class SavedProtocolsFragment extends Fragment {
 
 
         //Observers
-        viewModel.getProtocolsLiveData().observe(this, protocols -> protocolAdapter.submitList(protocols));
+        viewModel.getProtocolsLiveData().observe(getViewLifecycleOwner(), protocols -> protocolAdapter.submitList(protocols));
 
         //RecyclerView
         setupProtocolRecyclerView();
@@ -82,7 +81,7 @@ public class SavedProtocolsFragment extends Fragment {
     }
 
     private void setupSectionRecyclerView() {
-        sectionAdapter = new SectionAdapter(type -> {
+        SectionAdapter sectionAdapter = new SectionAdapter(type -> {
 
         });
 
@@ -92,7 +91,7 @@ public class SavedProtocolsFragment extends Fragment {
 
         List<Section> sectionList = new ArrayList<>();
         Section section = new Section();
-        section.setSectionName("Отправить все");
+        section.setSectionName(getString(R.string.sendAll));
         section.setSectionType(Section.Type.SUBMIT_ALL);
         sectionList.add(section);
         sectionAdapter.submitList(sectionList);
@@ -101,14 +100,14 @@ public class SavedProtocolsFragment extends Fragment {
     private void navigateToHome() {
         if (notMatchingDestination()) return;
         Bundle bundle = new Bundle();
-        bundle.putBoolean("updateList", true);
+        bundle.putBoolean(Keys.UPDATE_LIST, true);
         navController.navigate(R.id.homeFragment, bundle);
     }
 
     private void navigateToProtocolEditing(int protocolId) {
         if (notMatchingDestination()) return;
         Bundle bundle = new Bundle();
-        bundle.putInt("protocolId", protocolId);
+        bundle.putInt(Keys.PROTOCOL_ID, protocolId);
         navController.navigate(R.id.protocolEditFragment, bundle);
     }
 

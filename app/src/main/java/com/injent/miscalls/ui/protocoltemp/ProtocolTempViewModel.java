@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.api.HttpManager;
+import com.injent.miscalls.data.HttpManager;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.QueryToken;
@@ -49,7 +49,7 @@ public class ProtocolTempViewModel extends ViewModel {
     }
 
     public void applyProtocolTemp(ProtocolTemp protocolTemp, Patient patient) {
-        appliedProtocol.setValue(new ProtocolFletcher().fletchProtocol(protocolTemp, patient));
+        appliedProtocol.setValue(new ProtocolFletcher(patient).fletchProtocol(protocolTemp));
     }
 
     public LiveData<ProtocolTemp> getAppliedProtocolLiveData() {

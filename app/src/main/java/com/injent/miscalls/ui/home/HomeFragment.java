@@ -28,13 +28,13 @@ import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.Keys;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 import com.injent.miscalls.domain.repositories.AuthRepository;
-import com.injent.miscalls.data.Keys;
 
 import java.util.List;
 import java.util.Objects;
@@ -69,20 +69,20 @@ public class HomeFragment extends Fragment {
         binding.moreButton.setOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
         //Observers
-        homeViewModel.getPatientListLiveData().observe(this, patients -> {
+        homeViewModel.getPatientListLiveData().observe(getViewLifecycleOwner(), patients -> {
             adapter.submitList(patients);
             if (getArguments() == null) displayList();
         });
 
-        homeViewModel.getPatientListError().observe(this, throwable -> {
+        homeViewModel.getPatientListError().observe(getViewLifecycleOwner(), throwable -> {
             hideLoading();
             failed(throwable);
         });
 
-        homeViewModel.getDbDateLiveData().observe(this, date -> displayDbDate());
+        homeViewModel.getDbDateLiveData().observe(getViewLifecycleOwner(), date -> displayDbDate());
 
         //On back pressed action
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 MainActivity.getInstance().confirmExit();
@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment {
         hideLoading();
         List<Patient> patients = homeViewModel.getPatientList();
 
-        if (patients.isEmpty()) {
+        if (patients == null || patients.isEmpty()) {
             failed(new ListEmptyException());
         } else {
             displayDbDate();
@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment {
             return false;
         });
 
-        User user = App.getInstance().getUser();
+        User user = App.getUser();
         TextView fullName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
         fullName.setText(user.getFullName());
         TextView position = navigationView.getHeaderView(0).findViewById(R.id.proffesion);
@@ -241,12 +241,20 @@ public class HomeFragment extends Fragment {
 
         binding.patientsRecycler.setAdapter(adapter);
 
-        //Display list?
+        //Display list
         if (getArguments() == null) return;
 
-        if (getArguments().containsKey(Keys.UPDATE_LIST))
+        if (getArguments().containsKey(Keys.UPDATE_LIST)) {
             displayList();
+        }
+
         else if (getArguments().containsKey(Keys.DOWNLOAD_DB))
             downloadNewDb();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

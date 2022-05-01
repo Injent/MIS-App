@@ -23,6 +23,7 @@
     <string name="listOfPatients">Лист пациентов</string>
     <string name="updateList">Обновить список</string>
     <string name="card">Карта</string>
+    <string name="sendAll">Отправить все</string>
 
     <!-- Menu -->
     <string name="protocolMenu">Протоколы лечения</string>
@@ -86,6 +87,8 @@
     <string name="textCopied">Текст скопирован</string>
     <string name="undoDeleting">Отменить</string>
     <string name="exitFromEditing">Выйти из редактирования?</string>
+    <string name="pdfGeneration">Генерация PDF документа...</string>
+    <string name="pdfGenerationFailed">Ошибка генерации PDF документа</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>

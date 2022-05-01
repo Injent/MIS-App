@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.protocol;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +19,18 @@ import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.Keys;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.savedprotocols.Protocol;
 import com.injent.miscalls.data.templates.ProtocolTemp;
 import com.injent.miscalls.databinding.FragmentProtocolBinding;
-import com.injent.miscalls.domain.repositories.HomeRepository;
-import com.injent.miscalls.data.Keys;
 import com.injent.miscalls.domain.ProtocolFletcher;
+import com.injent.miscalls.domain.repositories.HomeRepository;
 import com.injent.miscalls.domain.repositories.ProtocolRepository;
 import com.injent.miscalls.domain.repositories.ProtocolTempRepository;
 import com.injent.miscalls.ui.protocoltemp.ProtocolTempViewModel;
+
+import java.io.IOException;
 
 public class ProtocolFragment extends Fragment {
 
@@ -66,7 +67,7 @@ public class ProtocolFragment extends Fragment {
 
         binding.fullnameText.setText(patient.getShortInfo() + " " + patient.getMiddleName());
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
                         confirmAction();
@@ -83,10 +84,7 @@ public class ProtocolFragment extends Fragment {
         binding.saveAsPdfCard.setOnClickListener(view3 -> generatePdf());
 
         //Observers
-        protocolTempViewModel.getAppliedProtocolLiveData().observe(this, protocolTemp -> {
-            applyProtocolTemp(protocolTemp);
-            Log.e("A","AX");
-        });
+        protocolTempViewModel.getAppliedProtocolLiveData().observe(getViewLifecycleOwner(), this::applyProtocolTemp);
 
         if (protocolTempId > -1) {
             protocolTempViewModel.applyProtocolTemp(new ProtocolTempRepository().getProtocolTempById(protocolTempId), patient);
@@ -136,8 +134,16 @@ public class ProtocolFragment extends Fragment {
             protocol.setId(duplicateProtocol.getId());
         }
 
+        patient.setInspected(true);
+        new HomeRepository().insertPatient(patient);
         repository.insertProtocol(protocol);
-        back();
+        backToHome();
+    }
+
+    private void backToHome() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Keys.UPDATE_LIST, true);
+        navController.navigate(R.id.homeFragment, bundle);
     }
 
     private Protocol protocolFieldsToProtocol() {
@@ -154,7 +160,13 @@ public class ProtocolFragment extends Fragment {
     }
 
     private void generatePdf() {
-        new ProtocolFletcher().fletchPdfFile(requireContext(), protocolFieldsToProtocol(), App.getUser(), patient);
-        Toast.makeText(requireContext(),"Генерация",Toast.LENGTH_SHORT).show();
+        try {
+            new ProtocolFletcher(requireContext(),patient,App.getUser()).fletchPdfFile(protocolFieldsToProtocol());
+            Toast.makeText(requireContext(),getText(R.string.pdfGeneration),Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Toast.makeText(requireContext(),getText(R.string.pdfGenerationFailed),Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
     }
 }

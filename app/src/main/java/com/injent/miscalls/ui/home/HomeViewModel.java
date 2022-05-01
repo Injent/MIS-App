@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.api.HttpManager;
+import com.injent.miscalls.data.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.Patient;
@@ -54,10 +54,6 @@ public class HomeViewModel extends ViewModel {
         return patientList;
     }
 
-    public void setList(List<Patient> list) {
-        patientList.setValue(list);
-    }
-
     public LiveData<Throwable> getPatientListError(){
         return patientListError;
     }
@@ -74,7 +70,7 @@ public class HomeViewModel extends ViewModel {
             patientListError.postValue(new NetworkErrorException());
             return;
         }
-        homeRepository.getPatientList(App.getInstance().getUser().getToken()).enqueue(new Callback<>() {
+        homeRepository.getPatientList(App.getUser().getToken()).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
                 if (response.isSuccessful()) {
@@ -98,7 +94,7 @@ public class HomeViewModel extends ViewModel {
         if (!HttpManager.isInternetAvailable()) {
             return;
         }
-        homeRepository.getPatientList(App.getInstance().getUser().getToken()).enqueue(new Callback<>() {
+        homeRepository.getPatientList(App.getUser().getToken()).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
                 if (response.isSuccessful()) {

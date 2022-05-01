@@ -49,18 +49,16 @@ public class PatientCardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(PatientCardViewModel.class);
-        binding.complaintField.setMovementMethod(new ScrollingMovementMethod());
         navController = Navigation.findNavController(requireView());
 
         MainActivity.getInstance().disableFullScreen();
 
-        InfoAdapter adapter = new InfoAdapter(getResources().getStringArray(R.array.fieldTypes));
-        binding.infoList.setAdapter(adapter);
+        setupRecyclerViewInfo();
 
         binding.backFromCard.setOnClickListener(view0 -> back());
 
         //On back pressed action
-        requireActivity().getOnBackPressedDispatcher().addCallback(this,
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
                 new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
@@ -68,18 +66,24 @@ public class PatientCardFragment extends Fragment {
                     }
         });
 
-        //Observers
-        viewModel.getPatientLiveData().observe(this, patient -> {
+        viewModel.getPatient(getArguments() != null ? getArguments().getInt(Keys.PATIENT_ID, 0) : 0);
+    }
+
+    private void setupRecyclerViewInfo() {
+        InfoAdapter adapter = new InfoAdapter(getResources().getStringArray(R.array.fieldTypes));
+        binding.infoList.setAdapter(adapter);
+        binding.complaintField.setMovementMethod(new ScrollingMovementMethod());
+
+        //Observer
+        viewModel.getPatientLiveData().observe(getViewLifecycleOwner(), patient -> {
             adapter.submitList(patient.getData());
             setInfo(patient);
         });
-
-        viewModel.getPatient(getArguments() != null ? getArguments().getInt(Keys.PATIENT_ID, 0) : 0);
     }
 
     private void back() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean(Keys.UPDATE_LIST,true);
+        bundle.putBoolean(Keys.UPDATE_LIST, true);
         navController.navigate(R.id.action_patientCardFragment_to_homeFragment, bundle);
     }
 
