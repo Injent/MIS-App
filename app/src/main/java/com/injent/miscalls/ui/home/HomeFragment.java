@@ -5,12 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +18,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -37,14 +33,15 @@ import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
+import com.injent.miscalls.domain.repositories.AuthRepository;
+import com.injent.miscalls.data.Keys;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
-    private PatientAdapter patientAdapter;
+    private PatientAdapter adapter;
 
     private FragmentHomeBinding binding;
     private NavController navController;
@@ -56,6 +53,7 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint({"CommitPrefEdits", "NonConstantResourceId"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -66,14 +64,13 @@ public class HomeFragment extends Fragment {
         MainActivity.getInstance().enableFullScreen();
 
         //Listeners
-        binding.patientListSection.setOnClickListener(view12 -> downloadNewDb());
+        binding.patientListSection.setOnClickListener(view0 -> downloadNewDb());
 
-        ImageView moreButton = requireView().findViewById(R.id.moreButton);
-        moreButton.setOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
+        binding.moreButton.setOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
         //Observers
         homeViewModel.getPatientListLiveData().observe(this, patients -> {
-            patientAdapter.submitList(patients);
+            adapter.submitList(patients);
             if (getArguments() == null) displayList();
         });
 
@@ -82,7 +79,7 @@ public class HomeFragment extends Fragment {
             failed(throwable);
         });
 
-        homeViewModel.getDbDateLiveData().observe(this, s -> displayDbDate());
+        homeViewModel.getDbDateLiveData().observe(this, date -> displayDbDate());
 
         //On back pressed action
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -92,50 +89,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //Navigation view
-        NavigationView navigationView = binding.navigationView;
-        navigationView.setNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.settingsMenu:
-                    navigateToSettings();
-                    break;
-                case R.id.about:
-                    moveToSite(getText(R.string.aboutLink).toString());
-                    break;
-                case R.id.help:
-                    moveToSite(getText(R.string.helpLink).toString());
-                    break;
-                case R.id.protocolTempsMenu:
-                    navigateToProtocolTemp();
-                    break;
-            }
-            return false;
-        });
-
-        //Display of full name and working position in Navigation view
-        User user = App.getInstance().getUser();
-        TextView fullName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
-        fullName.setText(user.getFullName());
-        TextView position = navigationView.getHeaderView(0).findViewById(R.id.proffesion);
-        position.setText(user.getWorkingPosition());
-
-        //Display list?
-        if (getArguments() != null) {
-            if (getArguments().containsKey("updateList"))
-                displayList();
-            else if (getArguments().containsKey("downloadDb"))
-                downloadNewDb();
-        }
-
-        //RecycleView Material Divider
-        if (binding.patientsRecycler.getItemDecorationCount() == 0)
-            binding.patientsRecycler.addItemDecoration(getDivider());
-
-        //RecycleView
-        binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        patientAdapter = new PatientAdapter(this::navigateToPatientCard);
-
-        binding.patientsRecycler.setAdapter(patientAdapter);
+        menuSetup();
+        recyclerViewSetup();
     }
 
     public void displayList() {
@@ -191,24 +146,28 @@ public class HomeFragment extends Fragment {
     }
 
     private void navigateToPatientCard(int patientId) {
+        if (notMatchingDestination()) return;
         Bundle bundle = new Bundle();
-        bundle.putInt("patientId", patientId);
-        if (navController.getCurrentDestination().getId() == R.id.homeFragment) {
-            navController.navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
-        }
+        bundle.putInt(Keys.PATIENT_ID, patientId);
+        navController.navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
     }
 
     private void navigateToSettings() {
+        if (notMatchingDestination()) return;
+        closeNavigationMenu();
         navController.navigate(R.id.action_homeFragment_to_settingsFragment);
     }
 
     private void navigateToProtocolTemp() {
+        if (notMatchingDestination()) return;
+        closeNavigationMenu();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("editMode", true);
-        navController.navigate(R.id.action_homeFragment_to_protocolTempFragment, bundle);
+        bundle.putBoolean(Keys.MODE_EDIT, true);
+        navController.navigate(R.id.protocolTempFragment, bundle);
     }
 
     private void moveToSite(String link) {
+        closeNavigationMenu();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         requireActivity().startActivity(intent);
     }
@@ -217,5 +176,77 @@ public class HomeFragment extends Fragment {
         setArguments(null);
         showLoading();
         homeViewModel.downloadPatientsDb();
+    }
+
+    private void navigateToAuth() {
+        closeNavigationMenu();
+        if (notMatchingDestination()) return;
+        navController.navigate(R.id.action_homeFragment_to_signInFragment);
+    }
+
+    private void navigateToSavedProtocols() {
+        closeNavigationMenu();
+        if (notMatchingDestination()) return;
+        navController.navigate(R.id.savedProtocolsFragment);
+    }
+
+    private boolean notMatchingDestination() {
+        return Objects.requireNonNull(navController.getCurrentDestination(), "CURRENT DESTINATION EMPTY").getId() != R.id.homeFragment;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private void menuSetup() {
+        NavigationView navigationView = binding.navigationView;
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.settingsMenu: navigateToSettings();
+                    break;
+                case R.id.about: moveToSite(getText(R.string.aboutLink).toString());
+                    break;
+                case R.id.help: moveToSite(getText(R.string.helpLink).toString());
+                    break;
+                case R.id.protocolTempsMenu: navigateToProtocolTemp();
+                    break;
+                case R.id.savedProtocolsMenu: navigateToSavedProtocols();
+                    break;
+                case R.id.logoutMenu: {
+                    new AuthRepository().setAuthed(false);
+                    navigateToAuth();
+                }
+                break;
+                default: closeNavigationMenu();
+            }
+            return false;
+        });
+
+        User user = App.getInstance().getUser();
+        TextView fullName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
+        fullName.setText(user.getFullName());
+        TextView position = navigationView.getHeaderView(0).findViewById(R.id.proffesion);
+        position.setText(user.getWorkingPosition());
+    }
+
+    private void closeNavigationMenu() {
+        binding.drawerLayout.closeDrawer(GravityCompat.START,false);
+    }
+
+    private void recyclerViewSetup() {
+        //Divider
+        if (binding.patientsRecycler.getItemDecorationCount() == 0)
+            binding.patientsRecycler.addItemDecoration(getDivider());
+
+        //RecyclerView
+        binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new PatientAdapter(this::navigateToPatientCard);
+
+        binding.patientsRecycler.setAdapter(adapter);
+
+        //Display list?
+        if (getArguments() == null) return;
+
+        if (getArguments().containsKey(Keys.UPDATE_LIST))
+            displayList();
+        else if (getArguments().containsKey(Keys.DOWNLOAD_DB))
+            downloadNewDb();
     }
 }

@@ -1,27 +1,25 @@
 package com.injent.miscalls.ui.protocoltemp;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.templates.ProtocolTemp;
 import com.injent.miscalls.databinding.FragmentProtocolEditBinding;
-import com.injent.miscalls.domain.ProtocolTempRepository;
+import com.injent.miscalls.data.Keys;
+import com.injent.miscalls.domain.repositories.ProtocolTempRepository;
 
 public class ProtocolEditFragment extends Fragment {
 
@@ -44,9 +42,9 @@ public class ProtocolEditFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProtocolTempViewModel.class);
 
         if (getArguments() != null) {
-            newProtocol = getArguments().getBoolean("newProtocol");
-            protocolId = getArguments().getInt("protocolId");
-            if (getArguments().getBoolean("newProtocol"))
+            newProtocol = getArguments().getBoolean(Keys.NEW_PROTOCOL);
+            protocolId = getArguments().getInt(Keys.PROTOCOL_ID);
+            if (newProtocol)
                 protocolTemp = new ProtocolTemp();
             else
                 protocolTemp = viewModel.getSelectedProtocol(protocolId);
@@ -56,29 +54,14 @@ public class ProtocolEditFragment extends Fragment {
         }
 
         //Listeners
-        binding.saveProtocolTemp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveProtocol();
-            }
-        });
+        binding.saveProtocolTemp.setOnClickListener(view0 -> saveProtocolTemp());
 
-        binding.backFromProtocolTempEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirmExit();
-            }
-        });
+        binding.backFromProtocolTempEdit.setOnClickListener(view1 -> confirmExit());
 
         if (newProtocol) {
             hideDeleteButton();
         } else {
-            binding.protocolDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    confirmDelete();
-                }
-            });
+            binding.protocolDelete.setOnClickListener(view2 -> confirmDelete());
         }
 
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
@@ -89,12 +72,9 @@ public class ProtocolEditFragment extends Fragment {
         });
 
         //Observers
-        viewModel.getSelectedProtocolLiveData().observe(this, new Observer<ProtocolTemp>() {
-            @Override
-            public void onChanged(ProtocolTemp protocolTemp) {
-                ProtocolEditFragment.this.protocolTemp = protocolTemp;
-                loadData();
-            }
+        viewModel.getSelectedProtocolLiveData().observe(this, protocolTemp0 -> {
+            protocolTemp = protocolTemp0;
+            loadData();
         });
     }
 
@@ -115,7 +95,7 @@ public class ProtocolEditFragment extends Fragment {
 
     private void back() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("editMode", true);
+        bundle.putBoolean(Keys.MODE_EDIT, true);
         Navigation.findNavController(requireView()).navigate(R.id.action_protocolEditFragment_to_protocolTempFragment, bundle);
     }
 
@@ -124,16 +104,8 @@ public class ProtocolEditFragment extends Fragment {
                 .setTitle(getString(R.string.editFile) + " " + getProtocolName())
                 .setMessage(R.string.saveFile)
 
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        saveProtocol();
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        back();
-                    }
-                })
+                .setPositiveButton(R.string.yes, (dialog, button0) -> saveProtocolTemp())
+                .setNegativeButton(R.string.no, (dialog, button1) -> back())
                 .create();
         alertDialog.show();
     }
@@ -143,22 +115,16 @@ public class ProtocolEditFragment extends Fragment {
                 .setTitle(String.format(getString(R.string.deleteProtocol),getProtocolName()))
                 .setMessage(R.string.dataWillBeDeletedForever)
 
-                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteProtocol();
-                        back();
-                    }
+                .setPositiveButton(R.string.cancel, (dialog, button2) -> dialog.dismiss())
+                .setNegativeButton(R.string.delete, (dialog, button3) -> {
+                    deleteProtocol();
+                    back();
                 })
                 .create();
         alertDialog.show();
     }
 
-    private void saveProtocol() {
+    private void saveProtocolTemp() {
         Toast.makeText(requireContext(),String.format(getString(R.string.protocolTempSaved),getProtocolName()),Toast.LENGTH_SHORT).show();
         protocolTemp.setId(protocolId);
         protocolTemp.setInspection(binding.editInspection.getText().toString());

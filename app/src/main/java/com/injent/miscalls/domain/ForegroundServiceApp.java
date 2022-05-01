@@ -2,11 +2,7 @@ package com.injent.miscalls.domain;
 
 import static com.injent.miscalls.App.CHANNEL_ID;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -18,8 +14,6 @@ import androidx.annotation.Nullable;
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -28,14 +22,13 @@ public class ForegroundServiceApp extends Service {
 
     private boolean init = false;
     private static final int FOREGROUND_ID = 1;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
+    public static final long UPDATE_TIME = 5L;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        ScheduledExecutorService es = new ScheduledThreadPoolExecutor(1);
+        es.scheduleAtFixedRate(() -> App.getInstance().getSharedPreferences().edit().putBoolean("newDb", true).apply(),0, UPDATE_TIME, TimeUnit.SECONDS);
 
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle(getText(R.string.receivingDataOn))
@@ -44,7 +37,7 @@ public class ForegroundServiceApp extends Service {
                 .build();
 
         init = true;
-        Log.e("FOREGROUNDSERVICE","START");
+        Log.e("FOREGROUNDING","START");
 
         startForeground(FOREGROUND_ID,notification);
         return super.onStartCommand(intent, flags, startId);

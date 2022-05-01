@@ -7,13 +7,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/darkBackground"
+        android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
+            android:background="@color/colorPrimary"
             android:elevation="@dimen/cardElevation"
             android:gravity="start|center_vertical">
 
@@ -49,7 +49,7 @@
             android:id="@+id/cardNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
+            android:background="@color/colorPrimary"
             android:fontFamily="@font/clear_sans_medium"
             android:gravity="center"
             android:padding="8dp"
@@ -57,7 +57,7 @@
             android:textColor="@color/grayText"
             android:textSize="@dimen/mediumFont" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,17 +66,21 @@
 
             <TextView
                 android:id="@+id/complaintsHeader"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/clear_sans_medium"
                 android:text="@string/complaints"
                 android:textColor="@color/darkGrayText"
-                android:textSize="@dimen/mediumFont" />
+                android:textSize="@dimen/mediumFont"
+                app:layout_constraintEnd_toStartOf="@+id/copyComplaints"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/complaintField"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/edit_text"
                 android:fontFamily="@font/clear_sans_medium"
                 android:maxLines="7"
@@ -85,9 +89,26 @@
                 android:scrollbars="vertical"
                 android:text="Complaints Description"
                 android:textColor="@color/grayText"
-                android:textSize="@dimen/hintFont" />
+                android:textColorHighlight="@color/highlight"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/hintFont"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/complaintsHeader"
+                app:layout_constraintTop_toBottomOf="@+id/complaintsHeader" />
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/copyComplaints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_copy_text"
+                app:layout_constraintBottom_toBottomOf="@+id/complaintsHeader"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="?android:attr/actionBarItemBackground"
+                app:layout_constraintTop_toTopOf="@+id/complaintsHeader" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -100,13 +121,14 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/clear_sans_bold"
                 android:text="@string/infoAboutPatient"
                 android:textAlignment="center"
                 android:textColor="@color/darkGrayText"
-                android:textSize="@dimen/mediumFont" />
+                android:textSize="@dimen/mediumFont"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/infoList"

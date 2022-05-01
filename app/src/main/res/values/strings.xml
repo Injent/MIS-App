@@ -9,6 +9,7 @@
     <string name="protocol">Протокол</string>
     <string name="protocolTemps">Протоколы лечения</string>
     <string name="protocolEdit">Редактирование протокола</string>
+    <string name="savedProtocols">Сохраненные протоколы</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
@@ -18,7 +19,6 @@
     <string name="infoAboutPatient">Информация о пациенте</string>
     <string name="conclusion">Заключение</string>
     <string name="treatment">Лечение</string>
-    <string name="savedProtocols">Сохраненные протоколы</string>
     <string name="sortByNearest">Сортировать по\nместоположению</string>
     <string name="listOfPatients">Лист пациентов</string>
     <string name="updateList">Обновить список</string>
@@ -45,6 +45,7 @@
     <string name="protocolName">Название протокола</string>
     <string name="protocolDesc">Описание протокола</string>
     <string name="dataWillBeDeletedForever">Данные навсегда удалятся</string>
+    <string name="protocolWontSave">Протокол не сохранится</string>
 
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
@@ -82,6 +83,9 @@
     <string name="protocolTempsCleared">Все протоколы сброшены сброшены</string>
     <string name="appliedTemp">Применен протокол</string>
     <string name="protocolDeleted">Протокол %s удален</string>
+    <string name="textCopied">Текст скопирован</string>
+    <string name="undoDeleting">Отменить</string>
+    <string name="exitFromEditing">Выйти из редактирования?</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>

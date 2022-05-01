@@ -1,20 +1,18 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.API.HttpManager;
+import com.injent.miscalls.api.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.PatientDatabase;
-import com.injent.miscalls.data.patientlist.QueryToken;
-import com.injent.miscalls.domain.HomeRepository;
+import com.injent.miscalls.domain.repositories.HomeRepository;
 
 import java.util.List;
 
@@ -26,10 +24,10 @@ public class HomeViewModel extends ViewModel {
 
     private final HomeRepository homeRepository;
 
-    private MutableLiveData<List<Patient>> patientList = new MutableLiveData<>();
-    private MutableLiveData<Throwable> patientListError = new MutableLiveData<>();
+    private final MutableLiveData<List<Patient>> patientList = new MutableLiveData<>();
+    private final MutableLiveData<Throwable> patientListError = new MutableLiveData<>();
 
-    private MutableLiveData<String> dbDate = new MutableLiveData<>();
+    private final MutableLiveData<String> dbDate = new MutableLiveData<>();
 
     public HomeViewModel() {
         super();
@@ -76,7 +74,7 @@ public class HomeViewModel extends ViewModel {
             patientListError.postValue(new NetworkErrorException());
             return;
         }
-        homeRepository.getPatientList(App.getInstance().getUser().getToken()).enqueue(new Callback<List<Patient>>() {
+        homeRepository.getPatientList(App.getInstance().getUser().getToken()).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
                 if (response.isSuccessful()) {
@@ -92,6 +90,26 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Call<List<Patient>> call, @NonNull Throwable t) {
                 patientListError.postValue(t);
+            }
+        });
+    }
+
+    public void backgroundDownloadDb() {
+        if (!HttpManager.isInternetAvailable()) {
+            return;
+        }
+        homeRepository.getPatientList(App.getInstance().getUser().getToken()).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
+                if (response.isSuccessful()) {
+                    homeRepository.insertWithDropDb((Patient) response.body());
+                    setNewDbDate();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Patient>> call, @NonNull Throwable t) {
+                //Nothing to do
             }
         });
     }

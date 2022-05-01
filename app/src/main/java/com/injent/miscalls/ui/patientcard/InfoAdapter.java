@@ -14,7 +14,7 @@ import com.injent.miscalls.databinding.PatientCardItemBinding;
 
 public class InfoAdapter extends ListAdapter<String, InfoAdapter.ViewHolder> {
 
-    public String[] fieldName;
+    private final String[] fieldName;
 
     protected InfoAdapter(String... fieldName) {
         super(diffCallback);

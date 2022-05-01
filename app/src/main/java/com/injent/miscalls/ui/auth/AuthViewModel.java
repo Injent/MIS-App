@@ -8,10 +8,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.API.HttpManager;
+import com.injent.miscalls.api.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.User;
-import com.injent.miscalls.domain.AuthRepository;
+import com.injent.miscalls.domain.repositories.AuthRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,12 +42,14 @@ public class AuthViewModel extends ViewModel {
                     case 200: {
                         User authModelIn = response.body();
                         authorized.postValue(true);
-                        App.getInstance().setUser(authModelIn);
+                        App.setUser(authModelIn);
 
                     } break;
                     case 403: {
                         errorUser.postValue(new UserNotFoundException());
-                    } break;
+                    }
+                    break;
+                    default: errorUser.postValue(new UnknownError());
                 }
             }
 

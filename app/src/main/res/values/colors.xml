@@ -10,13 +10,14 @@
     <color name="black">#FF000000</color>
 
     <!-- Interface elements -->
-    <color name="background">#FFFFFFFF</color>
-    <color name="darkBackground">#fafafa</color>
+    <color name="colorPrimary">#FFFFFFFF</color>
+    <color name="colorPrimaryDark">#fafafa</color>
+    <color name="colorSecondaryPrimary">#f5f5f5</color>
     <color name="line">#EAEAEA</color>
     <color name="green">#3ba55d</color>
     <color name="gray">#e8e8e8</color>
     <color name="lightBlue">#0a95ff</color>
-    <color name="statusBar">#4D000000</color>
+    <color name="statusBar">#FFFFFF</color>
     <color name="transparentDarkGlass">#34000000</color>
     <color name="transparentLightGlass">#34FFFFFF</color>
 
@@ -30,7 +31,7 @@
 
     <!-- Text -->
     <color name="focused">#EDFDFF</color>
-    <color name="highlight">#3200E1FF</color>
+    <color name="highlight">#CC3494FC</color>
     <color name="error">#FD2C4B</color>
 
     <!-- Font colors -->

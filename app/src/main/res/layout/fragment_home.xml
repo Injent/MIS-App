@@ -5,33 +5,129 @@
     tools:context=".ui.home.HomeFragment">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/drawerLayout">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_gradient">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:fitsSystemWindows="true">
 
-                <LinearLayout
-                    android:id="@+id/linearLayout5"
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/background_gradient"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:fitsSystemWindows="true"
+                    app:contentScrim="@color/centerColor"
+                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+                    <View
+                        android:id="@+id/status_bar_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:background="#34000000" />
 
                     <LinearLayout
+                        android:layout_marginTop="72dp"
+                        android:id="@+id/topAppbarPart"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/dbDateUpdateText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/minDp"
+                            android:layout_marginLeft="@dimen/defaultDp"
+                            android:drawablePadding="8dp"
+                            android:fontFamily="@font/clear_sans_medium"
+                            android:gravity="center|left"
+                            android:text="01.01.1980"
+                            android:textColor="@color/hintWhite"
+                            android:textSize="@dimen/hintFont"
+                            app:drawableStartCompat="@drawable/ic_clock" />
+
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fadeScrollbars="false"
+                            android:scrollbarThumbHorizontal="@null"
+                            android:scrollbarThumbVertical="@null">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="start|center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="@dimen/displayPadding"
+                                android:paddingTop="@dimen/displayPadding">
+
+                                <LinearLayout
+                                    android:id="@+id/patientListSection"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="12dp"
+                                    android:background="@drawable/transparent_glass"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/patientListSectionText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/clear_sans_medium"
+                                        android:padding="10dp"
+                                        android:text="@string/updateList"
+                                        android:textColor="@color/hintWhite"
+                                        android:textSize="@dimen/hintFont" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/transparent_glass"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/templatesSection"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/clear_sans_medium"
+                                        android:gravity="center"
+                                        android:padding="10dp"
+                                        android:text="@string/sortByNearest"
+                                        android:textColor="@color/hintWhite"
+                                        android:textSize="@dimen/hintFont" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </HorizontalScrollView>
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        app:layout_collapseMode="pin"/>
+
+                    <LinearLayout
                         android:layout_marginTop="24dp"
-                        android:gravity="center|start"
-                        android:orientation="horizontal"
-                        android:paddingStart="0dp"
-                        android:paddingTop="8dp"
-                        android:paddingEnd="@dimen/displayPadding">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_collapseMode="pin"
+                        android:gravity="center_vertical|start">
 
                         <ImageView
                             android:id="@+id/moreButton"
@@ -51,136 +147,67 @@
                             android:fontFamily="@font/clear_sans_bold"
                             android:text="@string/patientList"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/titleFont" />
+                            android:textSize="@dimen/titleFont"
+                            android:layout_marginTop="@dimen/displayPadding"
+                            android:layout_marginBottom="@dimen/displayPadding"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical|end" />
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/dbDateUpdateText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/minDp"
-                        android:layout_marginLeft="@dimen/defaultDp"
-                        android:fontFamily="@font/clear_sans_medium"
-                        android:gravity="center|left"
-                        android:textColor="@color/hintWhite"
-                        android:textSize="@dimen/hintFont"
-                        app:drawableStartCompat="@drawable/ic_clock"
-                        android:drawablePadding="8dp"/>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fadeScrollbars="false"
-                        android:scrollbarThumbHorizontal="@null"
-                        android:scrollbarThumbVertical="@null">
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/displayPadding"
+                android:background="@drawable/list"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="start|center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/displayPadding">
+                <LinearLayout
+                    android:id="@+id/linearLayout5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                            <LinearLayout
-                                android:id="@+id/patientListSection"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="12dp"
-                                android:background="@drawable/transparent_glass"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/patientListSectionText"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/clear_sans_medium"
-                                    android:padding="10dp"
-                                    android:text="@string/updateList"
-                                    android:textColor="@color/hintWhite"
-                                    android:textSize="@dimen/hintFont" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/transparent_glass"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/templatesSection"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/clear_sans_medium"
-                                    android:gravity="center"
-                                    android:padding="10dp"
-                                    android:text="@string/sortByNearest"
-                                    android:textColor="@color/hintWhite"
-                                    android:textSize="@dimen/hintFont" />
-                            </LinearLayout>
-
-                        </LinearLayout>
-                    </HorizontalScrollView>
-
-                    <LinearLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/patientsRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/list"
-                        android:orientation="vertical">
+                        android:overScrollMode="never"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/patientsRecycler"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-                        </androidx.recyclerview.widget.RecyclerView>
-
-                    </LinearLayout>
-
+                    </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
 
-                <ProgressBar
-                    android:id="@+id/loadingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="240dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
 
-                <TextView
-                    android:id="@+id/errorText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="48dp"
-                    android:layout_marginEnd="48dp"
-                    android:fontFamily="@font/clear_sans_bold"
-                    android:text="Error"
-                    android:textAlignment="center"
-                    android:textColor="@color/error"
-                    android:textSize="@dimen/headerFont"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toTopOf="@+id/loadingBar"
-                    app:layout_constraintEnd_toEndOf="@+id/loadingBar"
-                    app:layout_constraintStart_toStartOf="@+id/loadingBar" />
+            <ProgressBar
+                android:id="@+id/loadingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="240dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <View
-                    android:id="@+id/status_bar_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:background="#34000000"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/errorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginEnd="48dp"
+                android:fontFamily="@font/clear_sans_bold"
+                android:text="Error"
+                android:textAlignment="center"
+                android:textColor="@color/error"
+                android:textSize="@dimen/headerFont"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/loadingBar"
+                app:layout_constraintEnd_toEndOf="@+id/loadingBar"
+                app:layout_constraintStart_toStartOf="@+id/loadingBar" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
@@ -189,10 +216,14 @@
             android:layout_gravity="start"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
+            app:dividerInsetEnd="@dimen/displayPadding"
+            app:dividerInsetStart="@dimen/displayPadding"
             app:drawerLayoutCornerSize="@dimen/navBarCorners"
             app:headerLayout="@layout/nav_header"
             app:itemIconTint="@color/darkGrayText"
-            app:menu="@menu/navigation_menu" />
+            app:menu="@menu/navigation_menu">
+
+        </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

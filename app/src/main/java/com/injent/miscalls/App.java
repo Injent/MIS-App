@@ -1,14 +1,8 @@
 package com.injent.miscalls;
 
 import android.app.Application;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.IBinder;
 
-import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import com.injent.miscalls.data.User;
@@ -18,7 +12,6 @@ import com.injent.miscalls.data.savedprotocols.ProtocolDao;
 import com.injent.miscalls.data.savedprotocols.ProtocolDatabase;
 import com.injent.miscalls.data.templates.ProtocolTempDao;
 import com.injent.miscalls.data.templates.ProtocolTempDatabase;
-import com.injent.miscalls.domain.ForegroundServiceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -42,11 +35,15 @@ public class App extends Application {
         return instance.get();
     }
 
+    private static void setInstance(App referent) {
+        instance = new WeakReference<>(referent);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        instance = new WeakReference<>(this);
+        setInstance(this);
 
         pdb = Room.databaseBuilder(this,PatientDatabase.class,PatientDatabase.DB_NAME)
                 .allowMainThreadQueries()
@@ -77,7 +74,7 @@ public class App extends Application {
 
     public ProtocolTempDatabase getProtocolTempDatabase() { return protocolTempDatabase; }
 
-    public User getUser() { return user; }
+    public static User getUser() { return user; }
 
     public static void setUser(User user) { App.user = user; }
 
@@ -95,11 +92,6 @@ public class App extends Application {
 
     public SharedPreferences getSharedPreferences() { return getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE); }
 
-    public void startService() {
-        Intent service = new Intent(this, ForegroundServiceApp.class);
-        ContextCompat.startForegroundService(this, service);
-    }
-
     private void initSettings() {
         SharedPreferences sp = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -108,6 +100,7 @@ public class App extends Application {
             editor.putBoolean("authed", false);
             editor.putString("personalLink","");
             editor.putInt("section",0);
+            editor.putBoolean("init", true);
             editor.apply();
         }
         authed = sp.getBoolean("authed", false);

@@ -10,8 +10,8 @@
     <color name="black">#FF000000</color>
 
     <!-- Interface elements -->
-    <color name="background">#36393f</color>
-    <color name="darkBackground">#2f3136</color>
+    <color name="colorPrimary">#36393f</color>
+    <color name="colorPrimaryDark">#2f3136</color>
     <color name="line">#42464d</color>
     <color name="green">#3ba55d</color>
     <color name="lightBlue">#0a95ff</color>

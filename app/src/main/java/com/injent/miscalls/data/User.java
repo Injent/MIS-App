@@ -22,25 +22,25 @@ public class User {
     private int id;
 
     @SerializedName("login")
-    private String login;
+    private final String login;
 
     @SerializedName("password")
-    private String password;
+    private final String password;
 
     @SerializedName("name")
-    private String name;
+    private final String name;
 
     @SerializedName("lastname")
-    private String lastName;
+    private final String lastName;
 
     @SerializedName("middle_name")
-    private String middleName;
+    private final String middleName;
 
     @SerializedName("working_position")
-    private String workingPosition;
+    private final String workingPosition;
 
     @SerializedName("token")
-    private String token;
+    private final String token;
 
     public String getName() {
         return name;

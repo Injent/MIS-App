@@ -18,10 +18,22 @@ public class Protocol {
     private String treatment;
     @ColumnInfo(name = "conclusion")
     private String conclusion;
+    @ColumnInfo(name = "description")
+    private String description;
+    @ColumnInfo(name = "patient_id")
+    private int patientId;
+
+    public int getPatientId() { return patientId; }
+
+    public void setPatientId(int patientId) { this.patientId = patientId; }
 
     public void setId(int id) { this.id = id; }
 
     public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
 
     public void setInspection(String inspection) { this.inspection = inspection; }
 

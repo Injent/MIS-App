@@ -11,7 +11,10 @@ import java.util.List;
 public interface ProtocolDao {
 
     @Query("SELECT * FROM Protocol WHERE id =:id LIMIT 1")
-    Protocol getProtocol(int id);
+    Protocol getProtocolById(int id);
+
+    @Query("SELECT * FROM Protocol WHERE id =:id LIMIT 1")
+    Protocol getProtocolByPatientId(int id);
 
     @Query("SELECT * FROM Protocol")
     List<Protocol> getAll();

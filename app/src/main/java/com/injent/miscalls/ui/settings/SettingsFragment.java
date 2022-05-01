@@ -19,19 +19,17 @@ import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
-import com.injent.miscalls.domain.AuthRepository;
-import com.injent.miscalls.domain.ProtocolTempRepository;
-import com.injent.miscalls.domain.SettingsRepository;
+import com.injent.miscalls.domain.repositories.ProtocolTempRepository;
+import com.injent.miscalls.domain.repositories.SettingsRepository;
 
 public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
-    private static final float TEXTVIEW_FONT = 14;
     private SettingsRepository repository;
     private Spinner spinner;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings,
@@ -47,20 +45,7 @@ public class SettingsFragment extends Fragment {
 
         MainActivity.getInstance().disableFullScreen();
 
-        binding.logoutAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AuthRepository().setAuthed(false);
-                navigateToAuth();
-            }
-        });
-
-        binding.backFromSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                back();
-            }
-        });
+        binding.backFromSettings.setOnClickListener(view0 -> back());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this,
                 new OnBackPressedCallback(true) {
@@ -86,12 +71,9 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        binding.clearProtocolTempsAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new ProtocolTempRepository().clearDb();
-                Toast.makeText(requireContext(),R.string.protocolTempsCleared, Toast.LENGTH_SHORT).show();
-            }
+        binding.clearProtocolTempsAction.setOnClickListener(view1 -> {
+            new ProtocolTempRepository().clearDb();
+            Toast.makeText(requireContext(),R.string.protocolTempsCleared, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -100,9 +82,5 @@ public class SettingsFragment extends Fragment {
         bundle.putBoolean("updateList", true);
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_settingsFragment_to_homeFragment, bundle);
-    }
-
-    private void navigateToAuth() {
-        Navigation.findNavController(requireView()).navigate(R.id.action_settingsFragment_to_signInFragment);
     }
 }

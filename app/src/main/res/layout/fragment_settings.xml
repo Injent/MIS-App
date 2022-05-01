@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="12dp"
         tools:layout_editor_absoluteY="12dp">
@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
+            android:background="@color/colorPrimary"
             android:elevation="@dimen/cardElevation"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -45,10 +45,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/displayPadding"
-            android:paddingStart="@dimen/displayPadding"
-            android:paddingEnd="@dimen/displayPadding">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,13 +54,15 @@
 
                 <LinearLayout
                     android:id="@+id/regularUpdatesDbAction"
-                    android:focusable="true"
-                    android:clickable="true"
-                    android:background="?android:attr/selectableItemBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:orientation="vertical"
-                    android:paddingTop="@dimen/displayPadding">
+                    android:paddingStart="@dimen/displayPadding"
+                    android:paddingTop="@dimen/displayPadding"
+                    android:paddingEnd="@dimen/displayPadding">
 
                     <TextView
                         android:id="@+id/regularUpdatesDb"
@@ -117,13 +116,15 @@
 
                 <LinearLayout
                     android:id="@+id/clearProtocolTempsAction"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:orientation="vertical"
-                    android:paddingTop="@dimen/displayPadding">
+                    android:paddingStart="@dimen/displayPadding"
+                    android:paddingTop="@dimen/displayPadding"
+                    android:paddingEnd="@dimen/displayPadding">
 
                     <TextView
                         android:id="@+id/clearProtocolTemps"
@@ -143,32 +144,6 @@
                         android:layout_height="@dimen/thickLine"
                         android:layout_marginTop="@dimen/displayPadding"
                         android:background="@color/line" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/logoutAction"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/displayPadding"
-                    android:paddingBottom="@dimen/displayPadding">
-
-                    <TextView
-                        android:id="@+id/logoutText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/clear_sans_medium"
-                        android:text="@string/logout"
-                        android:textColor="@color/error"
-                        android:textSize="@dimen/mediumFont"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:drawablePadding="8dp"
-                        app:drawableTint="@color/error"
-                        app:drawableStartCompat="@drawable/ic_logout" />
                 </LinearLayout>
 
             </LinearLayout>

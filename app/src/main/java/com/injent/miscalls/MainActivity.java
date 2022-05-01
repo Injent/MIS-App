@@ -5,15 +5,15 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.injent.miscalls.domain.ForegroundServiceApp;
 
@@ -28,14 +28,17 @@ public class MainActivity extends AppCompatActivity {
         return instance.get();
     }
 
+    private static void setInstance(MainActivity referent) {
+        instance = new WeakReference<>(referent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setInstance(this);
 
         getWindow().setStatusBarColor(getResources().getColor(R.color.statusBar, getTheme()));
-
-        instance = new WeakReference<>(MainActivity.this);
 
         if (App.getInstance().getMode() == 1) {
             createNotificationChannel();
@@ -61,16 +64,8 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle(R.string.exit)
                 .setMessage(R.string.exitHint)
 
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        closeApp();
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setPositiveButton(R.string.yes, (dialog, button0) -> closeApp())
+                .setNegativeButton(R.string.no, (dialog, button1) -> dialog.dismiss())
                 .create();
         alertDialog.show();
     }
@@ -113,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onServiceDisconnected(ComponentName arg0) {
-
+                //Nothing to do
             }
         };
 

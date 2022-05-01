@@ -68,12 +68,7 @@ public class PatientAdapter extends ListAdapter<Patient, PatientAdapter.ViewHold
                 binding.statusBar.setBackgroundResource(R.drawable.status_bar_done);
             }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onClick(patient.getId());
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onClick(patient.getId()));
         }
     }
 

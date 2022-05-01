@@ -13,9 +13,6 @@ import java.util.List;
 @Entity
 public class Patient {
 
-    public Patient() {
-    }
-
     @SerializedName("id")
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
@@ -189,6 +186,10 @@ public class Patient {
 
     public String getShortInfo() {
         return lastname + " " + firstname;
+    }
+
+    public String getFullName() {
+        return lastname + " " + firstname + " " + middleName;
     }
 
     @Override

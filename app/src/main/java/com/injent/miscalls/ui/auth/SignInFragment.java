@@ -1,10 +1,7 @@
 package com.injent.miscalls.ui.auth;
 
 import android.accounts.NetworkErrorException;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.AuthModelIn;
-import com.injent.miscalls.data.User;
 import com.injent.miscalls.databinding.FragmentSignInBinding;
-import com.injent.miscalls.domain.AuthRepository;
+import com.injent.miscalls.data.Keys;
 
 public class SignInFragment extends Fragment {
 
@@ -55,29 +48,20 @@ public class SignInFragment extends Fragment {
         }
 
         //Listeners
-        binding.signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLoading();
-                actionAuth();
-            }
+        binding.signInButton.setOnClickListener(view0 -> {
+            showLoading();
+            actionAuth();
         });
 
         //Observers
-        viewModel.getAuthorized().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean authed) {
-                hideLoading();
-                successfulAuth();
-            }
+        viewModel.getAuthorized().observe(this, authed -> {
+            hideLoading();
+            successfulAuth();
         });
 
-        viewModel.getErrorUser().observe(this, new Observer<Throwable>() {
-            @Override
-            public void onChanged(Throwable throwable) {
-                hideLoading();
-                displayError(throwable);
-            }
+        viewModel.getErrorUser().observe(this, throwable -> {
+            hideLoading();
+            displayError(throwable);
         });
 
         //On back pressed action
@@ -123,7 +107,7 @@ public class SignInFragment extends Fragment {
 
     private void navigateToHome() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("downloadDb", true);
+        bundle.putBoolean(Keys.DOWNLOAD_DB, true);
         NavController navController = Navigation.findNavController(requireView());
         navController.navigate(R.id.action_signInFragment_to_homeFragment, bundle);
     }

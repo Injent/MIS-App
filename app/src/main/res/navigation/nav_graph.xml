@@ -25,9 +25,6 @@
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/left_in_slide"
             app:exitAnim="@anim/up_out_slide" />
-        <action
-            android:id="@+id/action_homeFragment_to_protocolTempFragment"
-            app:destination="@id/protocolTempFragment" />
     </fragment>
     <fragment
         android:id="@+id/patientCardFragment"
@@ -66,11 +63,6 @@
             app:destination="@id/homeFragment"
             app:enterAnim="@anim/down_in_slide"
             app:exitAnim="@anim/right_out_slide" />
-        <action
-            android:id="@+id/action_settingsFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/protocolFragment"
@@ -92,9 +84,6 @@
         android:label="fragment_protocol_temp"
         tools:layout="@layout/fragment_protocol_temp" >
         <action
-            android:id="@+id/action_protocolTempFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-        <action
             android:id="@+id/action_protocolTempFragment_to_protocolEditFragment"
             app:destination="@id/protocolEditFragment"
             app:enterAnim="@anim/left_in_slide"
@@ -114,4 +103,9 @@
             app:enterAnim="@anim/right_in_slide"
             app:exitAnim="@anim/right_out_slide" />
     </fragment>
+    <fragment
+        android:id="@+id/savedProtocolsFragment"
+        android:name="com.injent.miscalls.ui.savedprotocols.SavedProtocolsFragment"
+        android:label="fragment_saved_protocols"
+        tools:layout="@layout/fragment_saved_protocols" />
 </navigation>

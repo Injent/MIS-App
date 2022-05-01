@@ -30,10 +30,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".domain.BackgroundServiceApp" />
         <service android:name=".domain.ForegroundServiceApp" />
 
-        <receiver android:name=".domain.BroadcastReceiver"
+        <receiver android:name=".domain.BootManager"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

@@ -8,9 +8,6 @@ import androidx.room.PrimaryKey;
 @Entity
 public class ProtocolTemp {
 
-    public ProtocolTemp() {
-    }
-
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = false)
     private int id;

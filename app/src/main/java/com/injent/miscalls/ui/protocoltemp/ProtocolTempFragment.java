@@ -3,14 +3,12 @@ package com.injent.miscalls.ui.protocoltemp;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -18,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -29,21 +26,20 @@ import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.ListEmptyException;
-import com.injent.miscalls.data.templates.ProtocolTemp;
 import com.injent.miscalls.databinding.FragmentProtocolTempBinding;
-
-import java.util.List;
+import com.injent.miscalls.data.Keys;
 
 public class ProtocolTempFragment extends Fragment {
 
     private ProtocolTempViewModel viewModel;
     private FragmentProtocolTempBinding binding;
-    private ProtocolAdapter adapter;
+    private ProtocolTempAdapter adapter;
     private int downloadProgress;
     private NavController navController;
     private boolean editMode;
     private int patientId;
     private int protocolCount;
+    private boolean itemDeleted;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,73 +56,43 @@ public class ProtocolTempFragment extends Fragment {
         MainActivity.getInstance().disableFullScreen();
 
         if (getArguments() != null) {
-            editMode = getArguments().getBoolean("editMode");
-            patientId = getArguments().getInt("patientId");
+            editMode = getArguments().getBoolean(Keys.MODE_EDIT);
+            patientId = getArguments().getInt(Keys.PATIENT_ID);
+            itemDeleted = getArguments().getBoolean("itemDeleted");
         }
 
         if (!editMode)
             hideProtocolCreate();
 
         binding.protocolRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new ProtocolAdapter(new ProtocolAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int protocolId) {
-                if (editMode)
-                    navigateToProtocolEdit(protocolId, false);
-                else
-                    navigateToProtocol(protocolId);
-            }
+        adapter = new ProtocolTempAdapter(protocolId -> {
+            if (editMode)
+                navigateToProtocolEdit(protocolId, false);
+            else
+                navigateToProtocol(protocolId);
         }, editMode);
 
         binding.protocolRecycler.setAdapter(adapter);
 
         //Observers
-        viewModel.getProtocolsLiveDate().observe(this, new Observer<List<ProtocolTemp>>() {
-            @Override
-            public void onChanged(List<ProtocolTemp> protocolTemps) {
-                adapter.submitList(protocolTemps, true);
-            }
-        });
+        viewModel.getProtocolsLiveDate().observe(this, protocolTemps -> adapter.submitList(protocolTemps, true));
 
-        viewModel.getProtocolErrorLiveData().observe(this, new Observer<Throwable>() {
-            @Override
-            public void onChanged(Throwable throwable) {
-                displayError(throwable);
-            }
-        });
+        viewModel.getProtocolErrorLiveData().observe(this, this::displayError);
 
         createSearchView();
 
         //Listeners
-        binding.protocolDownloadAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewModel.downloadProtocolTemps(App.getInstance().getUser().getToken());
-                hideProtocolThings();
-            }
+        binding.protocolDownloadAction.setOnClickListener(view0 -> {
+            viewModel.downloadProtocolTemps(App.getInstance().getUser().getToken());
+            hideProtocolThings();
         });
 
-        binding.addProtocolTemp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateToProtocolEdit(protocolCount, true);
-            }
-        });
+        binding.addProtocolTemp.setOnClickListener(view12 -> navigateToProtocolEdit(protocolCount, true));
 
         if (editMode) {
-            binding.backFromProtocolTemps.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    navigateToHome();
-                }
-            });
+            binding.backFromProtocolTemps.setOnClickListener(view1 -> navigateToHome());
         } else {
-            binding.backFromProtocolTemps.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    navigateToProtocol();
-                }
-            });
+            binding.backFromProtocolTemps.setOnClickListener(view2 -> navigateToProtocol());
         }
 
 
@@ -158,27 +124,27 @@ public class ProtocolTempFragment extends Fragment {
 
     private void navigateToProtocolEdit(int protocolId, boolean newProtocol) {
         Bundle bundle = new Bundle();
-        bundle.putInt("protocolId", protocolId);
-        bundle.putBoolean("newProtocol", newProtocol);
+        bundle.putInt(Keys.PROTOCOL_ID, protocolId);
+        bundle.putBoolean(Keys.NEW_PROTOCOL, newProtocol);
         navController.navigate(R.id.action_protocolTempFragment_to_protocolEditFragment, bundle);
     }
 
     private void navigateToHome() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("updateList", true);
-        navController.navigate(R.id.action_protocolTempFragment_to_homeFragment, bundle);
+        bundle.putBoolean(Keys.UPDATE_LIST, true);
+        navController.navigate(R.id.homeFragment, bundle);
     }
 
     private void navigateToProtocol(int protocolId) {
         Bundle bundle = new Bundle();
-        bundle.putInt("protocolId", protocolId);
-        bundle.putInt("patientId", patientId);
+        bundle.putInt(Keys.PROTOCOL_ID, protocolId);
+        bundle.putInt(Keys.PATIENT_ID, patientId);
         navController.navigate(R.id.action_protocolTempFragment_to_protocolFragment, bundle);
     }
 
     private void navigateToProtocol() {
         Bundle bundle = new Bundle();
-        bundle.putInt("patientId", patientId);
+        bundle.putInt(Keys.PATIENT_ID, patientId);
         navController.navigate(R.id.action_protocolTempFragment_to_protocolFragment, bundle);
     }
 
