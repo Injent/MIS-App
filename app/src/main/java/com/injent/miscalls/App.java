@@ -18,6 +18,7 @@ import java.lang.ref.WeakReference;
 public class App extends Application {
 
     private static WeakReference<App> instance;
+    public static final String APP_VERSION = "alpha3.5.22";
 
     public static final String PREFERENCES_NAME = "settings";
     public static final String CHANNEL_ID = "service-v1";
@@ -78,7 +79,7 @@ public class App extends Application {
 
     public static void setUser(User user) { App.user = user; }
 
-    public PatientDatabase getPdb() { return pdb; }
+    public PatientDatabase getPatientDatabase() { return pdb; }
 
     public PatientDao getPatientDao() { return patientDao; }
 

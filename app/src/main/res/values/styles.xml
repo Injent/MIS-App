@@ -8,4 +8,18 @@
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
+
+    <style name="tabText" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/clear_sans_medium</item>
+        <item name="android:textColor">@color/darkGrayText</item>
+        <item name="android:textSize">@dimen/headerFont</item>
+        <item name="tabIconTint">@color/lowGray</item>
+    </style>
+
+    <style name="titleText">
+        <item name="android:textSize">@dimen/titleFont</item>
+        <item name="fontFamily">@font/clear_sans_bold</item>
+        <item name="android:textColor">@color/darkGrayText</item>
+        <item name="maxLines">1</item>
+    </style>
 </resources>

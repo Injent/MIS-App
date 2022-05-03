@@ -30,7 +30,7 @@
                     app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
                     <View
-                        android:id="@+id/status_bar_view"
+                        android:id="@+id/statusBarView"
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
                         android:background="#34000000" />
@@ -58,6 +58,7 @@
                         <HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/displayPadding"
                             android:fadeScrollbars="false"
                             android:scrollbarThumbHorizontal="@null"
                             android:scrollbarThumbVertical="@null">
@@ -67,8 +68,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="start|center_vertical"
                                 android:orientation="horizontal"
-                                android:paddingStart="@dimen/displayPadding"
-                                android:paddingTop="@dimen/displayPadding">
+                                android:paddingStart="@dimen/displayPadding">
 
                                 <LinearLayout
                                     android:id="@+id/patientListSection"
@@ -114,12 +114,11 @@
 
                             </LinearLayout>
                         </HorizontalScrollView>
-
                     </LinearLayout>
 
                     <androidx.appcompat.widget.Toolbar
                         android:layout_width="match_parent"
-                        android:layout_height="72dp"
+                        android:layout_height="92dp"
                         app:layout_collapseMode="pin"/>
 
                     <LinearLayout
@@ -145,67 +144,64 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/clear_sans_bold"
-                            android:text="@string/patientList"
+                            android:text="@string/callList"
                             android:textColor="@color/white"
                             android:textSize="@dimen/titleFont"
                             android:layout_marginTop="@dimen/displayPadding"
                             android:layout_marginBottom="@dimen/displayPadding"/>
 
                     </LinearLayout>
-
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
             </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/displayPadding"
                 android:background="@drawable/list"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-                <LinearLayout
-                    android:id="@+id/linearLayout5"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/listLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/errorText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="200dp"
+                        android:fontFamily="@font/clear_sans_bold"
+                        android:text="Error"
+                        android:textAlignment="center"
+                        android:textColor="@color/error"
+                        android:textSize="@dimen/headerFont"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/loadingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="200dp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/patientsRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:overScrollMode="never"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-                    </androidx.recyclerview.widget.RecyclerView>
-                </LinearLayout>
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
 
-
-            <ProgressBar
-                android:id="@+id/loadingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="240dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/errorText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginEnd="48dp"
-                android:fontFamily="@font/clear_sans_bold"
-                android:text="Error"
-                android:textAlignment="center"
-                android:textColor="@color/error"
-                android:textSize="@dimen/headerFont"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/loadingBar"
-                app:layout_constraintEnd_toEndOf="@+id/loadingBar"
-                app:layout_constraintStart_toStartOf="@+id/loadingBar" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

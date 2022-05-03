@@ -3,6 +3,7 @@ package com.injent.miscalls.ui.protocoltemp;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,18 +29,16 @@ import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.databinding.FragmentProtocolTempBinding;
 import com.injent.miscalls.data.Keys;
+import com.injent.miscalls.ui.protocol.ProtocolFragment;
 
 public class ProtocolTempFragment extends Fragment {
 
     private ProtocolTempViewModel viewModel;
     private FragmentProtocolTempBinding binding;
     private ProtocolTempAdapter adapter;
-    private int downloadProgress;
     private NavController navController;
     private boolean editMode;
     private int patientId;
-    private int protocolCount;
-    private boolean itemDeleted;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,18 +50,27 @@ public class ProtocolTempFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ProtocolTempViewModel.class);
-        navController = Navigation.findNavController(requireView());
 
         MainActivity.getInstance().disableFullScreen();
+
+        Log.e("a","YGY");
 
         if (getArguments() != null) {
             editMode = getArguments().getBoolean(Keys.MODE_EDIT);
             patientId = getArguments().getInt(Keys.PATIENT_ID);
-            itemDeleted = getArguments().getBoolean("itemDeleted");
         }
 
-        if (!editMode)
-            hideProtocolCreate();
+        if (!editMode) {
+            binding.titleLayout.setVisibility(View.GONE);
+        } else {
+            navController = Navigation.findNavController(requireView());
+            requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    navigateToHome();
+                }
+            });
+        }
 
         binding.protocolRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new ProtocolTempAdapter(protocolId -> {
@@ -75,19 +83,24 @@ public class ProtocolTempFragment extends Fragment {
         binding.protocolRecycler.setAdapter(adapter);
 
         //Observers
-        viewModel.getProtocolsLiveDate().observe(this, protocolTemps -> adapter.submitList(protocolTemps, true));
+        viewModel.getProtocolTempsLiveDate().observe(this, protocolTemps -> adapter.submitList(protocolTemps, true));
 
-        viewModel.getProtocolErrorLiveData().observe(this, this::displayError);
+        viewModel.getErrorLiveData().observe(this, this::displayError);
 
         createSearchView();
 
         //Listeners
         binding.protocolDownloadAction.setOnClickListener(view0 -> {
-            viewModel.downloadProtocolTemps(App.getInstance().getUser().getToken());
+            viewModel.downloadProtocolTemps(App.getUser().getToken());
             hideProtocolThings();
         });
 
-        binding.addProtocolTemp.setOnClickListener(view12 -> navigateToProtocolEdit(protocolCount, true));
+        binding.addProtocolTemp.setOnClickListener(view1 -> {
+            int itemCount = 0;
+            if (binding.protocolRecycler.getAdapter() != null)
+                itemCount = binding.protocolRecycler.getAdapter().getItemCount();
+            navigateToProtocolEdit(itemCount, true);
+        });
 
         if (editMode) {
             binding.backFromProtocolTemps.setOnClickListener(view1 -> navigateToHome());
@@ -95,19 +108,7 @@ public class ProtocolTempFragment extends Fragment {
             binding.backFromProtocolTemps.setOnClickListener(view2 -> navigateToProtocol());
         }
 
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                navigateToHome();
-            }
-        });
-
-        protocolCount = viewModel.getProtocolTemps().size();
-
-        if (protocolCount == 0) {
-            viewModel.setProtocolError(new ListEmptyException());
-        }
+        viewModel.loadProtocolTemps();
     }
 
     private void displayError(Throwable t) {
@@ -202,5 +203,11 @@ public class ProtocolTempFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

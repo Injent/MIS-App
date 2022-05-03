@@ -8,10 +8,14 @@ import com.injent.miscalls.data.templates.ProtocolTempDao;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import retrofit2.Call;
 
@@ -37,15 +41,11 @@ public class ProtocolTempRepository {
         es.submit(() -> dao.delete(id));
     }
 
-    public ProtocolTemp getProtocolTempById(int id) {
-        Future<ProtocolTemp> protocolTempFuture = es.submit(() -> dao.getProtocolById(id));
-        try {
-            return protocolTempFuture.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
-        return null;
+    public void getProtocolTempById(Function<Throwable, ProtocolTemp> ex, Consumer<ProtocolTemp> consumer, int id) {
+        CompletableFuture<ProtocolTemp> future = CompletableFuture
+                .supplyAsync(() -> dao.getProtocolById(id))
+                .exceptionally(ex);
+        future.thenAcceptAsync(consumer);
     }
 
     public void insertProtocol(ProtocolTemp protocolTemp) {
@@ -60,14 +60,10 @@ public class ProtocolTempRepository {
         });
     }
 
-    public List<ProtocolTemp> getProtocolTemps() {
-        Future<List<ProtocolTemp>> listFuture = es.submit(dao::getAll);
-        try {
-            return listFuture.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
-        return Collections.emptyList();
+    public void getProtocolTemps(Function<Throwable,List<ProtocolTemp>> ex, Consumer<List<ProtocolTemp>> consumer) {
+        CompletableFuture<List<ProtocolTemp>> future = CompletableFuture
+                .supplyAsync(dao::getAll)
+                .exceptionally(ex);
+        future.thenAcceptAsync(consumer);
     }
 }

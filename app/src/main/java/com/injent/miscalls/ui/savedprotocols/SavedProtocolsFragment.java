@@ -53,6 +53,8 @@ public class SavedProtocolsFragment extends Fragment {
         //Observers
         viewModel.getProtocolsLiveData().observe(getViewLifecycleOwner(), protocols -> protocolAdapter.submitList(protocols));
 
+        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> navigateToHome());
+
         //RecyclerView
         setupProtocolRecyclerView();
         setupSectionRecyclerView();
@@ -113,5 +115,11 @@ public class SavedProtocolsFragment extends Fragment {
 
     private boolean notMatchingDestination() {
         return Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.savedProtocolsFragment;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.auth;
 
 import android.accounts.NetworkErrorException;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSignInBinding;
@@ -36,6 +38,7 @@ public class SignInFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -71,6 +74,8 @@ public class SignInFragment extends Fragment {
                         MainActivity.getInstance().confirmExit();
                 }
         });
+
+        binding.copyrightText.setText(getString(R.string.app_name) + " " + App.APP_VERSION);
     }
 
     private void actionAuth() {

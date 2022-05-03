@@ -48,6 +48,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/protocolSectionsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/displayPadding" />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -58,17 +64,13 @@
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/protocolSectionsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/displayPadding" />
-
-                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/protocolRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
+                    android:paddingBottom="@dimen/displayPadding"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
             </LinearLayout>
         </ScrollView>
 

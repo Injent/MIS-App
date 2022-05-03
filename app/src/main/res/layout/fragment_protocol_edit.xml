@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.protocoltemp.ProtocolEditFragment">
+    tools:context=".ui.protocoltempedit.ProtocolEditFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -123,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/resultOfInspection"
+                    android:text="@string/inspection"
                     android:textColor="@color/darkGrayText"
                     android:textSize="@dimen/mediumFont" />
 
@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/displayPadding"
                     android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/treatment"
+                    android:text="@string/treatmentPlan"
                     android:textColor="@color/darkGrayText"
                     android:textSize="@dimen/mediumFont" />
 
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/displayPadding"
                     android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/conclusion"
+                    android:text="@string/diagnosis"
                     android:textColor="@color/darkGrayText"
                     android:textColorHint="@color/lightGrayText"
                     android:textSize="@dimen/mediumFont" />

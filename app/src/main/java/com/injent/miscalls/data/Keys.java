@@ -14,4 +14,5 @@ public class Keys {
     public static final String NEW_PROTOCOL = "newProtocol";
     public static final String DB_DATE = "dbDate";
     public static final String MODE_SAVED_PROTOCOL_EDIT = "savedProtocolEdit";
+    public static final String POSITION = "position";
 }

@@ -18,15 +18,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class ProtocolFletcher {
 
-    public static final String fileName = "pdf_template.html";
+    public static final String FILE_NAME = "pdf_template.html";
 
     public ProtocolFletcher(Context context, Patient patient, User user) {
         this.context = context;
@@ -52,58 +47,48 @@ public class ProtocolFletcher {
     };
     
     public ProtocolTemp fletchProtocol(ProtocolTemp temp) {
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        Callable<ProtocolTemp> callable = () -> {
-            String[] values = new String[]{temp.getInspection(), temp.getTreatment(), temp.getConclusion()};
-            for (int i = 0; i < values.length; i++) {
-                String replace = values[i]
-                        .replace(key[0], patient.getFirstname())
-                        .replace(key[1], patient.getLastname())
-                        .replace(key[2], patient.getMiddleName())
-                        .replace(key[3], patient.getBornDate())
-                        .replace(key[4], patient.getBenefitCategoryCode()
-                        .replace(key[5], patient.getRegAddress())
-                        );
-                values[i] = replace;
-            }
-
-            ProtocolTemp protocolTemp = new ProtocolTemp();
-            protocolTemp.setId(temp.getId());
-            protocolTemp.setDescription(temp.getDescription());
-            protocolTemp.setName(temp.getName());
-            protocolTemp.setInspection(values[0]);
-            protocolTemp.setTreatment(values[1]);
-            protocolTemp.setConclusion(values[2]);
-
-            return protocolTemp;
-        };
-        Future<ProtocolTemp> tempFuture = es.submit(callable);
-        try {
-            return tempFuture.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
+        String[] values = new String[]{temp.getInspection(), temp.getTreatment(), temp.getConclusion()};
+        for (int i = 0; i < values.length; i++) {
+            String replace = values[i]
+                    .replace(key[0], patient.getFirstname())
+                    .replace(key[1], patient.getLastname())
+                    .replace(key[2], patient.getMiddleName())
+                    .replace(key[3], patient.getBornDate())
+                    .replace(key[4], patient.getBenefitCategoryCode()
+                    .replace(key[5], patient.getResidence())
+                    );
+            values[i] = replace;
         }
-        return temp;
+
+        ProtocolTemp protocolTemp = new ProtocolTemp();
+        protocolTemp.setId(temp.getId());
+        protocolTemp.setDescription(temp.getDescription());
+        protocolTemp.setName(temp.getName());
+        protocolTemp.setInspection(values[0]);
+        protocolTemp.setTreatment(values[1]);
+        protocolTemp.setConclusion(values[2]);
+
+        return protocolTemp;
     }
 
     public void fletchPdfFile(Protocol protocol) throws IOException {
 
         AssetManager assetManager = context.getAssets();
-        InputStream inputStream = assetManager.open(fileName);
+        InputStream inputStream = assetManager.open(FILE_NAME);
         Scanner scanner = new Scanner(inputStream);
         StringBuilder stringBuilder = new StringBuilder();
         while (scanner.hasNextLine()){
             stringBuilder.append(scanner.nextLine());
         }
+        scanner.close();
 
         String html = stringBuilder.toString()
                 .replace("$docfullname", user.getFullName())
                 .replace("$workingposition", user.getWorkingPosition())
                 .replace("$patientfullname", patient.getFullName())
-                .replace("$inspection",protocol.getInspection())
-                .replace("$treatment",protocol.getTreatment()
-                .replace("$conclusion",protocol.getConclusion()));
+                .replace("$inspection", protocol.getInspection())
+                .replace("$treatment", protocol.getTreatment()
+                .replace("$conclusion", protocol.getConclusion()));
 
         final File savedPdfFile = FileManager.getInstance().createTempFile(context,"pdf",false);
 

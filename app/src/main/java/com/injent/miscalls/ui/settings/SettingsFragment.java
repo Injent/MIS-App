@@ -83,4 +83,10 @@ public class SettingsFragment extends Fragment {
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_settingsFragment_to_homeFragment, bundle);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

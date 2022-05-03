@@ -2,25 +2,28 @@
     <string name="app_name">МИС Вызовов</string>
 
     <!-- Titles -->
-    <string name="patientList">Лист пациентов</string>
-    <string name="medCard">Медицинская карта</string>
+    <string name="callList">Список вызовов</string>
+    <string name="callInfo">Вызов</string>
     <string name="auth">Авторизация</string>
     <string name="settings">Настройки</string>
-    <string name="protocol">Протокол</string>
-    <string name="protocolTemps">Протоколы лечения</string>
     <string name="protocolEdit">Редактирование протокола</string>
     <string name="savedProtocols">Сохраненные протоколы</string>
+
+    <!-- Tabs -->
+    <string name="medCardShort">Мед. карта</string>
+    <string name="recommendationsShort">Рекоменд.</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
     <string name="regularUpdates">Регулярные обновления</string>
     <string name="clearProtocolTemps">Сбросить шаблоны протоколов</string>
-    <string name="resultOfInspection">Результат осмотра</string>
+    <string name="inspection">Осмотр</string>
     <string name="infoAboutPatient">Информация о пациенте</string>
-    <string name="conclusion">Заключение</string>
-    <string name="treatment">Лечение</string>
+    <string name="diagnosis">Диагноз</string>
+    <string name="recommendations">Рекомендации</string>
+    <string name="treatmentPlan">План лечения</string>
     <string name="sortByNearest">Сортировать по\nместоположению</string>
-    <string name="listOfPatients">Лист пациентов</string>
+    <string name="listOfPatients">@string/callList</string>
     <string name="updateList">Обновить список</string>
     <string name="card">Карта</string>
     <string name="sendAll">Отправить все</string>
@@ -40,8 +43,8 @@
     <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
     <string name="patientsProtocol">Заполнение клинического протокола пациента</string>
     <string name="exitHint">Вы уверены что хотите выйти из приложения?</string>
-    <string name="protocolsDownloadHint"> Может потребоваться много места на устройстве</string>
-    <string name="protocolsDownloadDesc">Скачайте доступные шаблоны протоколов и используйте их при
+    <string name="recDownloadHint"> Может потребоваться много места на устройстве</string>
+    <string name="recDownloadDesc">Скачайте доступные рекомендации по лечению и используйте их при
         заполнении клинического протокола.</string>
     <string name="protocolName">Название протокола</string>
     <string name="protocolDesc">Описание протокола</string>
@@ -55,7 +58,7 @@
     <string name="backToPatientCard">Назад</string>
     <string name="saveProtocol">Сохранить протокол</string>
     <string name="saveAsPdf">Сохранить\nкак pdf</string>
-    <string name="applyTemp">Использовать\nпротокол</string>
+    <string name="useRecommendation">Использовать\nрекомендации</string>
     <string name="logout">Выйти из учетной записи</string>
     <string name="exit">Выход</string>
     <string name="editFile">Редактирование</string>
@@ -67,6 +70,7 @@
     <string name="deleteProtocol">Удалить протокол %s?</string>
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
+    <string name="moveToEditProtocol">Перейти к редактированию протокола</string>
 
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
@@ -74,20 +78,22 @@
     <string name="listNotUpdated">Лист не обновлялся</string>
     <string name="downloading">Загрузка…</string>
     <string name="noName">Безымянный</string>
+    <string name="age">лет</string>
+    <string name="inspected">Осмотрен</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>
-    <string name="updated">Обновлен</string>
+    <string name="updated">Обновлен %s</string>
     <string name="receivingDataOn">Обновление данных включено</string>
     <string name="moveToSettings">Перейдите в настройки приложения для отключения</string>
     <string name="protocolTempSaved">Протокол лечения %s сохранен</string>
-    <string name="protocolTempsCleared">Все протоколы сброшены сброшены</string>
+    <string name="protocolTempsCleared">Все протоколы сброшены</string>
     <string name="appliedTemp">Применен протокол</string>
     <string name="protocolDeleted">Протокол %s удален</string>
     <string name="textCopied">Текст скопирован</string>
     <string name="undoDeleting">Отменить</string>
     <string name="exitFromEditing">Выйти из редактирования?</string>
-    <string name="pdfGeneration">Генерация PDF документа...</string>
+    <string name="pdfGeneration">Генерация PDF документа…</string>
     <string name="pdfGenerationFailed">Ошибка генерации PDF документа</string>
 
     <!-- Field types -->
@@ -106,19 +112,28 @@
     <string name="aboutLink">https://exitoso.ru/injent/about/</string>
     <string name="helpLink">https://exitoso.ru/injent/help/</string>
 
-    <string-array name="fieldTypes">
+    <string-array name="infoType">
         <item>Дата заполнения мед. карты</item>
         <item>Ф.И.О.</item>
         <item>Пол</item>
         <item>Дата рождения</item>
-        <item>Место регистрации</item>
-        <item>Местность</item>
-        <item>Полис ОМС: серия, номер</item>
-        <item>СНИЛС</item>
-        <item>Наим. страховой. мед. организации</item>
+        <item>Место жительства</item>
         <item>Код категории льготы</item>
-        <item>Документ: серия, номер</item>
-        <item>Контакты</item>
+        <item>Звонок</item>
+    </string-array>
+
+    <string-array name="fieldType">
+        <item>Осмотр</item>
+        <item>Диагноз: МКБ (Международная классификация болезней)</item>
+        <item>План лечения</item>
+        <item>Рекомендации</item>
+    </string-array>
+
+    <string-array name="fieldHint">
+        <item>Осмотр…</item>
+        <item>Диагноз…</item>
+        <item>План лечения…</item>
+        <item>Рекоменции…</item>
     </string-array>
 
     <string-array name="modes">
@@ -126,4 +141,5 @@
         <item>Каждый час</item>
         <item>Вручную</item>
     </string-array>
+
 </resources>

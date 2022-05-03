@@ -32,11 +32,9 @@ import com.injent.miscalls.data.Keys;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
 import com.injent.miscalls.data.patientlist.ListEmptyException;
-import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 import com.injent.miscalls.domain.repositories.AuthRepository;
 
-import java.util.List;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
@@ -45,7 +43,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private NavController navController;
-    private HomeViewModel homeViewModel;
+    private HomeViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +56,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         navController = Navigation.findNavController(requireView());
 
         MainActivity.getInstance().enableFullScreen();
@@ -69,17 +67,18 @@ public class HomeFragment extends Fragment {
         binding.moreButton.setOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
         //Observers
-        homeViewModel.getPatientListLiveData().observe(getViewLifecycleOwner(), patients -> {
+        viewModel.getPatientListLiveData().observe(getViewLifecycleOwner(), patients -> {
+            hideLoading();
             adapter.submitList(patients);
-            if (getArguments() == null) displayList();
         });
 
-        homeViewModel.getPatientListError().observe(getViewLifecycleOwner(), throwable -> {
+        viewModel.getPatientListError().observe(getViewLifecycleOwner(), throwable -> {
             hideLoading();
             failed(throwable);
         });
 
-        homeViewModel.getDbDateLiveData().observe(getViewLifecycleOwner(), date -> displayDbDate());
+        viewModel.getDbDateLiveData().observe(getViewLifecycleOwner(), this::displayDbDate);
+        viewModel.loadDbDate();
 
         //On back pressed action
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
@@ -95,14 +94,7 @@ public class HomeFragment extends Fragment {
 
     public void displayList() {
         hideLoading();
-        List<Patient> patients = homeViewModel.getPatientList();
-
-        if (patients == null || patients.isEmpty()) {
-            failed(new ListEmptyException());
-        } else {
-            displayDbDate();
-            hideErrorMessage();
-        }
+        viewModel.loadPatientList();
     }
 
     private void failed(Throwable t) {
@@ -117,25 +109,31 @@ public class HomeFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    public void displayDbDate() {
-        binding.dbDateUpdateText.setText(getResources().getString(R.string.updated) + " " + homeViewModel.getDbDate());
+    public void displayDbDate(String date) {
+        binding.dbDateUpdateText.setText(String.format(getString(R.string.updated),date));
     }
 
     private void showLoading() {
         binding.loadingBar.setVisibility(View.VISIBLE);
+        binding.patientsRecycler.setVisibility(View.GONE);
+        binding.errorText.setVisibility(View.GONE);
     }
 
     private void hideLoading() {
-        binding.loadingBar.setVisibility(View.INVISIBLE);
+        binding.loadingBar.setVisibility(View.GONE);
+        binding.patientsRecycler.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage(String message) {
         binding.errorText.setText(message);
         binding.errorText.setVisibility(View.VISIBLE);
+        binding.patientsRecycler.setVisibility(View.GONE);
     }
 
     private void hideErrorMessage() {
-        binding.errorText.setVisibility(View.INVISIBLE);
+        binding.errorText.setVisibility(View.GONE);
+        binding.patientsRecycler.setVisibility(View.VISIBLE);
+        binding.loadingBar.setVisibility(View.GONE);
     }
 
     public DividerItemDecoration getDivider() {
@@ -149,13 +147,13 @@ public class HomeFragment extends Fragment {
         if (notMatchingDestination()) return;
         Bundle bundle = new Bundle();
         bundle.putInt(Keys.PATIENT_ID, patientId);
-        navController.navigate(R.id.action_homeFragment_to_patientCardFragment, bundle);
+        navController.navigate(R.id.patientStuffFragment, bundle);
     }
 
     private void navigateToSettings() {
         if (notMatchingDestination()) return;
         closeNavigationMenu();
-        navController.navigate(R.id.action_homeFragment_to_settingsFragment);
+        navController.navigate(R.id.settingsFragment);
     }
 
     private void navigateToProtocolTemp() {
@@ -173,9 +171,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void downloadNewDb() {
-        setArguments(null);
         showLoading();
-        homeViewModel.downloadPatientsDb();
+        viewModel.downloadPatientsDb();
     }
 
     private void navigateToAuth() {

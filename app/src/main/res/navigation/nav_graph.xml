@@ -94,7 +94,7 @@
     </fragment>
     <fragment
         android:id="@+id/protocolEditFragment"
-        android:name="com.injent.miscalls.ui.protocoltemp.ProtocolEditFragment"
+        android:name="com.injent.miscalls.ui.protocoltempedit.ProtocolEditFragment"
         android:label="fragment_protocol_edit"
         tools:layout="@layout/fragment_protocol_edit" >
         <action
@@ -113,4 +113,9 @@
         android:name="com.injent.miscalls.ui.savedprotocols.SaveProtocolEditFragment"
         android:label="save_protocol_edit_fragment"
         tools:layout="@layout/save_protocol_edit_fragment" />
+    <fragment
+        android:id="@+id/patientStuffFragment"
+        android:name="com.injent.miscalls.ui.patientstuff.PatientStuffFragment"
+        android:label="fragment_patient_stuff"
+        tools:layout="@layout/fragment_patient_stuff" />
 </navigation>

@@ -33,7 +33,10 @@ public class HttpManager {
 
     public static boolean isInternetAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) App.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo == null || !networkInfo.isConnectedOrConnecting())
+            return false;
+        return true;
     }
 
     public static MisAPI getAPI() {

@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -10,11 +11,18 @@ import androidx.lifecycle.ViewModel;
 import com.injent.miscalls.data.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
+import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.PatientDatabase;
 import com.injent.miscalls.domain.repositories.HomeRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,12 +46,8 @@ public class HomeViewModel extends ViewModel {
         dbDate.setValue(homeRepository.setNewPatientDbDate());
     }
 
-    public String getDbDate() {
-        if (dbDate.getValue() == null) {
-            String date = homeRepository.getPatientDbDate();
-            dbDate.setValue(date);
-        }
-        return dbDate.getValue();
+    public void loadDbDate() {
+        dbDate.setValue(homeRepository.getPatientDbDate());
     }
 
     public LiveData<String> getDbDateLiveData() {
@@ -58,11 +62,17 @@ public class HomeViewModel extends ViewModel {
         return patientListError;
     }
 
-    public List<Patient> getPatientList() {
-        if (patientList.getValue() == null) {
-            patientList.setValue(homeRepository.getAll());
-        }
-        return patientList.getValue();
+    public void loadPatientList() {
+        homeRepository.getAll(throwable -> {
+            patientListError.postValue(throwable);
+            return Collections.emptyList();
+        }, list -> {
+            if (list == null || list.isEmpty()) {
+                patientListError.postValue(new ListEmptyException());
+            } else {
+                patientList.postValue(list);
+            }
+        });
     }
 
     public void downloadPatientsDb() {

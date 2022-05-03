@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.data.HttpManager;
 import com.injent.miscalls.data.patientlist.FailedDownloadDb;
+import com.injent.miscalls.data.patientlist.ListEmptyException;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.data.patientlist.QueryToken;
 import com.injent.miscalls.data.templates.ProtocolTempDatabase;
@@ -16,7 +17,10 @@ import com.injent.miscalls.data.templates.ProtocolTemp;
 import com.injent.miscalls.domain.ProtocolFletcher;
 import com.injent.miscalls.domain.repositories.ProtocolTempRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,59 +29,36 @@ import retrofit2.Response;
 public class ProtocolTempViewModel extends ViewModel {
 
     private final ProtocolTempRepository repository;
-    private final MutableLiveData<List<ProtocolTemp>> protocols = new MutableLiveData<>();
-    private final MutableLiveData<Throwable> protocolError = new MutableLiveData<>();
-    private final MutableLiveData<ProtocolTemp> editingProtocol = new MutableLiveData<>();
-    private final MutableLiveData<ProtocolTemp> appliedProtocol = new MutableLiveData<>();
+    private final MutableLiveData<List<ProtocolTemp>> protocolsTemps = new MutableLiveData<>();
+    private final MutableLiveData<Throwable> error = new MutableLiveData<>();
 
     public ProtocolTempViewModel() {
         repository = new ProtocolTempRepository();
     }
 
-    public LiveData<ProtocolTemp> getSelectedProtocolLiveData() {
-        return editingProtocol;
+    public LiveData<List<ProtocolTemp>> getProtocolTempsLiveDate() {
+        return protocolsTemps;
     }
 
-    public ProtocolTemp getSelectedProtocol(int id) {
-        if (editingProtocol.getValue() == null)
-            editingProtocol.setValue(repository.getProtocolTempById(id));
-        return editingProtocol.getValue();
+    public LiveData<Throwable> getErrorLiveData() {
+        return error;
     }
 
-    public void saveSelectedProtocol(ProtocolTemp protocolTemp) {
-        repository.insertProtocol(protocolTemp);
-    }
-
-    public void applyProtocolTemp(ProtocolTemp protocolTemp, Patient patient) {
-        appliedProtocol.setValue(new ProtocolFletcher(patient).fletchProtocol(protocolTemp));
-    }
-
-    public LiveData<ProtocolTemp> getAppliedProtocolLiveData() {
-        return appliedProtocol;
-    }
-
-    public LiveData<List<ProtocolTemp>> getProtocolsLiveDate() {
-        return protocols;
-    }
-
-    public LiveData<Throwable> getProtocolErrorLiveData() {
-        return protocolError;
-    }
-
-    public List<ProtocolTemp> getProtocolTemps() {
-        if (protocols.getValue() == null) {
-            protocols.setValue(repository.getProtocolTemps());
-        }
-        return protocols.getValue();
-    }
-
-    public void setProtocolError(Throwable error) {
-        protocolError.setValue(error);
+    public void loadProtocolTemps() {
+        repository.getProtocolTemps(throwable -> {
+            error.postValue(throwable);
+            return Collections.emptyList();
+        }, list -> {
+            if (list.isEmpty())
+                error.postValue(new ListEmptyException());
+            else
+                protocolsTemps.postValue(list);
+        });
     }
 
     public void downloadProtocolTemps(QueryToken token) {
         if (!HttpManager.isInternetAvailable()) {
-            protocolError.setValue(new NetworkErrorException());
+            error.setValue(new NetworkErrorException());
             return;
         }
         repository.getProtocolsFromServer(token).enqueue(new Callback<>() {
@@ -85,14 +66,14 @@ public class ProtocolTempViewModel extends ViewModel {
             public void onResponse(@NonNull Call<List<ProtocolTemp>> call, @NonNull Response<List<ProtocolTemp>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     repository.insertProtocolTempWithDropDb(response.body());
-                    protocols.postValue(response.body());
+                    protocolsTemps.postValue(response.body());
                 } else
-                    protocolError.postValue(new UnknownError());
+                    error.postValue(new UnknownError());
             }
 
             @Override
             public void onFailure(@NonNull Call<List<ProtocolTemp>> call, @NonNull Throwable t) {
-                protocolError.postValue(new FailedDownloadDb(ProtocolTempDatabase.DB_NAME));
+                error.postValue(new FailedDownloadDb(ProtocolTempDatabase.DB_NAME));
             }
         });
     }

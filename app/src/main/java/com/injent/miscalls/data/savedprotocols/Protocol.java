@@ -3,10 +3,23 @@ package com.injent.miscalls.data.savedprotocols;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class Protocol {
+
+    public Protocol() {
+    }
+
+    @Ignore
+    public Protocol(String name, String inspection, String treatment, String conclusion, String description) {
+        this.name = name;
+        this.inspection = inspection;
+        this.treatment = treatment;
+        this.conclusion = conclusion;
+        this.description = description;
+    }
 
     @PrimaryKey(autoGenerate = true)
     private int id;

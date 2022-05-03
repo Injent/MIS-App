@@ -4,248 +4,127 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.protocol.ProtocolFragment">
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:elevation="@dimen/cardElevation"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:fitsSystemWindows="true"
+            android:background="@color/colorPrimaryDark">
 
-            <ImageView
-                android:id="@+id/backFromProtocol"
-                android:layout_width="@dimen/minDp"
-                android:layout_height="@dimen/minDp"
-                android:padding="8dp"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/ic_back_arrow"
-                android:background="?android:attr/actionBarItemBackground"/>
-
-            <TextView
-                android:id="@+id/protocolTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/displayPadding"
-                android:layout_marginBottom="@dimen/displayPadding"
-                android:fontFamily="@font/clear_sans_bold"
-                android:text="@string/protocol"
-                android:textColor="@color/darkGrayText"
-                android:textSize="@dimen/titleFont" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/displayPadding"
-            android:background="@color/colorPrimaryDark"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/displayPadding"
-            android:paddingTop="8dp"
-            android:paddingEnd="@dimen/displayPadding"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/fullnameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/clear_sans_bold"
-                android:gravity="center_horizontal"
-                android:text="LASTNAME FIRSTNAME MIDDLENAME"
-                android:textAlignment="center"
-                android:textColor="@color/grayText"
-                android:textSize="@dimen/mediumFont" />
-
-            <TextView
-                android:id="@+id/protocolHintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/clear_sans_medium"
-                android:text="@string/patientsProtocol"
-                android:textAlignment="center"
-                android:textColor="@color/lightGrayText"
-                android:textSize="@dimen/hintFont" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="32dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/saveAsPdfCard"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:clipToPadding="false"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:cardCornerRadius="@dimen/cardCorners"
-                    app:cardElevation="@dimen/cardElevation"
-                    app:cardUseCompatPadding="true"
-                    app:contentPadding="6dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    android:orientation="vertical"
+                    android:padding="@dimen/displayPadding">
 
                     <TextView
-                        android:id="@+id/saveAsPdfText"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/fullnameText"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/clear_sans_medium"
-                        android:text="@string/saveAsPdf"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/lowGray"
-                        android:textSize="@dimen/headerFont"
-                        app:drawableStartCompat="@drawable/ic_file" />
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/applyTemp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:clipToPadding="false"
-                    android:focusable="true"
-                    app:cardCornerRadius="@dimen/cardCorners"
-                    app:cardElevation="@dimen/cardElevation"
-                    app:cardUseCompatPadding="true"
-                    app:contentPadding="6dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                        android:fontFamily="@font/clear_sans_bold"
+                        android:gravity="center_horizontal"
+                        android:text="LASTNAME FIRSTNAME MIDDLENAME"
+                        android:textAlignment="center"
+                        android:textColor="@color/grayText"
+                        android:textSize="@dimen/mediumFont" />
 
                     <TextView
-                        android:id="@+id/applyTempText"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/protocolHintText"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:fontFamily="@font/clear_sans_medium"
-                        android:text="@string/applyTemp"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/lowGray"
-                        android:textSize="@dimen/headerFont"
-                        app:drawableStartCompat="@drawable/ic_temp_protocol_use" />
-                </androidx.cardview.widget.CardView>
+                        android:text="@string/patientsProtocol"
+                        android:textAlignment="center"
+                        android:textColor="@color/lightGrayText"
+                        android:textSize="@dimen/hintFont" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="32dp"
+                        android:gravity="start|center_vertical"
+                        android:orientation="horizontal">
 
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/applyTemp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:clipToPadding="false"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            app:cardCornerRadius="@dimen/cardCorners"
+                            app:cardElevation="@dimen/cardElevation"
+                            app:cardUseCompatPadding="true"
+                            app:contentPadding="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent">
 
+                            <TextView
+                                android:id="@+id/applyTempText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/clear_sans_medium"
+                                android:text="@string/useRecommendation"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/lowGray"
+                                android:textSize="@dimen/headerFont"
+                                app:drawableStartCompat="@drawable/ic_temp_protocol_use" />
+                        </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/transparent_glass">
 
-        <ScrollView
+                            <TextView
+                                android:id="@+id/appliedTempText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/clear_sans_medium"
+                                android:text="@string/useRecommendation"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/hintWhite"
+                                android:textSize="@dimen/headerFont"
+                                app:drawableStartCompat="@drawable/ic_temp_protocol_use" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:scrollbarThumbVertical="@drawable/scroll">
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            android:scrollbarThumbVertical="@null"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="@dimen/displayPadding"
-                android:paddingEnd="@dimen/displayPadding">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/resultOfInspectionText"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fieldRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/resultOfInspection"
-                    android:textColor="@color/darkGrayText"
-                    android:textSize="@dimen/mediumFont" />
-
-                <EditText
-                    android:id="@+id/resultOfInspectionField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text"
-                    android:ems="10"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:gravity="start|top"
-                    android:hint="@string/writeResultOfInspection"
-                    android:inputType="textMultiLine"
-                    android:minHeight="@dimen/minDp"
-                    android:padding="@dimen/editTextPadding"
-                    android:textColor="@color/grayText"
-                    android:textColorHint="@color/lightGrayText"
-                    android:textSize="@dimen/hintFont" />
-
-                <TextView
-                    android:id="@+id/treatmentText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/treatment"
-                    android:textColor="@color/darkGrayText"
-                    android:textSize="@dimen/mediumFont" />
-
-                <EditText
-                    android:id="@+id/treatmentField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text"
-                    android:ems="10"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:gravity="start|top"
-                    android:hint="@string/treatmentHint"
-                    android:inputType="textMultiLine"
-                    android:minHeight="@dimen/minDp"
-                    android:padding="@dimen/editTextPadding"
-                    android:textColor="@color/grayText"
-                    android:textColorHint="@color/lightGrayText"
-                    android:textSize="@dimen/hintFont" />
-
-                <TextView
-                    android:id="@+id/conclusionText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:text="@string/conclusion"
-                    android:textColor="@color/darkGrayText"
-                    android:textSize="@dimen/mediumFont" />
-
-                <EditText
-                    android:id="@+id/conclusionField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text"
-                    android:ems="10"
-                    android:fontFamily="@font/clear_sans_medium"
-                    android:gravity="start|top"
-                    android:hint="@string/writeConclusion"
-                    android:inputType="textMultiLine"
-                    android:minHeight="@dimen/minDp"
-                    android:padding="@dimen/editTextPadding"
-                    android:textColor="@color/grayText"
-                    android:textColorHint="@color/lightGrayText"
-                    android:textSize="@dimen/hintFont" />
-
-                <Button
-                    android:id="@+id/saveProtocolButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="64dp"
-                    android:background="@drawable/button"
-                    android:fontFamily="@font/clear_sans_bold"
-                    android:text="@string/saveProtocol"
-                    android:textColor="@color/button_text_color"
-                    android:textSize="@dimen/mediumFont" />
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never" />
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </LinearLayout>
+
 
 </layout>

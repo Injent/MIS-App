@@ -1,18 +1,24 @@
 package com.injent.miscalls.ui.home;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.patientlist.Patient;
 import com.injent.miscalls.databinding.PatientListItemBinding;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class PatientAdapter extends ListAdapter<Patient, PatientAdapter.ViewHolder> {
 
@@ -60,16 +66,23 @@ public class PatientAdapter extends ListAdapter<Patient, PatientAdapter.ViewHold
             this.listener = listener;
         }
 
+        @SuppressLint("SetTextI18n")
         public void setData(Patient patient, int position){
             binding.listId.setText(String.valueOf(position + 1));
             binding.listHeader.setText(patient.getShortInfo());
-            binding.listAddress.setText(patient.getRegAddress());
-            if (patient.isInspected()) {
+            binding.listAddress.setText(patient.getResidence());
+            binding.listAge.setText(patient.getAge() + " " + App.getInstance().getString(R.string.age));
+            if (Boolean.TRUE.equals(patient.isInspected()))
                 binding.statusBar.setBackgroundResource(R.drawable.status_bar_done);
-            }
 
             itemView.setOnClickListener(v -> listener.onClick(patient.getId()));
         }
+    }
+
+    @Override
+    public void submitList(@Nullable List<Patient> list) {
+        list.sort(Comparator.comparing(Patient::isInspected));
+        super.submitList(list);
     }
 
     public interface OnItemClickListener {

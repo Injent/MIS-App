@@ -10,59 +10,41 @@
         android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:elevation="@dimen/cardElevation"
-            android:gravity="start|center_vertical">
-
-            <ImageView
-                android:id="@+id/backFromCard"
-                android:layout_width="@dimen/minDp"
-                android:layout_height="@dimen/minDp"
-                android:layout_marginStart="4dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_back_arrow"
-                tools:layout_editor_absoluteX="33dp"
-                tools:layout_editor_absoluteY="27dp"
-                android:background="?attr/actionBarItemBackground"
-                android:focusable="true"
-                android:clickable="true"/>
-
-            <TextView
-                android:id="@+id/titlePatientCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/displayPadding"
-                android:layout_marginBottom="@dimen/displayPadding"
-                android:fontFamily="@font/clear_sans_bold"
-                android:text="@string/medCard"
-                android:textColor="@color/darkGrayText"
-                android:textSize="@dimen/titleFont"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/cardNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:fontFamily="@font/clear_sans_medium"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="№0"
-            android:textColor="@color/grayText"
-            android:textSize="@dimen/mediumFont" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/extraInfoLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/displayPadding">
+
+            <TextView
+                android:id="@+id/cardNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/clear_sans_medium"
+                android:gravity="center"
+                android:text="№0"
+                android:textColor="@color/grayText"
+                android:textSize="@dimen/mediumFont"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:elevation="@dimen/cardElevation"
+                android:fontFamily="@font/clear_sans_bold"
+                android:padding="4dp"
+                android:text="@string/inspected"
+                android:textColor="@color/green"
+                android:textSize="@dimen/mediumFont"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardNumber" />
 
             <TextView
                 android:id="@+id/complaintsHeader"
@@ -73,8 +55,9 @@
                 android:textColor="@color/darkGrayText"
                 android:textSize="@dimen/mediumFont"
                 app:layout_constraintEnd_toStartOf="@+id/copyComplaints"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/statusText" />
 
             <TextView
                 android:id="@+id/complaintField"
@@ -90,7 +73,6 @@
                 android:text="Complaints Description"
                 android:textColor="@color/grayText"
                 android:textColorHighlight="@color/highlight"
-                android:textIsSelectable="true"
                 android:textSize="@dimen/hintFont"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/complaintsHeader"
@@ -113,15 +95,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/stroke_list"
-            android:orientation="vertical"
-            android:padding="@dimen/displayPadding">
+            android:background="@drawable/list"
+            android:elevation="2dp"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/patientInfoHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/clear_sans_bold"
+                android:padding="8dp"
                 android:text="@string/infoAboutPatient"
                 android:textAlignment="center"
                 android:textColor="@color/darkGrayText"
@@ -138,27 +121,33 @@
                 android:background="@null"
                 android:fadeScrollbars="false"
                 android:overScrollMode="never"
+                android:paddingStart="@dimen/displayPadding"
+                android:paddingEnd="@dimen/displayPadding"
                 android:scrollbarThumbVertical="@drawable/scroll"
                 android:scrollbars="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@+id/protocolButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.937"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintTop_toBottomOf="@+id/patientInfoHeader" />
 
-            <Button
-                android:id="@+id/protocolButton"
-                android:layout_width="match_parent"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/callButton"
+                android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
-                android:background="@drawable/button"
-                android:fontFamily="@font/clear_sans_medium"
-                android:text="@string/actionProtocol"
-                android:textAllCaps="false"
-                android:textColor="@color/button_text_color"
-                android:textSize="@dimen/mediumFont"
+                android:layout_marginEnd="@dimen/displayPadding"
+                android:layout_marginBottom="@dimen/displayPadding"
+                android:backgroundTint="@color/green"
+                android:clickable="true"
+                android:src="@drawable/ic_call"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabCustomSize="@dimen/minDp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                tools:layout_editor_absoluteX="16dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/white" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
