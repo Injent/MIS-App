@@ -43,8 +43,6 @@ public class SettingsFragment extends Fragment {
 
         repository = new SettingsRepository();
 
-        MainActivity.getInstance().disableFullScreen();
-
         binding.backFromSettings.setOnClickListener(view0 -> back());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this,
@@ -81,7 +79,7 @@ public class SettingsFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putBoolean("updateList", true);
         Navigation.findNavController(requireView())
-                .navigate(R.id.action_settingsFragment_to_homeFragment, bundle);
+                .navigate(R.id.homeFragment, bundle);
     }
 
     @Override

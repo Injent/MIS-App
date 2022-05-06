@@ -9,7 +9,7 @@
 
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/focused" />
+            <solid android:color="@color/uiLightGray" />
             <corners android:radius="@dimen/buttonCorners" />
         </shape>
     </item>

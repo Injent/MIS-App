@@ -28,10 +28,9 @@ import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.Keys;
 import com.injent.miscalls.data.User;
-import com.injent.miscalls.data.patientlist.FailedDownloadDb;
-import com.injent.miscalls.data.patientlist.ListEmptyException;
+import com.injent.miscalls.data.calllist.FailedDownloadDb;
+import com.injent.miscalls.data.calllist.ListEmptyException;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 import com.injent.miscalls.domain.repositories.AuthRepository;
 
@@ -39,7 +38,7 @@ import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
-    private PatientAdapter adapter;
+    private CallAdapter adapter;
 
     private FragmentHomeBinding binding;
     private NavController navController;
@@ -59,8 +58,6 @@ public class HomeFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         navController = Navigation.findNavController(requireView());
 
-        MainActivity.getInstance().enableFullScreen();
-
         //Listeners
         binding.patientListSection.setOnClickListener(view0 -> downloadNewDb());
 
@@ -72,7 +69,7 @@ public class HomeFragment extends Fragment {
             adapter.submitList(patients);
         });
 
-        viewModel.getPatientListError().observe(getViewLifecycleOwner(), throwable -> {
+        viewModel.getCallListError().observe(getViewLifecycleOwner(), throwable -> {
             hideLoading();
             failed(throwable);
         });
@@ -94,7 +91,7 @@ public class HomeFragment extends Fragment {
 
     public void displayList() {
         hideLoading();
-        viewModel.loadPatientList();
+        viewModel.loadCallList();
     }
 
     private void failed(Throwable t) {
@@ -143,25 +140,17 @@ public class HomeFragment extends Fragment {
         return divider;
     }
 
-    private void navigateToPatientCard(int patientId) {
+    private void navigateToCallStuff(int callId) {
         if (notMatchingDestination()) return;
-        Bundle bundle = new Bundle();
-        bundle.putInt(Keys.PATIENT_ID, patientId);
-        navController.navigate(R.id.patientStuffFragment, bundle);
+        Bundle args = new Bundle();
+        args.putInt(getString(R.string.keyCallId), callId);
+        navController.navigate(R.id.callStuffFragment, args);
     }
 
     private void navigateToSettings() {
         if (notMatchingDestination()) return;
         closeNavigationMenu();
         navController.navigate(R.id.settingsFragment);
-    }
-
-    private void navigateToProtocolTemp() {
-        if (notMatchingDestination()) return;
-        closeNavigationMenu();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(Keys.MODE_EDIT, true);
-        navController.navigate(R.id.protocolTempFragment, bundle);
     }
 
     private void moveToSite(String link) {
@@ -202,12 +191,10 @@ public class HomeFragment extends Fragment {
                     break;
                 case R.id.help: moveToSite(getText(R.string.helpLink).toString());
                     break;
-                case R.id.protocolTempsMenu: navigateToProtocolTemp();
-                    break;
                 case R.id.savedProtocolsMenu: navigateToSavedProtocols();
                     break;
                 case R.id.logoutMenu: {
-                    new AuthRepository().setAuthed(false);
+                    App.getInstance().setAuthed(false);
                     navigateToAuth();
                 }
                 break;
@@ -234,18 +221,18 @@ public class HomeFragment extends Fragment {
 
         //RecyclerView
         binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new PatientAdapter(this::navigateToPatientCard);
+        adapter = new CallAdapter(this::navigateToCallStuff);
 
         binding.patientsRecycler.setAdapter(adapter);
 
         //Display list
         if (getArguments() == null) return;
 
-        if (getArguments().containsKey(Keys.UPDATE_LIST)) {
+        if (getArguments().containsKey(getString(R.string.keyUpdateList))) {
             displayList();
         }
 
-        else if (getArguments().containsKey(Keys.DOWNLOAD_DB))
+        else if (getArguments().containsKey(getString(R.string.keyDownloadDb)))
             downloadNewDb();
     }
 

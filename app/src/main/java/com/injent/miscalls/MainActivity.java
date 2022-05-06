@@ -9,11 +9,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.View;
-import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.injent.miscalls.domain.ForegroundServiceApp;
 
@@ -38,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setInstance(this);
 
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.statusBar, getTheme()));
         getWindow().setStatusBarColor(getResources().getColor(R.color.statusBar, getTheme()));
 
         if (App.getInstance().getMode() == 1) {
@@ -74,15 +72,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
         System.exit(0);
     }
-
-    public void enableFullScreen() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-    }
-
-    public void disableFullScreen() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-    }
-
 
     public void startService() {
         Intent service = new Intent(this, ForegroundServiceApp.class);

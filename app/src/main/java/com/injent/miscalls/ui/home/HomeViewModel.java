@@ -1,28 +1,22 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.HttpManager;
+import com.injent.miscalls.domain.HttpManager;
 import com.injent.miscalls.App;
-import com.injent.miscalls.data.patientlist.FailedDownloadDb;
-import com.injent.miscalls.data.patientlist.ListEmptyException;
-import com.injent.miscalls.data.patientlist.Patient;
-import com.injent.miscalls.data.patientlist.PatientDatabase;
+import com.injent.miscalls.data.calllist.CallDatabase;
+import com.injent.miscalls.data.calllist.CallInfo;
+import com.injent.miscalls.data.calllist.FailedDownloadDb;
+import com.injent.miscalls.data.calllist.ListEmptyException;
 import com.injent.miscalls.domain.repositories.HomeRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,8 +26,8 @@ public class HomeViewModel extends ViewModel {
 
     private final HomeRepository homeRepository;
 
-    private final MutableLiveData<List<Patient>> patientList = new MutableLiveData<>();
-    private final MutableLiveData<Throwable> patientListError = new MutableLiveData<>();
+    private final MutableLiveData<List<CallInfo>> callList = new MutableLiveData<>();
+    private final MutableLiveData<Throwable> callListError = new MutableLiveData<>();
 
     private final MutableLiveData<String> dbDate = new MutableLiveData<>();
 
@@ -54,48 +48,48 @@ public class HomeViewModel extends ViewModel {
         return dbDate;
     }
 
-    public LiveData<List<Patient>> getPatientListLiveData() {
-        return patientList;
+    public LiveData<List<CallInfo>> getPatientListLiveData() {
+        return callList;
     }
 
-    public LiveData<Throwable> getPatientListError(){
-        return patientListError;
+    public LiveData<Throwable> getCallListError(){
+        return callListError;
     }
 
-    public void loadPatientList() {
+    public void loadCallList() {
         homeRepository.getAll(throwable -> {
-            patientListError.postValue(throwable);
+            callListError.postValue(throwable);
             return Collections.emptyList();
         }, list -> {
             if (list == null || list.isEmpty()) {
-                patientListError.postValue(new ListEmptyException());
+                callListError.postValue(new ListEmptyException());
             } else {
-                patientList.postValue(list);
+                callList.postValue(list);
             }
         });
     }
 
     public void downloadPatientsDb() {
         if (!HttpManager.isInternetAvailable()) {
-            patientListError.postValue(new NetworkErrorException());
+            callListError.postValue(new NetworkErrorException());
             return;
         }
-        homeRepository.getPatientList(App.getUser().getToken()).enqueue(new Callback<>() {
+        homeRepository.getPatientList(App.getUser().getQueryToken()).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
+            public void onResponse(@NonNull Call<List<CallInfo>> call, @NonNull Response<List<CallInfo>> response) {
                 if (response.isSuccessful()) {
-                    List<Patient> list = response.body();
-                    homeRepository.insertWithDropDb(list != null ? list.toArray(new Patient[0]) : new Patient[0]);
-                    patientList.postValue(list);
+                    List<CallInfo> list = response.body();
+                    homeRepository.insertWithDropDb(list != null ? list.toArray(new CallInfo[0]) : new CallInfo[0]);
+                    callList.postValue(list);
                     setNewDbDate();
                 } else {
-                    patientListError.postValue(new FailedDownloadDb(PatientDatabase.DB_NAME));
+                    callListError.postValue(new FailedDownloadDb(CallDatabase.DB_NAME));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Patient>> call, @NonNull Throwable t) {
-                patientListError.postValue(t);
+            public void onFailure(@NonNull Call<List<CallInfo>> call, @NonNull Throwable t) {
+                callListError.postValue(t);
             }
         });
     }
@@ -104,17 +98,17 @@ public class HomeViewModel extends ViewModel {
         if (!HttpManager.isInternetAvailable()) {
             return;
         }
-        homeRepository.getPatientList(App.getUser().getToken()).enqueue(new Callback<>() {
+        homeRepository.getPatientList(App.getUser().getQueryToken()).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<List<Patient>> call, @NonNull Response<List<Patient>> response) {
+            public void onResponse(@NonNull Call<List<CallInfo>> call, @NonNull Response<List<CallInfo>> response) {
                 if (response.isSuccessful()) {
-                    homeRepository.insertWithDropDb((Patient) response.body());
+                    homeRepository.insertWithDropDb((CallInfo) response.body());
                     setNewDbDate();
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Patient>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<CallInfo>> call, @NonNull Throwable t) {
                 //Nothing to do
             }
         });

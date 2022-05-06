@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="colorControlHighlight">@color/lightGrayText</item>
 
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
 
     </style>
 </resources>

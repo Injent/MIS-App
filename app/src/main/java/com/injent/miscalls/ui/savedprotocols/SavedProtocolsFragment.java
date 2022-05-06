@@ -17,9 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.Keys;
 import com.injent.miscalls.databinding.FragmentSavedProtocolsBinding;
 import com.injent.miscalls.ui.Section;
 import com.injent.miscalls.ui.SectionAdapter;
@@ -47,8 +45,6 @@ public class SavedProtocolsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(SavedProtocolsViewModel.class);
         navController = Navigation.findNavController(requireView());
-        MainActivity.getInstance().disableFullScreen();
-
 
         //Observers
         viewModel.getProtocolsLiveData().observe(getViewLifecycleOwner(), protocols -> protocolAdapter.submitList(protocols));
@@ -73,7 +69,6 @@ public class SavedProtocolsFragment extends Fragment {
     }
 
     private void setupProtocolRecyclerView() {
-        protocolAdapter = new SavedProtocolAdapter(this::navigateToProtocolEditing);
 
         binding.protocolRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.protocolRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -102,15 +97,8 @@ public class SavedProtocolsFragment extends Fragment {
     private void navigateToHome() {
         if (notMatchingDestination()) return;
         Bundle bundle = new Bundle();
-        bundle.putBoolean(Keys.UPDATE_LIST, true);
+        bundle.putBoolean(getString(R.string.keyUpdateList), true);
         navController.navigate(R.id.homeFragment, bundle);
-    }
-
-    private void navigateToProtocolEditing(int protocolId) {
-        if (notMatchingDestination()) return;
-        Bundle bundle = new Bundle();
-        bundle.putInt(Keys.PROTOCOL_ID, protocolId);
-        navController.navigate(R.id.protocolEditFragment, bundle);
     }
 
     private boolean notMatchingDestination() {

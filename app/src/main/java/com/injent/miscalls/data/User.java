@@ -3,7 +3,7 @@ package com.injent.miscalls.data;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
-import com.injent.miscalls.data.patientlist.QueryToken;
+import com.injent.miscalls.data.calllist.QueryToken;
 
 public class User {
 
@@ -22,10 +22,10 @@ public class User {
     private int id;
 
     @SerializedName("login")
-    private final String login;
+    private String login;
 
     @SerializedName("password")
-    private final String password;
+    private String password;
 
     @SerializedName("name")
     private final String name;
@@ -62,7 +62,23 @@ public class User {
         return workingPosition;
     }
 
-    public QueryToken getToken() {
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public QueryToken getQueryToken() {
         QueryToken queryToken = new QueryToken();
         queryToken.setToken(token);
         return queryToken;

@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.HttpManager;
+import com.injent.miscalls.domain.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.domain.repositories.AuthRepository;
@@ -20,8 +20,8 @@ import retrofit2.Response;
 public class AuthViewModel extends ViewModel {
 
     private final AuthRepository repository;
-    private MutableLiveData<Boolean> authorized = new MutableLiveData<>();
-    private MutableLiveData<Throwable> errorUser = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> authorized = new MutableLiveData<>();
+    private final MutableLiveData<Throwable> errorUser = new MutableLiveData<>();
 
     public AuthViewModel() {
         super();
@@ -30,20 +30,21 @@ public class AuthViewModel extends ViewModel {
 
     public void auth(String login, String password) {
         if (!HttpManager.isInternetAvailable()) {
-            Log.e("AuthViewModel", "NO INTERNET CONNECTION");
             errorUser.postValue(new NetworkErrorException());
             return;
         }
         Call<User> call = repository.auth(login, password);
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 switch (response.code()) {
                     case 200: {
                         User authModelIn = response.body();
+                        if (authModelIn == null) return;
+                        authModelIn.setLogin(login);
+                        authModelIn.setPassword(password);
+                        App.getInstance().writeEncryptedData(authModelIn);
                         authorized.postValue(true);
-                        App.setUser(authModelIn);
-
                     } break;
                     case 403: {
                         errorUser.postValue(new UserNotFoundException());
@@ -58,14 +59,6 @@ public class AuthViewModel extends ViewModel {
                 errorUser.postValue(t);
             }
         });
-    }
-
-    public boolean isAuthed() {
-        return repository.isAuthed();
-    }
-
-    public void setAuthed(boolean authed) {
-        repository.setAuthed(authed);
     }
 
     public LiveData<Boolean> getAuthorized() {

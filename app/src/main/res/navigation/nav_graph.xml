@@ -11,40 +11,14 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_patientCardFragment"
-            app:destination="@id/patientCardFragment"
-            app:enterAnim="@anim/left_in_slide"
-            app:exitAnim="@anim/down_out_slide" />
-        <action
             android:id="@+id/action_homeFragment_to_signInFragment"
             app:destination="@id/signInFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_homeFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/left_in_slide"
-            app:exitAnim="@anim/up_out_slide" />
-    </fragment>
-    <fragment
-        android:id="@+id/patientCardFragment"
-        android:name="com.injent.miscalls.ui.patientcard.PatientCardFragment"
-        android:label="fragment_patient_card"
-        tools:layout="@layout/fragment_patient_card">
-        <action
-            android:id="@+id/action_patientCardFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@anim/up_in_slide"
-            app:exitAnim="@anim/right_out_slide" />
-        <action
-            android:id="@+id/action_patientCardFragment_to_protocolFragment"
-            app:destination="@id/protocolFragment"
-            app:enterAnim="@anim/left_in_slide"
-            app:exitAnim="@anim/left_out_slide" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.injent.miscalls.ui.auth.SignInFragment"
+        android:name="com.injent.miscalls.ui.auth.AuthFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
@@ -54,68 +28,28 @@
             app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.injent.miscalls.ui.settings.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" >
-        <action
-            android:id="@+id/action_settingsFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@anim/down_in_slide"
-            app:exitAnim="@anim/right_out_slide" />
-    </fragment>
+        android:id="@+id/callStuffFragment"
+        android:name="com.injent.miscalls.ui.patientstuff.CallStuffFragment"
+        android:label="fragment_call_stuff"
+        tools:layout="@layout/fragment_call_stuff" />
     <fragment
-        android:id="@+id/protocolFragment"
-        android:name="com.injent.miscalls.ui.protocol.ProtocolFragment"
-        android:label="fragment_protocol"
-        tools:layout="@layout/fragment_protocol" >
-        <action
-            android:id="@+id/action_protocolFragment_to_patientCardFragment"
-            app:destination="@id/patientCardFragment"
-            app:enterAnim="@anim/right_in_slide"
-            app:exitAnim="@anim/right_out_slide" />
-        <action
-            android:id="@+id/action_protocolFragment_to_protocolTempFragment"
-            app:destination="@id/protocolTempFragment" />
-    </fragment>
+        android:id="@+id/diagnosisFragment"
+        android:name="com.injent.miscalls.ui.diagnosis.DiagnosisFragment"
+        android:label="fragment_diagnosis"
+        tools:layout="@layout/fragment_diagnosis" />
     <fragment
-        android:id="@+id/protocolTempFragment"
-        android:name="com.injent.miscalls.ui.protocoltemp.ProtocolTempFragment"
-        android:label="fragment_protocol_temp"
-        tools:layout="@layout/fragment_protocol_temp" >
-        <action
-            android:id="@+id/action_protocolTempFragment_to_protocolEditFragment"
-            app:destination="@id/protocolEditFragment"
-            app:enterAnim="@anim/left_in_slide"
-            app:exitAnim="@anim/left_out_slide" />
-        <action
-            android:id="@+id/action_protocolTempFragment_to_protocolFragment"
-            app:destination="@id/protocolFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/protocolEditFragment"
-        android:name="com.injent.miscalls.ui.protocoltempedit.ProtocolEditFragment"
-        android:label="fragment_protocol_edit"
-        tools:layout="@layout/fragment_protocol_edit" >
-        <action
-            android:id="@+id/action_protocolEditFragment_to_protocolTempFragment"
-            app:destination="@id/protocolTempFragment"
-            app:enterAnim="@anim/right_in_slide"
-            app:exitAnim="@anim/right_out_slide" />
-    </fragment>
+        android:id="@+id/patientCardFragment"
+        android:name="com.injent.miscalls.ui.patientcard.PatientCardFragment"
+        android:label="fragment_patient_card"
+        tools:layout="@layout/fragment_patient_card" />
     <fragment
         android:id="@+id/savedProtocolsFragment"
         android:name="com.injent.miscalls.ui.savedprotocols.SavedProtocolsFragment"
         android:label="fragment_saved_protocols"
         tools:layout="@layout/fragment_saved_protocols" />
     <fragment
-        android:id="@+id/saveProtocolEditFragment"
-        android:name="com.injent.miscalls.ui.savedprotocols.SaveProtocolEditFragment"
-        android:label="save_protocol_edit_fragment"
-        tools:layout="@layout/save_protocol_edit_fragment" />
-    <fragment
-        android:id="@+id/patientStuffFragment"
-        android:name="com.injent.miscalls.ui.patientstuff.PatientStuffFragment"
-        android:label="fragment_patient_stuff"
-        tools:layout="@layout/fragment_patient_stuff" />
+        android:id="@+id/settingsFragment"
+        android:name="com.injent.miscalls.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

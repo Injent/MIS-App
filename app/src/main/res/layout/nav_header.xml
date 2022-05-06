@@ -4,9 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/header_background"
+    android:background="@color/colorPrimary"
     android:elevation="@dimen/cardElevation"
-    android:padding="@dimen/displayPadding">
+    android:paddingStart="@dimen/displayPadding"
+    android:paddingTop="32dp"
+    android:paddingEnd="@dimen/displayPadding"
+    android:paddingBottom="32dp">
 
     <ImageView
         android:id="@+id/imageView"

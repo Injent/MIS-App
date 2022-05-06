@@ -4,26 +4,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.patientlist.ListEmptyException;
-import com.injent.miscalls.data.savedprotocols.Protocol;
+import com.injent.miscalls.data.calllist.ListEmptyException;
+import com.injent.miscalls.data.savedprotocols.Inspection;
 import com.injent.miscalls.domain.repositories.ProtocolRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class SavedProtocolsViewModel extends ViewModel {
 
     private final ProtocolRepository repository;
-    private final MutableLiveData<List<Protocol>> protocols = new MutableLiveData<>();
+    private final MutableLiveData<List<Inspection>> protocols = new MutableLiveData<>();
     private final MutableLiveData<Throwable> error = new MutableLiveData<>();
 
     public SavedProtocolsViewModel() {
         this.repository = new ProtocolRepository();
     }
 
-    public LiveData<List<Protocol>> getProtocolsLiveData() {
+    public LiveData<List<Inspection>> getProtocolsLiveData() {
         return protocols;
     }
 

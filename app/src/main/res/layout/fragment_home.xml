@@ -26,27 +26,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
-                    app:contentScrim="@color/centerColor"
+                    app:contentScrim="@color/endColor"
                     app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
-                    <View
-                        android:id="@+id/statusBarView"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:background="#34000000" />
-
                     <LinearLayout
-                        android:layout_marginTop="72dp"
                         android:id="@+id/topAppbarPart"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="64dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/dbDateUpdateText"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/minDp"
-                            android:layout_marginLeft="@dimen/defaultDp"
+                            android:layout_marginLeft="@dimen/displayPadding"
+                            android:layout_marginBottom="8dp"
                             android:drawablePadding="8dp"
                             android:fontFamily="@font/clear_sans_medium"
                             android:gravity="center|left"
@@ -118,15 +113,14 @@
 
                     <androidx.appcompat.widget.Toolbar
                         android:layout_width="match_parent"
-                        android:layout_height="92dp"
-                        app:layout_collapseMode="pin"/>
+                        android:layout_height="72dp"
+                        app:layout_collapseMode="pin" />
 
                     <LinearLayout
-                        android:layout_marginTop="24dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_collapseMode="pin"
-                        android:gravity="center_vertical|start">
+                        android:gravity="center_vertical|start"
+                        app:layout_collapseMode="pin">
 
                         <ImageView
                             android:id="@+id/moreButton"
@@ -143,12 +137,12 @@
                             android:id="@+id/titlePatients"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/displayPadding"
+                            android:layout_marginBottom="@dimen/displayPadding"
                             android:fontFamily="@font/clear_sans_bold"
                             android:text="@string/callList"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/titleFont"
-                            android:layout_marginTop="@dimen/displayPadding"
-                            android:layout_marginBottom="@dimen/displayPadding"/>
+                            android:textSize="@dimen/titleFont" />
 
                     </LinearLayout>
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -210,11 +204,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
+            android:background="@color/colorPrimaryDark"
             app:dividerInsetEnd="@dimen/displayPadding"
             app:dividerInsetStart="@dimen/displayPadding"
-            app:drawerLayoutCornerSize="@dimen/navBarCorners"
+            app:drawerLayoutCornerSize="@dimen/listCorners"
             app:headerLayout="@layout/nav_header"
             app:itemIconTint="@color/darkGrayText"
             app:menu="@menu/navigation_menu">

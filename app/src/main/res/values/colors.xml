@@ -17,7 +17,7 @@
     <color name="green">#3ba55d</color>
     <color name="gray">#e8e8e8</color>
     <color name="lightBlue">#0a95ff</color>
-    <color name="statusBar">#FFFFFF</color>
+    <color name="statusBar">#21201e</color>
     <color name="transparentDarkGlass">#34000000</color>
     <color name="transparentLightGlass">#34FFFFFF</color>
 
@@ -26,8 +26,8 @@
 
     <color name="icClock">#0091FF</color>
     <color name="icClear">#FF6F00</color>
-    <color name="uiGray">#e6e6e6</color>
-    <color name="uiLightGray">#f2f2f2</color>
+    <color name="uiGray">#f2f2f2</color>
+    <color name="uiLightGray">#e6e6e6</color>
 
     <!-- Text -->
     <color name="focused">#EDFDFF</color>

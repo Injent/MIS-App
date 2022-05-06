@@ -11,7 +11,7 @@
 
     <!-- Tabs -->
     <string name="medCardShort">Мед. карта</string>
-    <string name="recommendationsShort">Рекоменд.</string>
+    <string name="recommendationsShort">Реком…</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
@@ -29,8 +29,7 @@
     <string name="sendAll">Отправить все</string>
 
     <!-- Menu -->
-    <string name="protocolMenu">Протоколы лечения</string>
-    <string name="savedProtocolsMenu">Сохраненные протоколы</string>
+    <string name="inspections">Осмотры</string>
     <string name="others">Разное</string>
     <string name="aboutMenu">О нас</string>
     <string name="helpMenu">Помощь</string>
@@ -45,7 +44,7 @@
     <string name="exitHint">Вы уверены что хотите выйти из приложения?</string>
     <string name="recDownloadHint"> Может потребоваться много места на устройстве</string>
     <string name="recDownloadDesc">Скачайте доступные рекомендации по лечению и используйте их при
-        заполнении клинического протокола.</string>
+        заполнении осмотра пациента</string>
     <string name="protocolName">Название протокола</string>
     <string name="protocolDesc">Описание протокола</string>
     <string name="dataWillBeDeletedForever">Данные навсегда удалятся</string>
@@ -65,8 +64,7 @@
     <string name="saveFile">Сохранить файл?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="downloadProtocols">Скачать протоколы лечения</string>
-    <string name="search">Поиск</string>
+    <string name="downloadRecommendations">Скачать рекомендации по лечению</string>
     <string name="deleteProtocol">Удалить протокол %s?</string>
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
@@ -95,10 +93,14 @@
     <string name="exitFromEditing">Выйти из редактирования?</string>
     <string name="pdfGeneration">Генерация PDF документа…</string>
     <string name="pdfGenerationFailed">Ошибка генерации PDF документа</string>
+    <string name="diagnoseDeleted">Диагноз удален</string>
+    <string name="diagnosisAlreadyAdded">Этот диагноз уже записан</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>
     <string name="password">Пароль</string>
+    <string name="diagnose">Диагноз: МКБ (Международная классификация болезней)</string>
+    <string name="search">Поиск…</string>
 
     <!-- Errors -->
     <string name="noInternetConnection">Отсутствует интернет соединение</string>
@@ -119,19 +121,21 @@
         <item>Дата рождения</item>
         <item>Место жительства</item>
         <item>Код категории льготы</item>
+        <item>СНИЛС</item>
+        <item>ПОЛИС</item>
+        <item>Медицинская организация</item>
+        <item>Документ</item>
         <item>Звонок</item>
     </string-array>
 
     <string-array name="fieldType">
         <item>Осмотр</item>
-        <item>Диагноз: МКБ (Международная классификация болезней)</item>
         <item>План лечения</item>
         <item>Рекомендации</item>
     </string-array>
 
     <string-array name="fieldHint">
         <item>Осмотр…</item>
-        <item>Диагноз…</item>
         <item>План лечения…</item>
         <item>Рекоменции…</item>
     </string-array>
@@ -141,5 +145,22 @@
         <item>Каждый час</item>
         <item>Вручную</item>
     </string-array>
+
+    <!-- Keys -->
+    <string name="keyCallId">callId</string>
+    <string name="keyCallParcelable">callParcelable</string>
+    <string name="keyRecommendationId">recommendationId</string>
+    <string name="keyEditMode">editMode</string>
+    <string name="keyUpdateList">updateList</string>
+    <string name="keyDownloadDb">downloadDb</string>
+    <string name="keyDbDate">dbDate</string>
+
+    <string name="keyWorkingPosition">workingPosition</string>
+    <string name="keyFirstName">firstName</string>
+    <string name="keyLastname">lastname</string>
+    <string name="keyMiddleName">middleName</string>
+    <string name="keyToken">token</string>
+    <string name="keyLogin">login</string>
+    <string name="keyPassword">password</string>
 
 </resources>

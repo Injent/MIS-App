@@ -17,18 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.Keys;
-import com.injent.miscalls.data.patientlist.Patient;
+import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.databinding.FragmentPatientCardBinding;
 
 public class PatientCardFragment extends Fragment {
 
     private FragmentPatientCardBinding binding;
-    private PatientCardViewModel viewModel;
     private InfoAdapter adapter;
 
     public PatientCardFragment() {
@@ -47,19 +43,10 @@ public class PatientCardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(PatientCardViewModel.class);
-
-        MainActivity.getInstance().disableFullScreen();
-
         setupRecyclerViewInfo();
 
-        //Observer
-        viewModel.getPatientLiveData().observe(getViewLifecycleOwner(), patient -> {
-            adapter.submitList(patient.getData());
-            setInfo(patient);
-        });
-
-        viewModel.loadPatient(getArguments() != null ? getArguments().getInt(Keys.PATIENT_ID, 0) : 0);
+        if (getArguments() != null)
+            setInfo(getArguments().getParcelable(getString(R.string.keyCallParcelable)));
     }
 
     private void call(String number) {
@@ -83,16 +70,17 @@ public class PatientCardFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void setInfo(Patient patient) {
-        binding.cardNumber.setText("№" + patient.getCardNumber());
-        binding.complaintField.setText(patient.getComplaints());
+    private void setInfo(CallInfo callInfo) {
+        binding.complaintField.setText(callInfo.getComplaints());
+
         //Listeners
-        binding.copyComplaints.setOnClickListener(view1 -> copyText(patient.getComplaints()));
+        binding.copyComplaints.setOnClickListener(view1 -> copyText(callInfo.getComplaints()));
+        binding.callButton.setOnClickListener(view1 -> call(callInfo.getPhoneNumber()));
 
-        binding.callButton.setOnClickListener(view1 -> call(patient.getPhoneNumber()));
-
-        if (patient.isInspected())
+        if (callInfo.isInspected())
             binding.statusText.setVisibility(View.VISIBLE);
+
+        adapter.submitList(callInfo.getData());
     }
 
     @Override

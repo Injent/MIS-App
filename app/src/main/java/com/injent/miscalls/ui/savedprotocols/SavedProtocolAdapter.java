@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.savedprotocols.Protocol;
+import com.injent.miscalls.data.savedprotocols.Inspection;
 import com.injent.miscalls.databinding.SavedProtocolsItemBinding;
 
-public class SavedProtocolAdapter extends ListAdapter<Protocol, SavedProtocolAdapter.ViewHolder> {
+public class SavedProtocolAdapter extends ListAdapter<Inspection, SavedProtocolAdapter.ViewHolder> {
 
     private final OnItemClickListener listener;
 
@@ -22,14 +22,14 @@ public class SavedProtocolAdapter extends ListAdapter<Protocol, SavedProtocolAda
         this.listener = listener;
     }
 
-    static DiffUtil.ItemCallback<Protocol> diffCallback = new DiffUtil.ItemCallback<>() {
+    static DiffUtil.ItemCallback<Inspection> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull Protocol oldItem, @NonNull Protocol newItem) {
+        public boolean areItemsTheSame(@NonNull Inspection oldItem, @NonNull Inspection newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Protocol oldItem, @NonNull Protocol newItem) {
+        public boolean areContentsTheSame(@NonNull Inspection oldItem, @NonNull Inspection newItem) {
             return oldItem.equals(newItem);
         }
     };
@@ -62,11 +62,11 @@ public class SavedProtocolAdapter extends ListAdapter<Protocol, SavedProtocolAda
             this.listener = listener;
         }
 
-        public void setData(Protocol protocol) {
-            binding.savedProtocolName.setText(protocol.getName());
-            binding.savedProtocolType.setText(protocol.getDescription());
+        public void setData(Inspection inspection) {
+            binding.savedProtocolName.setText(inspection.getName());
+            binding.savedProtocolType.setText(inspection.getDescription());
 
-            binding.editProtocol.setOnClickListener(view -> listener.onClick(protocol.getId()));
+            binding.editProtocol.setOnClickListener(view -> listener.onClick(inspection.getId()));
         }
     }
 }
