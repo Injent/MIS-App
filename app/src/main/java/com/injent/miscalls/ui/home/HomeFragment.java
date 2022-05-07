@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment {
     private void navigateToAuth() {
         closeNavigationMenu();
         if (notMatchingDestination()) return;
-        navController.navigate(R.id.action_homeFragment_to_signInFragment);
+        navController.navigate(R.id.authFragment);
     }
 
     private void navigateToSavedProtocols() {

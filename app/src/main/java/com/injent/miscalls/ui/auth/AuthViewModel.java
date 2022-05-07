@@ -1,13 +1,13 @@
 package com.injent.miscalls.ui.auth;
 
 import android.accounts.NetworkErrorException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.injent.miscalls.data.UserNotFoundException;
 import com.injent.miscalls.domain.HttpManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.User;

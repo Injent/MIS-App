@@ -16,10 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
-import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
-import com.injent.miscalls.domain.repositories.ProtocolTempRepository;
 import com.injent.miscalls.domain.repositories.SettingsRepository;
 
 public class SettingsFragment extends Fragment {
@@ -70,7 +68,6 @@ public class SettingsFragment extends Fragment {
         });
 
         binding.clearProtocolTempsAction.setOnClickListener(view1 -> {
-            new ProtocolTempRepository().clearDb();
             Toast.makeText(requireContext(),R.string.protocolTempsCleared, Toast.LENGTH_SHORT).show();
         });
     }

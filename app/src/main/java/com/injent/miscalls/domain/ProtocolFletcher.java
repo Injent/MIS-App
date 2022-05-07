@@ -9,7 +9,7 @@ import android.print.PDFPrint;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.data.registry.Registry;
-import com.injent.miscalls.data.diagnosis.RecommendationTemp;
+import com.injent.miscalls.data.recommendation.Recommendation;
 import com.tejpratapsingh.pdfcreator.activity.PDFViewerActivity;
 import com.tejpratapsingh.pdfcreator.utils.FileManager;
 import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
@@ -46,7 +46,7 @@ public class ProtocolFletcher {
             "@адрес"
     };
     
-    public RecommendationTemp fletchRecommendation(RecommendationTemp temp) {
+    public Recommendation fletchRecommendation(Recommendation temp) {
         String content = temp.getContent()
                 .replace(key[0], callInfo.getFirstname())
                 .replace(key[1], callInfo.getLastname())
@@ -56,15 +56,20 @@ public class ProtocolFletcher {
                 .replace(key[5], callInfo.getResidence())
                 );
 
-        RecommendationTemp recommendationTemp = new RecommendationTemp();
-        recommendationTemp.setId(temp.getId());
-        recommendationTemp.setDescription(temp.getDescription());
-        recommendationTemp.setName(temp.getName());
-        recommendationTemp.setContent(content);
+        Recommendation recommendation = new Recommendation();
+        recommendation.setId(temp.getId());
+        recommendation.setDescription(temp.getDescription());
+        recommendation.setName(temp.getName());
+        recommendation.setContent(content);
 
-        return recommendationTemp;
+        return recommendation;
     }
 
+    /**+
+     *
+     * @param registry
+     * @throws IOException
+     */
     public void fletchPdfFile(Registry registry) throws IOException {
         AssetManager assetManager = context.getAssets();
         InputStream inputStream = assetManager.open(FILE_NAME);

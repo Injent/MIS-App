@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.App;
@@ -19,16 +20,19 @@ import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.data.registry.Registry;
 import com.injent.miscalls.databinding.FragmentInspectionBinding;
 import com.injent.miscalls.domain.ProtocolFletcher;
+import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InspectionFragment extends Fragment {
 
     private FragmentInspectionBinding binding;
     private CallInfo callInfo;
     private FieldAdapter fieldAdapter;
+    private CallStuffViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -43,16 +47,20 @@ public class InspectionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null) {
-            callInfo = getArguments().getParcelable(getString(R.string.keyCallParcelable));
-            setInfo(callInfo);
-        }
+        viewModel = new ViewModelProvider(this).get(CallStuffViewModel.class);
+
+        setInfo(Objects.requireNonNull(viewModel.getCallLiveData().getValue()));
 
         setupRecyclerView();
     }
 
     private void setupRecyclerView() {
-        fieldAdapter = new FieldAdapter();
+        fieldAdapter = new FieldAdapter((s, type) -> {
+            if (type == 0)
+                viewModel.setCurrentInspection(s);
+            else
+                viewModel.setCurrentRecommendation(s);
+        });
         List<Field> fieldList = new ArrayList<>();
         String[] names = getResources().getStringArray(R.array.fieldType);
         String[] hints = getResources().getStringArray(R.array.fieldHint);

@@ -1,4 +1,4 @@
-package com.injent.miscalls.data.diagnosis;
+package com.injent.miscalls.data.recommendation;
 
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class RecommendationTemp {
+public class Recommendation {
 
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = false)
@@ -55,8 +55,8 @@ public class RecommendationTemp {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (obj instanceof RecommendationTemp)
-            return ((RecommendationTemp) obj).getId() == id;
+        if (obj instanceof Recommendation)
+            return ((Recommendation) obj).getId() == id;
         return false;
     }
 }

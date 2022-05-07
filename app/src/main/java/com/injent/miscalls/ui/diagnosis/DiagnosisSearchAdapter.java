@@ -72,7 +72,7 @@ public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSear
         }
 
         public void setData(Diagnosis diagnosis) {
-            binding.diagnosisName.setText(diagnosis.getContent());
+            binding.diagnosisName.setText(diagnosis.getName());
             binding.diagnosisName.setOnClickListener(view -> listener.onClick(diagnosis));
         }
     }
@@ -96,7 +96,7 @@ public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSear
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
                 for (Diagnosis item : searchList) {
-                    if (item.getContent().toLowerCase().contains(filterPattern)) {
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }

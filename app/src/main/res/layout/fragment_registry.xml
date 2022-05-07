@@ -27,7 +27,7 @@
                 android:fontFamily="@font/clear_sans_bold"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="@string/registry"
+                android:text="@string/resultsOfInspection"
                 android:textColor="@color/darkGrayText"
                 android:textSize="@dimen/titleFont"
                 app:layout_constraintBottom_toBottomOf="parent"

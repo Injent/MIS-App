@@ -138,10 +138,13 @@ public class CallStuffFragment extends Fragment {
     }
 
     private void save() {
-        Registry registry = new Registry("ИМЯ ДОКУМЕНТА","Осмотрен, ничего не найдено", "Три ложки соли", "Сходить к психологу", "Перелом хряща колена");
+        Registry registry = new Registry();
+        registry.setInspectionContent(viewModel.getCurrentInspection());
+        registry.setRecommendations(viewModel.getCurrentRecommendation());
+        registry.setDiagnosis(viewModel.getCurrentRecommendation());
         registry.setCallId(callId);
         viewModel.saveRegistry(registry);
-        Toast.makeText(requireContext(),getString(R.string.docMovedTo) + " " + getString(R.string.registry),Toast.LENGTH_LONG).show();
+        Toast.makeText(requireContext(),getString(R.string.docMovedTo) + " " + getString(R.string.resultsOfInspection),Toast.LENGTH_LONG).show();
         navigateToHome();
     }
 

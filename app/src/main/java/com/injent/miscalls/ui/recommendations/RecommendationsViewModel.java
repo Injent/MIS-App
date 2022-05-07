@@ -7,13 +7,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.injent.miscalls.data.AppDatabase;
 import com.injent.miscalls.domain.HttpManager;
 import com.injent.miscalls.data.calllist.FailedDownloadDb;
 import com.injent.miscalls.data.calllist.ListEmptyException;
 import com.injent.miscalls.data.calllist.QueryToken;
-import com.injent.miscalls.data.diagnosis.RecommendationTemp;
-import com.injent.miscalls.data.diagnosis.RecommendationsDatabase;
-import com.injent.miscalls.domain.repositories.ProtocolTempRepository;
+import com.injent.miscalls.data.recommendation.Recommendation;
+import com.injent.miscalls.domain.repositories.RecommendationsRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,15 +24,15 @@ import retrofit2.Response;
 
 public class RecommendationsViewModel extends ViewModel {
 
-    private final ProtocolTempRepository repository;
-    private final MutableLiveData<List<RecommendationTemp>> protocolsTemps = new MutableLiveData<>();
+    private final RecommendationsRepository repository;
+    private final MutableLiveData<List<Recommendation>> protocolsTemps = new MutableLiveData<>();
     private final MutableLiveData<Throwable> error = new MutableLiveData<>();
 
     public RecommendationsViewModel() {
-        repository = new ProtocolTempRepository();
+        repository = new RecommendationsRepository();
     }
 
-    public LiveData<List<RecommendationTemp>> getProtocolTempsLiveDate() {
+    public LiveData<List<Recommendation>> getProtocolTempsLiveDate() {
         return protocolsTemps;
     }
 
@@ -41,7 +41,7 @@ public class RecommendationsViewModel extends ViewModel {
     }
 
     public void loadProtocolTemps() {
-        repository.getProtocolTemps(throwable -> {
+        repository.getAll(throwable -> {
             error.postValue(throwable);
             return Collections.emptyList();
         }, list -> {
@@ -59,17 +59,17 @@ public class RecommendationsViewModel extends ViewModel {
         }
         repository.getProtocolsFromServer(token).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<List<RecommendationTemp>> call, @NonNull Response<List<RecommendationTemp>> response) {
+            public void onResponse(@NonNull Call<List<Recommendation>> call, @NonNull Response<List<Recommendation>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    repository.insertProtocolTempWithDropDb(response.body());
+                    repository.insertWithDropTable(response.body());
                     protocolsTemps.postValue(response.body());
                 } else
                     error.postValue(new UnknownError());
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<RecommendationTemp>> call, @NonNull Throwable t) {
-                error.postValue(new FailedDownloadDb(RecommendationsDatabase.DB_NAME));
+            public void onFailure(@NonNull Call<List<Recommendation>> call, @NonNull Throwable t) {
+                error.postValue(new FailedDownloadDb(AppDatabase.DB_NAME));
             }
         });
     }

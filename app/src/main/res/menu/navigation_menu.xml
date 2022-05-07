@@ -5,7 +5,7 @@
 
     <item android:id="@+id/savedProtocolsMenu"
         android:icon="@drawable/ic_inspections"
-        android:title="@string/registry" />
+        android:title="@string/resultsOfInspection" />
 
     <item android:title="@string/others">
 

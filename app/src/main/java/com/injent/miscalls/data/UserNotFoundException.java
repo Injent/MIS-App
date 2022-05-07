@@ -1,4 +1,4 @@
-package com.injent.miscalls.ui.auth;
+package com.injent.miscalls.data;
 
 public class UserNotFoundException extends Exception {
 

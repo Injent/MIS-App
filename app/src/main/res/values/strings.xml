@@ -28,12 +28,13 @@
     <string name="sendAll">Отправить все</string>
 
     <!-- Menu -->
-    <string name="registry">Реестр</string>
+    <string name="resultsOfInspection">Результаты осмотра</string>
     <string name="others">Разное</string>
     <string name="aboutMenu">О нас</string>
     <string name="helpMenu">Помощь</string>
     <string name="account">Учетная запись</string>
     <string name="logout">Выйти</string>
+    <string name="mkbspravochnik"> </string>
 
     <!-- Hints -->
     <string name="regularUpdatesDesc">Получать регулярные обновления базы данных пациентов</string>
@@ -72,6 +73,7 @@
     <string name="noName">Безымянный</string>
     <string name="age">лет</string>
     <string name="inspected">Осмотрен</string>
+    <string name="inspectionPreset">Значение 1: \nЗначение 2: \nЗначение 3: \nЗначение 4: \n</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>
@@ -125,13 +127,11 @@
 
     <string-array name="fieldType">
         <item>Осмотр</item>
-        <item>План лечения</item>
         <item>Рекомендации</item>
     </string-array>
 
     <string-array name="fieldHint">
         <item>Осмотр…</item>
-        <item>План лечения…</item>
         <item>Рекоменции…</item>
     </string-array>
 

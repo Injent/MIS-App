@@ -19,11 +19,14 @@ public interface CallInfoDao {
     CallInfo getById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CallInfo callInfo);
+    void insert(CallInfo... callInfo);
 
     @Update
     void update(CallInfo callInfo);
 
     @Delete
     void delete(CallInfo callInfo);
+
+    @Query("DELETE FROM CallInfo")
+    void clearAll();
 }

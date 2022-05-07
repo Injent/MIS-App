@@ -7,18 +7,20 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
 import androidx.room.Room;
+import androidx.room.RoomDatabase;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.injent.miscalls.data.User;
-import com.injent.miscalls.data.calllist.CallDatabase;
 import com.injent.miscalls.data.calllist.CallInfoDao;
+import com.injent.miscalls.data.AppDatabase;
+import com.injent.miscalls.data.diagnosis.Diagnosis;
+import com.injent.miscalls.data.diagnosis.DiagnosisDao;
 import com.injent.miscalls.data.registry.RegistryDao;
-import com.injent.miscalls.data.registry.RegistryDatabase;
-import com.injent.miscalls.data.diagnosis.ProtocolTempDao;
-import com.injent.miscalls.data.diagnosis.RecommendationsDatabase;
-import com.injent.miscalls.ui.inspection.FieldAdapter;
+import com.injent.miscalls.data.recommendation.RecommendationDao;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SupportFactory;
@@ -26,21 +28,23 @@ import net.sqlcipher.database.SupportFactory;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.GeneralSecurityException;
+import java.util.concurrent.Executors;
 
 public class App extends Application {
 
     private static WeakReference<App> instance;
-    public static final String APP_VERSION = "snapshot 22w18b";
 
+    public static final String APP_VERSION = "snapshot 22w18b";
     public static final String PREFERENCES_NAME = "settings";
     public static final String ENCRYPTED_PREFERENCES_NAME = "security-data";
     public static final String CHANNEL_ID = "service-v1";
-    private CallDatabase callDatabase;
-    private CallInfoDao callInfoDao;
-    private ProtocolTempDao recommendationTempDao;
-    private RecommendationsDatabase recommendationsDatabase;
+
+    private AppDatabase appDatabase;
+    private DiagnosisDao diagnosisDao;
     private RegistryDao registryDao;
-    private RegistryDatabase registryDatabase;
+    private RecommendationDao recommendationDao;
+    private CallInfoDao callInfoDao;
+
     private boolean authed;
     private static int mode;
     private static User user;
@@ -59,45 +63,40 @@ public class App extends Application {
 
         setInstance(this);
 
-        final char[] userEnteredPassphrase = new char[]{'a','b'};
-        final byte[] passphrase = SQLiteDatabase.getBytes(userEnteredPassphrase);
-        final SupportFactory factory = new SupportFactory(passphrase);
+        appDatabase = AppDatabase.getInstance(this);
 
-        callDatabase = Room.databaseBuilder(this, CallDatabase.class, CallDatabase.DB_NAME)
-                .openHelperFactory(factory)
-                .build();
-
-        recommendationsDatabase = Room.databaseBuilder(this, RecommendationsDatabase.class, RecommendationsDatabase.DB_NAME)
-                .openHelperFactory(factory)
-                .build();
-
-        registryDatabase = Room.databaseBuilder(this, RegistryDatabase.class, RegistryDatabase.DB_NAME)
-                .openHelperFactory(factory)
-                .build();
-
-        callInfoDao = callDatabase.patientDao();
-        recommendationTempDao = recommendationsDatabase.protocolDao();
-        registryDao = registryDatabase.registryDao();
+        diagnosisDao = appDatabase.diagnosisDao();
+        registryDao = appDatabase.registryDao();
+        recommendationDao = appDatabase.recommendationDao();
+        callInfoDao = appDatabase.callInfoDao();
 
         initSettings();
         initEncryptedPreferences();
     }
 
-    public RegistryDao getProtocolDao() { return registryDao; }
+    public AppDatabase getAppDatabase() {
+        return appDatabase;
+    }
 
-    public RegistryDatabase getProtocolDatabase() { return registryDatabase; }
+    public DiagnosisDao getDiagnosisDao() {
+        return diagnosisDao;
+    }
 
-    public ProtocolTempDao getRecommendationTempDao() { return recommendationTempDao; }
+    public RegistryDao getRegistryDao() {
+        return registryDao;
+    }
 
-    public RecommendationsDatabase getProtocolTempDatabase() { return recommendationsDatabase; }
+    public RecommendationDao getRecommendationDao() {
+        return recommendationDao;
+    }
+
+    public CallInfoDao getCallInfoDao() {
+        return callInfoDao;
+    }
 
     public static User getUser() { return user; }
 
     public static void setUser(User user) { App.user = user; }
-
-    public CallDatabase getCallDatabase() { return callDatabase; }
-
-    public CallInfoDao getPatientDao() { return callInfoDao; }
 
     public boolean isAuthed() { return authed; }
 

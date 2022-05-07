@@ -68,7 +68,7 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
         }
 
         public void setData(Diagnosis diagnosis) {
-            binding.usedDiagnosisText.setText(diagnosis.getContent());
+            binding.usedDiagnosisText.setText(diagnosis.getName());
             diagnosis.setId(random.nextInt());
             binding.usedDiagnosisText.setOnLongClickListener(view -> {
                 listener.onClick(diagnosis.getId());

@@ -20,11 +20,12 @@ import androidx.navigation.Navigation;
 import com.injent.miscalls.App;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-import com.injent.miscalls.databinding.FragmentSignInBinding;
+import com.injent.miscalls.data.UserNotFoundException;
+import com.injent.miscalls.databinding.FragmentAuthBinding;
 
 public class AuthFragment extends Fragment {
 
-    private FragmentSignInBinding binding;
+    private FragmentAuthBinding binding;
     private AuthViewModel viewModel;
 
     @Nullable
@@ -32,7 +33,7 @@ public class AuthFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sign_in,
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_auth,
                 container, false);
         return binding.getRoot();
     }
@@ -115,7 +116,7 @@ public class AuthFragment extends Fragment {
         else
             args.putBoolean(getString(R.string.keyUpdateList), true);
         NavController navController = Navigation.findNavController(requireView());
-        navController.navigate(R.id.action_signInFragment_to_homeFragment, args);
+        navController.navigate(R.id.homeFragment, args);
     }
 
     @Override

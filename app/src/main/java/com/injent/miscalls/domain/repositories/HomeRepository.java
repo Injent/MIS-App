@@ -27,7 +27,7 @@ public class HomeRepository {
     private final ExecutorService es;
 
     public HomeRepository() {
-        dao = App.getInstance().getPatientDao();
+        dao = App.getInstance().getCallInfoDao();
         es = Executors.newSingleThreadExecutor();
     }
 
@@ -50,10 +50,6 @@ public class HomeRepository {
         return HttpManager.getMisAPI().patients(token);
     }
 
-    public void deleteAll() {
-        es.submit(() -> App.getInstance().getCallDatabase().clearAllTables());
-    }
-
     public void getCallById(Function<Throwable, CallInfo> ex, Consumer<CallInfo> consumer, int id) {
         CompletableFuture<CallInfo> future = CompletableFuture
                 .supplyAsync(() -> dao.getById(id), es)
@@ -61,24 +57,17 @@ public class HomeRepository {
         future.thenAcceptAsync(consumer);
     }
 
-    public void insertPatient(CallInfo callInfo) {
-        es.submit(() -> dao.insert(callInfo));
-    }
-
     public void getAll(Function<Throwable, List<CallInfo>> ex, Consumer<List<CallInfo>> consumer) {
         CompletableFuture<List<CallInfo>> future = CompletableFuture
                 .supplyAsync(dao::getAll, es)
                 .exceptionally(ex);
-
         future.thenAcceptAsync(consumer);
     }
 
     public void insertWithDropDb(CallInfo... callInfoList) {
         es.submit(() -> {
-            App.getInstance().getCallDatabase().clearAllTables();
-            for (CallInfo callInfo : callInfoList) {
-                dao.insert(callInfo);
-            }
+            App.getInstance().getAppDatabase().callInfoDao().clearAll();
+            dao.insert(callInfoList);
         });
     }
 }

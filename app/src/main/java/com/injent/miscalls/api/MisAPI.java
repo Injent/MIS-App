@@ -4,7 +4,7 @@ import com.injent.miscalls.data.AuthModelOut;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.data.calllist.QueryToken;
-import com.injent.miscalls.data.diagnosis.RecommendationTemp;
+import com.injent.miscalls.data.recommendation.Recommendation;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface MisAPI {
     Call<User> auth(@Body AuthModelOut authModel);
 
     @POST("getProtocols.php")
-    Call<List<RecommendationTemp>> protocolTemps(@Body QueryToken token);
+    Call<List<Recommendation>> protocolTemps(@Body QueryToken token);
 
     @GET("protocoltemp.txt")
     Call<String> getProtocolTemp();

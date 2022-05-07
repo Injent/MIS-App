@@ -28,6 +28,13 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
         this.listener = listener;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+
+        //If type ... then
+        return super.getItemViewType(position);
+    }
+
     static DiffUtil.ItemCallback<CallInfo> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull CallInfo oldItem, @NonNull CallInfo newItem) {

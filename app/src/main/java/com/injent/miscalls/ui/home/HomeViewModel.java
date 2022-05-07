@@ -7,9 +7,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.injent.miscalls.data.AppDatabase;
 import com.injent.miscalls.domain.HttpManager;
 import com.injent.miscalls.App;
-import com.injent.miscalls.data.calllist.CallDatabase;
 import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.data.calllist.FailedDownloadDb;
 import com.injent.miscalls.data.calllist.ListEmptyException;
@@ -83,7 +83,7 @@ public class HomeViewModel extends ViewModel {
                     callList.postValue(list);
                     setNewDbDate();
                 } else {
-                    callListError.postValue(new FailedDownloadDb(CallDatabase.DB_NAME));
+                    callListError.postValue(new FailedDownloadDb(AppDatabase.DB_NAME));
                 }
             }
 

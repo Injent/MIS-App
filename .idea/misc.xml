@@ -172,16 +172,20 @@
         <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/patient_card_item.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/patient_list_item.xml" value="0.5" />
         <entry key="..\:/Programs/AndroidProjects/MISCalls/app/src/main/res/layout/protocol_temp_fragment.xml" value="0.32592592592592595" />
+        <entry key="app/src/main/res/drawable/focusable_search.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/ic_notif_off.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/ic_notif_on.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/ic_offline_download_off.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/ic_offline_download_on.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/status_bar_process.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/switch_notifications_thumb_off.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/switch_notifications_thumb_on.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/switch_offline_thumb_off.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/switch_offline_thumb_on.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/switch_track.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/fragment_auth.xml" value="0.3515625" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/fragment_inspection.xml" value="0.26296296296296295" />
         <entry key="app/src/main/res/layout/fragment_patient_card.xml" value="0.3515625" />
         <entry key="app/src/main/res/layout/fragment_protocol.xml" value="0.3515625" />
         <entry key="app/src/main/res/layout/fragment_protocol_temp.xml" value="0.3515625" />
@@ -190,6 +194,7 @@
         <entry key="app/src/main/res/layout/patient_list_item.xml" value="0.3515625" />
         <entry key="app/src/main/res/layout/save_protocol_edit_fragment.xml" value="0.3463541666666667" />
         <entry key="app/src/main/res/layout/saved_protocols.xml" value="0.3515625" />
+        <entry key="app/src/main/res/layout/tab_view.xml" value="0.3515625" />
         <entry key="app/src/main/res/menu/navigation_menu.xml" value="0.3515625" />
       </map>
     </option>

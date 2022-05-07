@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.diagnosis.RecommendationTemp;
-import com.injent.miscalls.databinding.ProtocolTempItemBinding;
+import com.injent.miscalls.data.recommendation.Recommendation;
+import com.injent.miscalls.databinding.ItemRecommendationBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecommendationAdapter extends ListAdapter<RecommendationTemp, RecommendationAdapter.ViewHolder> implements Filterable {
+public class RecommendationAdapter extends ListAdapter<Recommendation, RecommendationAdapter.ViewHolder> implements Filterable {
 
     private final OnItemClickListener listener;
-    private List<RecommendationTemp> searchList;
+    private List<Recommendation> searchList;
     private final boolean editMode;
 
     protected RecommendationAdapter(OnItemClickListener listener, boolean editMode) {
@@ -31,20 +31,20 @@ public class RecommendationAdapter extends ListAdapter<RecommendationTemp, Recom
         this.editMode = editMode;
     }
 
-    public void submitList(@Nullable List<RecommendationTemp> list, boolean searchList) {
+    public void submitList(@Nullable List<Recommendation> list, boolean searchList) {
         super.submitList(list);
         if (searchList && list != null)
             this.searchList = new ArrayList<>(list);
     }
 
-    static DiffUtil.ItemCallback<RecommendationTemp> diffCallback = new DiffUtil.ItemCallback<>() {
+    static DiffUtil.ItemCallback<Recommendation> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull RecommendationTemp oldItem, @NonNull RecommendationTemp newItem) {
+        public boolean areItemsTheSame(@NonNull Recommendation oldItem, @NonNull Recommendation newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull RecommendationTemp oldItem, @NonNull RecommendationTemp newItem) {
+        public boolean areContentsTheSame(@NonNull Recommendation oldItem, @NonNull Recommendation newItem) {
             return oldItem.equals(newItem);
         }
     };
@@ -53,7 +53,7 @@ public class RecommendationAdapter extends ListAdapter<RecommendationTemp, Recom
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ProtocolTempItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.protocol_temp_item, parent, false);
+        ItemRecommendationBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_recommendation, parent, false);
         return new ViewHolder(binding, listener);
     }
 
@@ -63,18 +63,18 @@ public class RecommendationAdapter extends ListAdapter<RecommendationTemp, Recom
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private final ProtocolTempItemBinding binding;
+        private final ItemRecommendationBinding binding;
         private final OnItemClickListener listener;
 
-        public ViewHolder(ProtocolTempItemBinding binding, OnItemClickListener listener) {
+        public ViewHolder(ItemRecommendationBinding binding, OnItemClickListener listener) {
             super(binding.getRoot());
             this.binding = binding;
             this.listener = listener;
         }
 
-        public void setData(RecommendationTemp recommendationTemp, boolean editMode) {
-            binding.listProtocolName.setText(recommendationTemp.getName());
-            binding.listProtocolDesc.setText(recommendationTemp.getDescription());
+        public void setData(Recommendation recommendation, boolean editMode) {
+            binding.listProtocolName.setText(recommendation.getName());
+            binding.listProtocolDesc.setText(recommendation.getDescription());
 
             if (editMode) {
                 binding.modeImage.setBackgroundResource(R.drawable.ic_edit);
@@ -82,7 +82,7 @@ public class RecommendationAdapter extends ListAdapter<RecommendationTemp, Recom
                 binding.modeImage.setBackgroundResource(R.drawable.ic_navigate_right);
             }
 
-            binding.protocolTempCard.setOnClickListener(view0 -> listener.onClick(recommendationTemp.getId()));
+            binding.protocolTempCard.setOnClickListener(view0 -> listener.onClick(recommendation.getId()));
         }
     }
 
@@ -98,13 +98,13 @@ public class RecommendationAdapter extends ListAdapter<RecommendationTemp, Recom
     private final Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<RecommendationTemp> filteredList = new ArrayList<>();
+            List<Recommendation> filteredList = new ArrayList<>();
             if (charSequence == null || charSequence.length() == 0) {
                 filteredList.addAll(searchList);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
-                for (RecommendationTemp item : searchList) {
+                for (Recommendation item : searchList) {
                     if (item.getName().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
@@ -118,7 +118,7 @@ public class RecommendationAdapter extends ListAdapter<RecommendationTemp, Recom
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             //TODO
-            submitList((List<RecommendationTemp>) filterResults.values, false);
+            submitList((List<Recommendation>) filterResults.values, false);
         }
     };
 }
