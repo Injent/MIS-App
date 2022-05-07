@@ -8,7 +8,7 @@ import android.print.PDFPrint;
 
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.calllist.CallInfo;
-import com.injent.miscalls.data.savedprotocols.Inspection;
+import com.injent.miscalls.data.registry.Registry;
 import com.injent.miscalls.data.diagnosis.RecommendationTemp;
 import com.tejpratapsingh.pdfcreator.activity.PDFViewerActivity;
 import com.tejpratapsingh.pdfcreator.utils.FileManager;
@@ -65,7 +65,7 @@ public class ProtocolFletcher {
         return recommendationTemp;
     }
 
-    public void fletchPdfFile(Inspection inspection) throws IOException {
+    public void fletchPdfFile(Registry registry) throws IOException {
         AssetManager assetManager = context.getAssets();
         InputStream inputStream = assetManager.open(FILE_NAME);
         Scanner scanner = new Scanner(inputStream);
@@ -79,9 +79,9 @@ public class ProtocolFletcher {
                 .replace("$docfullname", user.getFullName())
                 .replace("$workingposition", user.getWorkingPosition())
                 .replace("$patientfullname", callInfo.getFullName())
-                .replace("$inspection", inspection.getInspection())
-                .replace("$treatment", inspection.getTreatment()
-                .replace("$conclusion", inspection.getConclusion()));
+                .replace("$inspection", registry.getInspectionContent())
+                .replace("$treatment", registry.getTreatment()
+                .replace("$conclusion", registry.getRecommendations()));
 
         final File savedPdfFile = FileManager.getInstance().createTempFile(context,"pdf",false);
 

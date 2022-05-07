@@ -2,7 +2,10 @@ package com.injent.miscalls;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.room.Room;
 import androidx.security.crypto.EncryptedSharedPreferences;
@@ -11,10 +14,11 @@ import androidx.security.crypto.MasterKeys;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.calllist.CallDatabase;
 import com.injent.miscalls.data.calllist.CallInfoDao;
-import com.injent.miscalls.data.savedprotocols.InspectionDao;
-import com.injent.miscalls.data.savedprotocols.InspectionDatabase;
+import com.injent.miscalls.data.registry.RegistryDao;
+import com.injent.miscalls.data.registry.RegistryDatabase;
 import com.injent.miscalls.data.diagnosis.ProtocolTempDao;
 import com.injent.miscalls.data.diagnosis.RecommendationsDatabase;
+import com.injent.miscalls.ui.inspection.FieldAdapter;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SupportFactory;
@@ -26,7 +30,7 @@ import java.security.GeneralSecurityException;
 public class App extends Application {
 
     private static WeakReference<App> instance;
-    public static final String APP_VERSION = "22w18a";
+    public static final String APP_VERSION = "snapshot 22w18b";
 
     public static final String PREFERENCES_NAME = "settings";
     public static final String ENCRYPTED_PREFERENCES_NAME = "security-data";
@@ -35,8 +39,8 @@ public class App extends Application {
     private CallInfoDao callInfoDao;
     private ProtocolTempDao recommendationTempDao;
     private RecommendationsDatabase recommendationsDatabase;
-    private InspectionDao inspectionDao;
-    private InspectionDatabase inspectionDatabase;
+    private RegistryDao registryDao;
+    private RegistryDatabase registryDatabase;
     private boolean authed;
     private static int mode;
     private static User user;
@@ -67,21 +71,21 @@ public class App extends Application {
                 .openHelperFactory(factory)
                 .build();
 
-        inspectionDatabase = Room.databaseBuilder(this, InspectionDatabase.class, InspectionDatabase.DB_NAME)
+        registryDatabase = Room.databaseBuilder(this, RegistryDatabase.class, RegistryDatabase.DB_NAME)
                 .openHelperFactory(factory)
                 .build();
 
         callInfoDao = callDatabase.patientDao();
         recommendationTempDao = recommendationsDatabase.protocolDao();
-        inspectionDao = inspectionDatabase.protocolDao();
+        registryDao = registryDatabase.registryDao();
 
         initSettings();
         initEncryptedPreferences();
     }
 
-    public InspectionDao getProtocolDao() { return inspectionDao; }
+    public RegistryDao getProtocolDao() { return registryDao; }
 
-    public InspectionDatabase getProtocolDatabase() { return inspectionDatabase; }
+    public RegistryDatabase getProtocolDatabase() { return registryDatabase; }
 
     public ProtocolTempDao getRecommendationTempDao() { return recommendationTempDao; }
 
@@ -176,5 +180,10 @@ public class App extends Application {
         spEditor.putBoolean("authed", true);
         spEditor.apply();
         setAuthed(true);
+    }
+
+    public static void hideKeyBoard(Context context, View view) {
+        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

@@ -1,5 +1,7 @@
 package com.injent.miscalls.ui.diagnosis;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,6 +9,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.diagnosis.Diagnosis;
 import com.injent.miscalls.databinding.FragmentDiagnosisBinding;
@@ -59,6 +64,13 @@ public class DiagnosisFragment extends Fragment {
             }
         });
 
+        binding.cancelSearch.setOnClickListener(view12 -> {
+            binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
+            binding.addDiagnosis.setVisibility(View.VISIBLE);
+            binding.searchDiagnosisText.setText("");
+            binding.searchDiagnosisLayout.setVisibility(View.GONE);
+        });
+
         binding.diagnosisSelectRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         diagnosisSearchAdapter = new DiagnosisSearchAdapter(this::addDiagnosis);
         binding.diagnosisSelectRecyclerView.setAdapter(diagnosisSearchAdapter);
@@ -83,9 +95,9 @@ public class DiagnosisFragment extends Fragment {
     }
 
     private void showDiagnosisSearch() {
-        binding.searchDivider.setVisibility(View.VISIBLE);
         binding.searchDiagnosisLayout.setVisibility(View.VISIBLE);
         binding.addDiagnosis.setVisibility(View.GONE);
+        binding.diagnosisRecyclerView.setVisibility(View.GONE);
         try {
             diagnosisSearchAdapter.submitList(getDiagnosisList(), true);
         } catch (IOException e) {
@@ -104,10 +116,11 @@ public class DiagnosisFragment extends Fragment {
             }
         }
         if (added) return;
+        App.hideKeyBoard(requireContext(), requireView());
         currentList.add(diagnosis);
         diagnosisUsedAdapter.submitList(currentList);
 
-        binding.searchDivider.setVisibility(View.GONE);
+        binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
         binding.addDiagnosis.setVisibility(View.VISIBLE);
         binding.searchDiagnosisText.setText("");
         binding.searchDiagnosisLayout.setVisibility(View.GONE);

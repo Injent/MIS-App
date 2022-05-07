@@ -11,13 +11,12 @@
 
     <!-- Tabs -->
     <string name="medCardShort">Мед. карта</string>
-    <string name="recommendationsShort">Реком…</string>
+    <string name="inspection">Осмотр</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
     <string name="regularUpdates">Регулярные обновления</string>
     <string name="clearProtocolTemps">Сбросить шаблоны протоколов</string>
-    <string name="inspection">Осмотр</string>
     <string name="infoAboutPatient">Информация о пациенте</string>
     <string name="diagnosis">Диагноз</string>
     <string name="recommendations">Рекомендации</string>
@@ -29,10 +28,12 @@
     <string name="sendAll">Отправить все</string>
 
     <!-- Menu -->
-    <string name="inspections">Осмотры</string>
+    <string name="registry">Реестр</string>
     <string name="others">Разное</string>
     <string name="aboutMenu">О нас</string>
     <string name="helpMenu">Помощь</string>
+    <string name="account">Учетная запись</string>
+    <string name="logout">Выйти</string>
 
     <!-- Hints -->
     <string name="regularUpdatesDesc">Получать регулярные обновления базы данных пациентов</string>
@@ -41,29 +42,22 @@
     <string name="treatmentHint">Напишите…</string>
     <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
     <string name="patientsProtocol">Заполнение клинического протокола пациента</string>
-    <string name="exitHint">Вы уверены что хотите выйти из приложения?</string>
     <string name="recDownloadHint"> Может потребоваться много места на устройстве</string>
     <string name="recDownloadDesc">Скачайте доступные рекомендации по лечению и используйте их при
         заполнении осмотра пациента</string>
     <string name="protocolName">Название протокола</string>
     <string name="protocolDesc">Описание протокола</string>
     <string name="dataWillBeDeletedForever">Данные навсегда удалятся</string>
-    <string name="protocolWontSave">Протокол не сохранится</string>
+    <string name="dataWontSave">Данные не сохранятся!</string>
 
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
-    <string name="backToHome">Назад</string>
-    <string name="actionProtocol">Составить протокол</string>
-    <string name="backToPatientCard">Назад</string>
-    <string name="saveProtocol">Сохранить протокол</string>
     <string name="saveAsPdf">Сохранить\nкак pdf</string>
     <string name="useRecommendation">Использовать\nрекомендации</string>
-    <string name="logout">Выйти из учетной записи</string>
-    <string name="exit">Выход</string>
-    <string name="editFile">Редактирование</string>
-    <string name="saveFile">Сохранить файл?</string>
-    <string name="yes">Да</string>
+    <string name="exit">Выйти</string>
+    <string name="ok">Ок</string>
     <string name="no">Нет</string>
+    <string name="yes">Да</string>
     <string name="downloadRecommendations">Скачать рекомендации по лечению</string>
     <string name="deleteProtocol">Удалить протокол %s?</string>
     <string name="cancel">Отмена</string>
@@ -90,11 +84,12 @@
     <string name="protocolDeleted">Протокол %s удален</string>
     <string name="textCopied">Текст скопирован</string>
     <string name="undoDeleting">Отменить</string>
-    <string name="exitFromEditing">Выйти из редактирования?</string>
+    <string name="exitFromEditing">Прекратить редактирование?</string>
     <string name="pdfGeneration">Генерация PDF документа…</string>
     <string name="pdfGenerationFailed">Ошибка генерации PDF документа</string>
     <string name="diagnoseDeleted">Диагноз удален</string>
     <string name="diagnosisAlreadyAdded">Этот диагноз уже записан</string>
+    <string name="docMovedTo">Документ перемещен в раздел</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>

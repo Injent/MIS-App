@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
     public void confirmExit() {
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.exit)
-                .setMessage(R.string.exitHint)
-
                 .setPositiveButton(R.string.yes, (dialog, button0) -> closeApp())
                 .setNegativeButton(R.string.no, (dialog, button1) -> dialog.dismiss())
                 .create();

@@ -10,35 +10,29 @@
         android:background="@color/colorPrimary"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/menuSignIn"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:elevation="@dimen/cardElevation"
-            android:orientation="vertical"
+            android:fontFamily="@font/clear_sans_bold"
+            android:gravity="center"
             android:padding="@dimen/displayPadding"
+            android:text="@string/auth"
+            android:textColor="@color/darkGrayText"
+            android:textSize="@dimen/titleFont"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toTopOf="@+id/lineSignIn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/menuSignIn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/clear_sans_bold"
-                android:text="@string/auth"
-                android:textColor="@color/darkGrayText"
-                android:textSize="@dimen/titleFont"
-                android:textStyle="normal"
-                app:layout_constraintBottom_toTopOf="@+id/lineSignIn" />
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/clear_sans_medium"
             android:gravity="center_horizontal"
             android:paddingLeft="40dp"
@@ -46,7 +40,10 @@
             android:text="@string/authHint"
             android:textAlignment="center"
             android:textColor="@color/lightGrayText"
-            android:textSize="@dimen/hintFont" />
+            android:textSize="@dimen/hintFont"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menuSignIn" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -58,7 +55,7 @@
             android:paddingRight="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+            app:layout_constraintTop_toBottomOf="@+id/textView">
 
             <EditText
                 android:id="@+id/emailField"
@@ -105,7 +102,6 @@
             android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="100dp"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/copyright"
@@ -137,10 +133,15 @@
 
             <Button
                 android:id="@+id/signInButton"
-                android:layout_width="270dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button"
+                android:drawableStart="@drawable/ic_login"
+                android:drawablePadding="16dp"
+                android:drawableTint="@color/white"
                 android:fontFamily="@font/clear_sans_bold"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
                 android:text="@string/actionAuth"
                 android:textAllCaps="false"
                 android:textColor="@color/button_text_color"
@@ -154,7 +155,7 @@
             android:id="@+id/copyright"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/displayPadding"
+            android:layout_marginBottom="48dp"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"

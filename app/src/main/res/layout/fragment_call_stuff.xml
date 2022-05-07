@@ -2,44 +2,72 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.patientstuff.CallStuffFragment">
+    tools:context=".ui.callstuff.CallStuffFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom">
 
-        <TextView
-            android:id="@+id/titlePatientStuff"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:elevation="@dimen/cardElevation"
-            android:gravity="center"
-            android:padding="@dimen/displayPadding"
-            android:textAppearance="@style/titleText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
-        <View
-            android:id="@+id/line"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/gray"
-            app:layout_constraintBottom_toTopOf="@+id/tabs"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/titleCallStuff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="@dimen/displayPadding"
+                android:textAppearance="@style/titleText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/doneButton"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:padding="8dp"
+                android:src="@drawable/ic_done"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/titleCallStuff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/titleCallStuff"
+                app:tint="@color/darkGrayText" />
+
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintBottom_toBottomOf="@+id/titleCallStuff"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/titleCallStuff"
+                app:tint="@color/darkGrayText" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/line"
+            app:layout_constraintBottom_toTopOf="@+id/tabs"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titlePatientStuff"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
             app:layout_wrapBehaviorInParent="horizontal_only">
 
         </androidx.viewpager2.widget.ViewPager2>
@@ -48,6 +76,8 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="54dp"
+            android:background="@color/colorPrimary"
+            android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

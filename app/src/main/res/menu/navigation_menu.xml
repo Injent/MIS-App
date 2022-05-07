@@ -5,7 +5,7 @@
 
     <item android:id="@+id/savedProtocolsMenu"
         android:icon="@drawable/ic_inspections"
-        android:title="@string/inspections" />
+        android:title="@string/registry" />
 
     <item android:title="@string/others">
 
@@ -22,6 +22,11 @@
             <item android:id="@+id/help"
                 android:icon="@drawable/ic_help"
                 android:title="@string/helpMenu" />
+        </menu>
+    </item>
+
+    <item android:title="@string/account">
+        <menu>
             <item android:id="@+id/logoutMenu"
                 android:icon="@drawable/ic_logout"
                 android:title="@string/logout" />

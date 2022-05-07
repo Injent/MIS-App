@@ -11,11 +11,10 @@
         android:id="@+id/tabIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tint="@color/tab_color_selector"
         app:layout_constraintEnd_toEndOf="@+id/tabText"
         app:layout_constraintStart_toStartOf="@+id/tabText"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_info" />
+        app:tint="@color/tab_color_selector" />
 
     <TextView
         android:id="@+id/tabText"
@@ -23,7 +22,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/clear_sans_medium"
         android:gravity="center_horizontal"
-        android:text="Text"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/darkGrayText"
         android:textSize="@dimen/headerFont"
         app:layout_constraintEnd_toEndOf="parent"

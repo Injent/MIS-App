@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/callStuffFragment"
-        android:name="com.injent.miscalls.ui.patientstuff.CallStuffFragment"
+        android:name="com.injent.miscalls.ui.callstuff.CallStuffFragment"
         android:label="fragment_call_stuff"
         tools:layout="@layout/fragment_call_stuff" />
     <fragment
@@ -39,14 +39,14 @@
         tools:layout="@layout/fragment_diagnosis" />
     <fragment
         android:id="@+id/patientCardFragment"
-        android:name="com.injent.miscalls.ui.patientcard.PatientCardFragment"
+        android:name="com.injent.miscalls.ui.callinfo.PatientCardFragment"
         android:label="fragment_patient_card"
         tools:layout="@layout/fragment_patient_card" />
     <fragment
         android:id="@+id/savedProtocolsFragment"
-        android:name="com.injent.miscalls.ui.savedprotocols.SavedProtocolsFragment"
+        android:name="com.injent.miscalls.ui.registry.RegistryFragment"
         android:label="fragment_saved_protocols"
-        tools:layout="@layout/fragment_saved_protocols" />
+        tools:layout="@layout/fragment_registry" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.injent.miscalls.ui.settings.SettingsFragment"

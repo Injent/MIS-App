@@ -12,7 +12,7 @@
         tools:layout_editor_absoluteX="12dp"
         tools:layout_editor_absoluteY="12dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
@@ -24,24 +24,33 @@
                 android:id="@+id/backFromSettings"
                 android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
+                android:layout_marginStart="8dp"
                 android:background="?attr/actionBarItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="8dp"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/ic_back_arrow" />
+                app:tint="@color/darkGrayText"
+                android:src="@drawable/ic_back_arrow"
+                app:layout_constraintBottom_toBottomOf="@+id/titleSettingsText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/titleSettingsText" />
 
             <TextView
                 android:id="@+id/titleSettingsText"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/displayPadding"
-                android:layout_marginBottom="@dimen/displayPadding"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/clear_sans_bold"
+                android:gravity="center"
                 android:text="@string/settings"
                 android:textColor="@color/darkGrayText"
-                android:textSize="@dimen/titleFont" />
-        </LinearLayout>
+                android:textSize="@dimen/titleFont"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ScrollView
             android:layout_width="match_parent"
