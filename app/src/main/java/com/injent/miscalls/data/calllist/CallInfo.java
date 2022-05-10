@@ -1,8 +1,5 @@
 package com.injent.miscalls.data.calllist;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -15,14 +12,11 @@ import java.util.Calendar;
 import java.util.List;
 
 @Entity
-public class CallInfo implements Parcelable {
-
-    public CallInfo() {
-    }
+public class CallInfo {
 
     @SerializedName("id")
-    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = false)
     private int id;
 
     @SerializedName("edit_card_date")
@@ -85,37 +79,6 @@ public class CallInfo implements Parcelable {
     @SerializedName("passport")
     @ColumnInfo(name = "passport")
     private String passport;
-
-    protected CallInfo(Parcel in) {
-        id = in.readInt();
-        editCardDate = in.readString();
-        complaints = in.readString();
-        benefitCategoryCode = in.readString();
-        inspected = in.readByte() != 0;
-        firstname = in.readString();
-        middleName = in.readString();
-        lastname = in.readString();
-        sex = in.readByte() != 0;
-        residence = in.readString();
-        phoneNumber = in.readString();
-        bornDate = in.readString();
-        snils = in.readString();
-        polis = in.readString();
-        organization = in.readString();
-        passport = in.readString();
-    }
-
-    public static final Creator<CallInfo> CREATOR = new Creator<CallInfo>() {
-        @Override
-        public CallInfo createFromParcel(Parcel in) {
-            return new CallInfo(in);
-        }
-
-        @Override
-        public CallInfo[] newArray(int size) {
-            return new CallInfo[size];
-        }
-    };
 
     public int getId() {
         return id;
@@ -201,10 +164,6 @@ public class CallInfo implements Parcelable {
         this.sex = sex;
     }
 
-    public void setRegAddress(String regAddress) {
-        this.residence = regAddress;
-    }
-
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
@@ -286,30 +245,5 @@ public class CallInfo implements Parcelable {
         if (obj instanceof CallInfo)
             return ((CallInfo) obj).getId() == id;
         return false;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(editCardDate);
-        parcel.writeString(complaints);
-        parcel.writeString(benefitCategoryCode);
-        parcel.writeByte((byte) (inspected ? 1 : 0));
-        parcel.writeString(firstname);
-        parcel.writeString(middleName);
-        parcel.writeString(lastname);
-        parcel.writeByte((byte) (sex ? 1 : 0));
-        parcel.writeString(residence);
-        parcel.writeString(phoneNumber);
-        parcel.writeString(bornDate);
-        parcel.writeString(snils);
-        parcel.writeString(polis);
-        parcel.writeString(organization);
-        parcel.writeString(passport);
     }
 }

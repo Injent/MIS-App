@@ -17,7 +17,6 @@ import com.injent.miscalls.domain.repositories.HomeRepository;
 
 import java.util.Collections;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,7 +31,6 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<String> dbDate = new MutableLiveData<>();
 
     public HomeViewModel() {
-        super();
         homeRepository = new HomeRepository();
     }
 
@@ -48,7 +46,7 @@ public class HomeViewModel extends ViewModel {
         return dbDate;
     }
 
-    public LiveData<List<CallInfo>> getPatientListLiveData() {
+    public LiveData<List<CallInfo>> getCallListLiveData() {
         return callList;
     }
 
@@ -61,15 +59,15 @@ public class HomeViewModel extends ViewModel {
             callListError.postValue(throwable);
             return Collections.emptyList();
         }, list -> {
-            if (list == null || list.isEmpty()) {
-                callListError.postValue(new ListEmptyException());
-            } else {
+            if (!list.isEmpty()) {
                 callList.postValue(list);
+            } else {
+                callListError.postValue(new ListEmptyException());
             }
         });
     }
 
-    public void downloadPatientsDb() {
+    public void downloadCallsDb() {
         if (!HttpManager.isInternetAvailable()) {
             callListError.postValue(new NetworkErrorException());
             return;
@@ -79,9 +77,11 @@ public class HomeViewModel extends ViewModel {
             public void onResponse(@NonNull Call<List<CallInfo>> call, @NonNull Response<List<CallInfo>> response) {
                 if (response.isSuccessful()) {
                     List<CallInfo> list = response.body();
-                    homeRepository.insertWithDropDb(list != null ? list.toArray(new CallInfo[0]) : new CallInfo[0]);
-                    callList.postValue(list);
-                    setNewDbDate();
+                    if (list != null) {
+                        homeRepository.insertCallsWithDropTable(list);
+                        callList.postValue(list);
+                        setNewDbDate();
+                    }
                 } else {
                     callListError.postValue(new FailedDownloadDb(AppDatabase.DB_NAME));
                 }
@@ -90,26 +90,6 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Call<List<CallInfo>> call, @NonNull Throwable t) {
                 callListError.postValue(t);
-            }
-        });
-    }
-
-    public void backgroundDownloadDb() {
-        if (!HttpManager.isInternetAvailable()) {
-            return;
-        }
-        homeRepository.getPatientList(App.getUser().getQueryToken()).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<CallInfo>> call, @NonNull Response<List<CallInfo>> response) {
-                if (response.isSuccessful()) {
-                    homeRepository.insertWithDropDb((CallInfo) response.body());
-                    setNewDbDate();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<CallInfo>> call, @NonNull Throwable t) {
-                //Nothing to do
             }
         });
     }

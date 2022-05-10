@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,24 +18,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.calllist.CallInfo;
-import com.injent.miscalls.databinding.FragmentPatientCardBinding;
+import com.injent.miscalls.databinding.FragmentCallInfoBinding;
+import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
-public class PatientCardFragment extends Fragment {
+import java.util.Objects;
 
-    private FragmentPatientCardBinding binding;
+public class CallInfoFragment extends Fragment {
+
+    private FragmentCallInfoBinding binding;
     private InfoAdapter adapter;
+    private CallStuffViewModel viewModel;
 
-    public PatientCardFragment() {
+    public CallInfoFragment() {
         //Need for working
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_patient_card,
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_call_info,
                 container, false);
         return binding.getRoot();
     }
@@ -43,10 +50,11 @@ public class PatientCardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
+
         setupRecyclerViewInfo();
 
-        if (getArguments() != null)
-            setInfo(getArguments().getParcelable(getString(R.string.keyCallParcelable)));
+        viewModel.getCallLiveData().observe(getViewLifecycleOwner(), this::setInfo);
     }
 
     private void call(String number) {

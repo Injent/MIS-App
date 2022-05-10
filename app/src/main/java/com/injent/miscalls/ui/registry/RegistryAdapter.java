@@ -44,12 +44,11 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setData(getItem(position), position);
+        holder.setData(getItem(position));
     }
 
     public interface OnItemClickListener {
         void onClick(int position);
-
         void onLongClick(int position);
     }
 
@@ -64,13 +63,13 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
             this.listener = listener;
         }
 
-        public void setData(Registry registry, int position) {
-            binding.registryPatient.setText(String.valueOf("Мирослав Дудко Алексеевич"));
-            binding.registryDiagnosis.setText(String.valueOf(registry.getDiagnosis()));
+        public void setData(Registry registry) {
+            binding.registryPatient.setText(registry.getName());
+            binding.registryDiagnosis.setText(registry.getDiagnosisCode());
 
-            binding.editRegistry.setOnClickListener(view -> listener.onClick(position));
+            binding.editRegistry.setOnClickListener(view -> listener.onClick(registry.getId()));
             binding.protocolCard.setOnLongClickListener(view -> {
-                listener.onLongClick(position);
+                listener.onLongClick(registry.getId());
                 return false;
             });
         }

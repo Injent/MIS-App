@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setNavigationBarColor(getResources().getColor(R.color.statusBar, getTheme()));
         getWindow().setStatusBarColor(getResources().getColor(R.color.statusBar, getTheme()));
 
-        if (App.getInstance().getMode() == 1) {
+        if (App.getUserSettings().getMode() == 1) {
             createNotificationChannel();
             onForegroundService();
         } else

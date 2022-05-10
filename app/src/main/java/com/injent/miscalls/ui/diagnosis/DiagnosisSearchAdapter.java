@@ -1,5 +1,6 @@
 package com.injent.miscalls.ui.diagnosis;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -60,6 +61,19 @@ public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSear
         holder.setData(getItem(position));
     }
 
+    @Override
+    public void submitList(@Nullable List<Diagnosis> list) {
+        if (list == null) return;
+        List<Diagnosis> sortedList = new ArrayList<>();
+        for (Diagnosis d : list) {
+            if (!d.getCode().isEmpty()) {
+                sortedList.add(d);
+            }
+        }
+        searchList = sortedList;
+        super.submitList(sortedList);
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final DiagnosisItemSelectBinding binding;
@@ -71,8 +85,12 @@ public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSear
             this.listener = listener;
         }
 
+        @SuppressLint("SetTextI18n")
         public void setData(Diagnosis diagnosis) {
-            binding.diagnosisName.setText(diagnosis.getName());
+            if (diagnosis.getCode().isEmpty())
+                binding.diagnosisName.setText(diagnosis.getName());
+            else
+                binding.diagnosisName.setText(diagnosis.getCode() + " " + diagnosis.getName());
             binding.diagnosisName.setOnClickListener(view -> listener.onClick(diagnosis));
         }
     }

@@ -17,6 +17,8 @@ public class User {
         this.token = token;
     }
 
+
+
     @SerializedName("id")
     @PrimaryKey(autoGenerate = true)
     private int id;

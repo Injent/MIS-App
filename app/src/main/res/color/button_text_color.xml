@@ -4,4 +4,8 @@
         android:color="@color/lightBlue"/>
     <item android:state_pressed="false"
         android:color="@color/colorPrimary"/>
+    <item android:state_focused="true"
+        android:color="@color/lightBlue" />
+    <item android:state_focused="false"
+        android:color="@color/colorPrimary" />
 </selector>

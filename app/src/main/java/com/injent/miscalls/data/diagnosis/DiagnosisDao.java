@@ -20,5 +20,8 @@ public interface DiagnosisDao {
     void delete(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Diagnosis... diagnosis);
+    void insert(Diagnosis... diagnoses);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Diagnosis> list);
 }

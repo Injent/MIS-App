@@ -43,9 +43,9 @@ public class AuthFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        if (App.getInstance().isAuthed()) {
+        if (App.getUserSettings().isAuthed()) {
             navigateToHome(false);
             return;
         }
@@ -98,7 +98,6 @@ public class AuthFragment extends Fragment {
 
     private void successfulAuth() {
         Toast.makeText(requireContext(), R.string.successfulAuth, Toast.LENGTH_SHORT).show();
-
         navigateToHome(true);
     }
 

@@ -5,26 +5,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.CompoundButton;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
-import com.injent.miscalls.domain.repositories.SettingsRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
-    private SettingsRepository repository;
-    private Spinner spinner;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -39,8 +42,6 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        repository = new SettingsRepository();
-
         binding.backFromSettings.setOnClickListener(view0 -> back());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this,
@@ -51,26 +52,39 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        spinner = binding.spinner;
-        spinner.setAdapter(repository.getAdapter(requireContext()));
-        spinner.setSelection(App.getInstance().getMode());
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-                repository.setMode(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //Nothing
-            }
-        });
-
-        binding.clearProtocolTempsAction.setOnClickListener(view1 -> {
-            Toast.makeText(requireContext(),R.string.protocolTempsCleared, Toast.LENGTH_SHORT).show();
-        });
+        setupSettingsRecyclerView();
     }
+
+    private void setupSettingsRecyclerView() {
+        SettingAdapter settingAdapter = new SettingAdapter(requireContext());
+
+        binding.settingsRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        binding.settingsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.settings_divider, requireContext().getTheme())));
+        binding.settingsRecyclerView.addItemDecoration(divider);
+        binding.settingsRecyclerView.setAdapter(settingAdapter);
+        List<SettingLayout> list = new ArrayList<>();
+        list.add(new SpinnerLayout(R.drawable.ic_clock, R.color.icClock, R.string.regularUpdates, App.getUserSettings().getMode(), R.array.modes, new SpinnerLayout.OnItemClickListener() {
+                    @Override
+                    public void onOpen() {
+                        // Nothing to do
+                    }
+
+                    @Override
+                    public void onSelect(int position) {
+                        App.getUserSettings().setMode(position).write();
+                    }
+                }));
+        list.add(new SwitchLayout(R.drawable.ic_call, R.color.green, R.string.anonCall, App.getUserSettings().isAnonCall(), R.drawable.switch_thumb_phone, R.drawable.switch_track, new SwitchLayout.OnFlickListener() {
+            @Override
+            public void onFlick(boolean state) {
+                App.getUserSettings().setAnonCall(state).write();
+            }
+        }));
+        settingAdapter.submitList(list);
+    }
+
 
     private void back() {
         Bundle bundle = new Bundle();

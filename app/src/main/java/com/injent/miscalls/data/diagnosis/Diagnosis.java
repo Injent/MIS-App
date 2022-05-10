@@ -1,14 +1,62 @@
 package com.injent.miscalls.data.diagnosis;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.sql.Date;
+import java.util.List;
 
 @Entity
 public class Diagnosis {
+
+    public Diagnosis(String[] array) {
+        this.id = Integer.parseInt(array[0]);
+        if (!array[1].isEmpty())
+            this.recCode = array[1];
+        else
+            this.recCode = "";
+        if (!array[2].isEmpty())
+            this.code = array[2];
+        else
+            this.code = "";
+        if (!array[3].isEmpty())
+            this.name = array[3];
+        else
+            this.name = "";
+        if (!array[4].isEmpty())
+            this.parentId = Integer.parseInt(array[4]);
+        else
+            this.parentId = 0;
+        if (!array[5].isEmpty())
+            this.addlCode = Integer.parseInt(array[5]);
+        else
+            this.addlCode = -1;
+        if (!array[6].isEmpty())
+            this.actual = Integer.parseInt(array[6]);
+        else
+            this.actual = -1;
+        if (!array[7].isEmpty())
+            this.date = array[7];
+        else
+            this.date = "";
+    }
+
+    public Diagnosis() {
+    }
+
+    public static String listToStringCodes(List<Diagnosis> list) {
+        StringBuilder sb = new StringBuilder("");
+
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i).getCode());
+            if (i != list.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
+    }
 
     @PrimaryKey
     private int id;

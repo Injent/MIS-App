@@ -8,7 +8,7 @@
         </shape>
     </item>
 
-    <item android:drawable="@drawable/ic_offline_download_off"
+    <item android:drawable="@drawable/ic_phone_enabled"
         android:bottom="4dp"
         android:top="4dp"
         android:left="4dp"

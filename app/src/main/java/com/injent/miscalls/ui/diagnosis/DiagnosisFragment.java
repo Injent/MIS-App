@@ -1,6 +1,5 @@
 package com.injent.miscalls.ui.diagnosis;
 
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,10 +10,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.App;
@@ -23,11 +24,9 @@ import com.injent.miscalls.data.diagnosis.Diagnosis;
 import com.injent.miscalls.databinding.FragmentDiagnosisBinding;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Objects;
 
 public class DiagnosisFragment extends Fragment {
 
@@ -47,7 +46,7 @@ public class DiagnosisFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(CallStuffViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
 
         binding.searchDiagnosisText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -68,47 +67,62 @@ public class DiagnosisFragment extends Fragment {
 
         binding.cancelSearch.setOnClickListener(view12 -> {
             binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
-            binding.addDiagnosis.setVisibility(View.VISIBLE);
             binding.searchDiagnosisText.setText("");
             binding.searchDiagnosisLayout.setVisibility(View.GONE);
         });
 
-        binding.diagnosisSelectRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        diagnosisSearchAdapter = new DiagnosisSearchAdapter(this::addDiagnosis);
-        binding.diagnosisSelectRecyclerView.setAdapter(diagnosisSearchAdapter);
+        setupSearchRecyclerView();
 
         //Observer
-        viewModel.getDiagnosisLiveData().observe(getViewLifecycleOwner(), diagnosisList -> binding.addDiagnosis.setOnClickListener(view1 -> showDiagnosisSearch(diagnosisList)));
+        viewModel.getDiagnosisDatabaseListLiveData().observe(getViewLifecycleOwner(), list -> diagnosisSearchAdapter.submitList(list));
+
+        viewModel.loadDiagnosisDatabase();
 
         binding.diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        diagnosisUsedAdapter = new DiagnosisUsedAdapter(diagnosisId -> {
-            List<Diagnosis> diagnosisList = new ArrayList<>(diagnosisUsedAdapter.getCurrentList());
-            int idToDelete = 0;
-            for (int i = 0; i < diagnosisList.size(); i++) {
-                if (diagnosisList.get(i).getId() == diagnosisId) {
-                    idToDelete = i;
-                    break;
+        diagnosisUsedAdapter = new DiagnosisUsedAdapter(new DiagnosisUsedAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(Diagnosis diagnosis) {
+                List<Diagnosis> diagnosisList = new ArrayList<>(diagnosisUsedAdapter.getCurrentList());
+                int idToDelete = 0;
+                for (int i = 0; i < diagnosisList.size(); i++) {
+                    if (diagnosisList.get(i).equals(diagnosis)) {
+                        idToDelete = i;
+                        break;
+                    }
                 }
+                diagnosisList.remove(idToDelete);
+                diagnosisUsedAdapter.submitList(diagnosisList);
+                Toast.makeText(requireContext(),R.string.diagnoseDeleted,Toast.LENGTH_SHORT).show();
             }
-            diagnosisList.remove(idToDelete);
-            diagnosisUsedAdapter.submitList(diagnosisList);
-            Toast.makeText(requireContext(),R.string.diagnoseDeleted,Toast.LENGTH_SHORT).show();
+
+            @Override
+            public void onAddClick() {
+                showDiagnosisSearch();
+            }
         });
         binding.diagnosisRecyclerView.setAdapter(diagnosisUsedAdapter);
+        binding.diagnosisRecyclerView.setItemAnimator(null);
     }
 
-    private void showDiagnosisSearch(List<Diagnosis> list) {
+    private void setupSearchRecyclerView() {
+        binding.diagnosisSelectRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        diagnosisSearchAdapter = new DiagnosisSearchAdapter(this::addDiagnosis);
+        DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.divider_layer, requireContext().getTheme())));
+        binding.diagnosisSelectRecyclerView.addItemDecoration(divider);
+        binding.diagnosisSelectRecyclerView.setAdapter(diagnosisSearchAdapter);
+    }
+
+    private void showDiagnosisSearch() {
         binding.searchDiagnosisLayout.setVisibility(View.VISIBLE);
-        binding.addDiagnosis.setVisibility(View.GONE);
         binding.diagnosisRecyclerView.setVisibility(View.GONE);
-        diagnosisSearchAdapter.submitList(list, true);
     }
 
     private void addDiagnosis(Diagnosis diagnosis) {
         List<Diagnosis> currentList = new ArrayList<>(diagnosisUsedAdapter.getCurrentList());
         boolean added = false;
         for (Diagnosis d : currentList) {
-            if (d.getCode().equals(diagnosis.getCode())) {
+            if (d.equals(diagnosis)) {
                 Toast.makeText(requireContext(),R.string.diagnosisAlreadyAdded,Toast.LENGTH_SHORT).show();
                 added = true;
                 break;
@@ -118,9 +132,9 @@ public class DiagnosisFragment extends Fragment {
         App.hideKeyBoard(requireContext(), requireView());
         currentList.add(diagnosis);
         diagnosisUsedAdapter.submitList(currentList);
+        viewModel.setCurrentDiagnoses(currentList);
 
         binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
-        binding.addDiagnosis.setVisibility(View.VISIBLE);
         binding.searchDiagnosisText.setText("");
         binding.searchDiagnosisLayout.setVisibility(View.GONE);
     }

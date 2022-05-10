@@ -1,9 +1,14 @@
 package com.injent.miscalls.ui.diagnosis;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.XmlResourceParser;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
@@ -13,13 +18,11 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.diagnosis.Diagnosis;
 import com.injent.miscalls.databinding.DiagnosisItemBinding;
 
-import java.security.SecureRandom;
-
 public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAdapter.ViewHolder> {
 
-    private final OnItemLongClickListener listener;
+    private final OnItemClickListener listener;
 
-    protected DiagnosisUsedAdapter(OnItemLongClickListener listener) {
+    protected DiagnosisUsedAdapter(OnItemClickListener listener) {
         super(diffCallback);
         this.listener = listener;
     }
@@ -36,6 +39,11 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
         }
     };
 
+    @Override
+    public int getItemCount() {
+        return super.getItemCount() + 1;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,34 +54,56 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Diagnosis diagnosis = getItem(position);
-        holder.setData(diagnosis);
+        if (position == getCurrentList().size() || getCurrentList().isEmpty()) {
+            holder.setAddActionItem();
+        } else {
+            holder.setData(getItem(position));
+        }
     }
 
-    public interface OnItemLongClickListener {
-        void onClick(int diagnosisId);
+    public interface OnItemClickListener {
+        void onClick(Diagnosis diagnosis);
+        void onAddClick();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final DiagnosisItemBinding binding;
-        private final OnItemLongClickListener listener;
-        private final SecureRandom random;
+        private final OnItemClickListener listener;
 
-        public ViewHolder(@NonNull DiagnosisItemBinding binding, OnItemLongClickListener listener) {
+        public ViewHolder(@NonNull DiagnosisItemBinding binding, OnItemClickListener listener) {
             super(binding.getRoot());
             this.binding = binding;
             this.listener = listener;
-            random = new SecureRandom();
         }
 
         public void setData(Diagnosis diagnosis) {
             binding.usedDiagnosisText.setText(diagnosis.getName());
-            diagnosis.setId(random.nextInt());
             binding.usedDiagnosisText.setOnLongClickListener(view -> {
-                listener.onClick(diagnosis.getId());
+                listener.onClick(diagnosis);
                 return false;
             });
+        }
+
+        public void setAddActionItem() {
+            binding.usedDiagnosisText.setOnClickListener(view -> listener.onAddClick());
+            binding.usedDiagnosisText.setText(R.string.addDiagnosis);
+            Context context = binding.getRoot().getContext();
+            ColorStateList cl = null;
+            try {
+                @SuppressLint("ResourceType")
+                XmlResourceParser xpp = context.getResources().getXml(R.color.button_text_color);
+                cl = ColorStateList.createFromXml(context.getResources(), xpp,context.getTheme());
+            } catch (Exception ignored) {}
+            binding.usedDiagnosisText.setTextColor(cl);
+            binding.usedDiagnosisText.setCompoundDrawables(ResourcesCompat.getDrawable(
+                    binding.getRoot().getResources(),
+                    R.drawable.ic_diagnosis,binding.getRoot().getContext().getTheme()),
+                    null,
+                    null,
+                    null
+            );
+            binding.usedDiagnosisText.setBackgroundResource(R.drawable.add_diagnosis_bg);
         }
     }
 }

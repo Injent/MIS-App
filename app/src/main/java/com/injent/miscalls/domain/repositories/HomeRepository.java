@@ -1,13 +1,14 @@
 package com.injent.miscalls.domain.repositories;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
-import com.injent.miscalls.R;
-import com.injent.miscalls.domain.HttpManager;
 import com.injent.miscalls.App;
+import com.injent.miscalls.R;
 import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.data.calllist.CallInfoDao;
 import com.injent.miscalls.data.calllist.QueryToken;
+import com.injent.miscalls.domain.HttpManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import retrofit2.Call;
 
@@ -52,22 +54,22 @@ public class HomeRepository {
 
     public void getCallById(Function<Throwable, CallInfo> ex, Consumer<CallInfo> consumer, int id) {
         CompletableFuture<CallInfo> future = CompletableFuture
-                .supplyAsync(() -> dao.getById(id), es)
+                .supplyAsync(() -> dao.getById(id))
                 .exceptionally(ex);
         future.thenAcceptAsync(consumer);
     }
 
     public void getAll(Function<Throwable, List<CallInfo>> ex, Consumer<List<CallInfo>> consumer) {
         CompletableFuture<List<CallInfo>> future = CompletableFuture
-                .supplyAsync(dao::getAll, es)
+                .supplyAsync(dao::getAll)
                 .exceptionally(ex);
         future.thenAcceptAsync(consumer);
     }
 
-    public void insertWithDropDb(CallInfo... callInfoList) {
+    public void insertCallsWithDropTable(List<CallInfo> list) {
         es.submit(() -> {
-            App.getInstance().getAppDatabase().callInfoDao().clearAll();
-            dao.insert(callInfoList);
+            dao.clearAll();
+            dao.insertAll(list);
         });
     }
 }

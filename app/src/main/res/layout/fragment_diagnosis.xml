@@ -10,20 +10,6 @@
         android:background="@color/colorPrimary"
         android:orientation="vertical">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addDiagnosis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/green"
-            android:clickable="true"
-            android:src="@drawable/ic_add"
-            android:tint="@color/white"
-            app:elevation="0dp"
-            app:fabCustomSize="@dimen/minDp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diagnosisRecyclerView" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/diagnosisRecyclerView"
             android:layout_width="match_parent"
@@ -55,13 +41,14 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/focusable_search">
 
                 <EditText
                     android:id="@+id/searchDiagnosisText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/focusable_search"
+                    android:background="@null"
                     android:drawableStart="@drawable/search_selector"
                     android:drawablePadding="4dp"
                     android:fontFamily="@font/clear_sans_medium"
@@ -83,7 +70,7 @@
                     android:id="@+id/cancelSearch"
                     android:layout_width="@dimen/minDp"
                     android:layout_height="@dimen/minDp"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_cancel"
                     app:layout_constraintBottom_toBottomOf="@+id/searchDiagnosisText"
                     app:layout_constraintEnd_toEndOf="parent"

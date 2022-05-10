@@ -20,6 +20,7 @@
     <dimen name="patientListDp">256dp</dimen>
     <dimen name="editTextPadding">6dp</dimen>
     <dimen name="defaultDp">16dp</dimen>
+    <dimen name="icPadding">8dp</dimen>
 
     <!-- Font Size -->
     <dimen name="titleFont">24sp</dimen>

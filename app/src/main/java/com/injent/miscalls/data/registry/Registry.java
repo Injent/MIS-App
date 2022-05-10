@@ -6,8 +6,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.injent.miscalls.data.calllist.Patient;
-
 @Entity
 public class Registry {
 
@@ -15,46 +13,67 @@ public class Registry {
     }
 
     @Ignore
-    public Registry(String name, String inspectionContent, String treatment, String recommendations, String diagnosis) {
+    public Registry(String name, String inspection, String recommendations, int diagnosisId) {
         this.name = name;
-        this.inspectionContent = inspectionContent;
-        this.treatment = treatment;
+        this.inspection = inspection;
         this.recommendations = recommendations;
-        this.diagnosis = diagnosis;
+        this.diagnosisId = diagnosisId;
     }
 
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "name")
     private String name;
+    @ColumnInfo(name = "diagnosis_name")
+    private String diagnosisCode;
     @ColumnInfo(name = "inspection")
-    private String inspectionContent;
-    @ColumnInfo(name = "treatment")
-    private String treatment;
+    private String inspection;
     @ColumnInfo(name = "recommendations")
     private String recommendations;
-    @ColumnInfo(name = "diagnosis")
-    private String diagnosis;
+    @ColumnInfo(name = "diagnosis_id")
+    private int diagnosisId;
     @ColumnInfo(name = "call_id")
     private int callId;
 
-    public int getCallId() { return callId; }
+    public int getCallId() {
+        return callId;
+    }
 
-    public void setCallId(int id) { this.callId = id; }
+    public void setCallId(int id) {
+        this.callId = id;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getDiagnosis() { return diagnosis; }
+    public String getDiagnosisCode() {
+        return diagnosisCode;
+    }
 
-    public void setDiagnosis(String diagnosis) { this.diagnosis = diagnosis; }
+    public void setDiagnosisCode(String diagnosisCode) {
+        this.diagnosisCode = diagnosisCode;
+    }
 
-    public void setInspectionContent(String inspectionContent) { this.inspectionContent = inspectionContent; }
+    public int getDiagnosisId() {
+        return diagnosisId;
+    }
 
-    public void setTreatment(String treatment) { this.treatment = treatment; }
+    public void setDiagnosisId(int diagnosis) {
+        this.diagnosisId = diagnosis;
+    }
 
-    public void setRecommendations(String recommendations) { this.recommendations = recommendations; }
+    public void setInspection(String inspection) {
+        this.inspection = inspection;
+    }
+
+    public void setRecommendations(String recommendations) {
+        this.recommendations = recommendations;
+    }
 
     public int getId() {
         return id;
@@ -64,21 +83,12 @@ public class Registry {
         return name;
     }
 
-    public String getInspectionContent() {
-        return inspectionContent;
-    }
-
-    public String getTreatment() {
-        return treatment;
+    public String getInspection() {
+        return inspection;
     }
 
     public String getRecommendations() {
         return recommendations;
-    }
-
-    public Registry build(Patient patient) {
-        callId = patient.getId();
-        return this;
     }
 
     @Override

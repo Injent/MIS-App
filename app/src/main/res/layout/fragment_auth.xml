@@ -23,7 +23,6 @@
             android:textColor="@color/darkGrayText"
             android:textSize="@dimen/titleFont"
             android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@+id/lineSignIn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -138,7 +137,7 @@
                 android:background="@drawable/button"
                 android:drawableStart="@drawable/ic_login"
                 android:drawablePadding="16dp"
-                android:drawableTint="@color/white"
+                android:drawableTint="@color/button_text_color"
                 android:fontFamily="@font/clear_sans_bold"
                 android:paddingStart="32dp"
                 android:paddingEnd="32dp"

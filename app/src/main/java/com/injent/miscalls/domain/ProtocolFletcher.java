@@ -84,9 +84,8 @@ public class ProtocolFletcher {
                 .replace("$docfullname", user.getFullName())
                 .replace("$workingposition", user.getWorkingPosition())
                 .replace("$patientfullname", callInfo.getFullName())
-                .replace("$inspection", registry.getInspectionContent())
-                .replace("$treatment", registry.getTreatment()
-                .replace("$conclusion", registry.getRecommendations()));
+                .replace("$inspection", registry.getInspection())
+                .replace("$conclusion", registry.getRecommendations());
 
         final File savedPdfFile = FileManager.getInstance().createTempFile(context,"pdf",false);
 

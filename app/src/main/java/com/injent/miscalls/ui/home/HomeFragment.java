@@ -32,7 +32,6 @@ import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.calllist.FailedDownloadDb;
 import com.injent.miscalls.data.calllist.ListEmptyException;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
-import com.injent.miscalls.domain.repositories.AuthRepository;
 
 import java.util.Objects;
 
@@ -55,7 +54,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         navController = Navigation.findNavController(requireView());
 
         //Listeners
@@ -64,9 +63,9 @@ public class HomeFragment extends Fragment {
         binding.moreButton.setOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
         //Observers
-        viewModel.getPatientListLiveData().observe(getViewLifecycleOwner(), patients -> {
+        viewModel.getCallListLiveData().observe(getViewLifecycleOwner(), callList -> {
             hideLoading();
-            adapter.submitList(patients);
+            adapter.submitList(callList);
         });
 
         viewModel.getCallListError().observe(getViewLifecycleOwner(), throwable -> {
@@ -161,7 +160,7 @@ public class HomeFragment extends Fragment {
 
     private void downloadNewDb() {
         showLoading();
-        viewModel.downloadPatientsDb();
+        viewModel.downloadCallsDb();
     }
 
     private void navigateToAuth() {
@@ -170,10 +169,9 @@ public class HomeFragment extends Fragment {
         navController.navigate(R.id.authFragment);
     }
 
-    private void navigateToSavedProtocols() {
-        closeNavigationMenu();
+    private void navigateToRegistry() {
         if (notMatchingDestination()) return;
-        navController.navigate(R.id.savedProtocolsFragment);
+        navController.navigate(R.id.registryFragment);
     }
 
     private boolean notMatchingDestination() {
@@ -187,14 +185,14 @@ public class HomeFragment extends Fragment {
             switch (item.getItemId()) {
                 case R.id.settingsMenu: navigateToSettings();
                     break;
-                case R.id.about: moveToSite(getText(R.string.aboutLink).toString());
+                case R.id.about: moveToSite(getString(R.string.aboutLink));
                     break;
-                case R.id.help: moveToSite(getText(R.string.helpLink).toString());
+                case R.id.help: moveToSite(getString(R.string.helpLink));
                     break;
-                case R.id.savedProtocolsMenu: navigateToSavedProtocols();
+                case R.id.registry: navigateToRegistry();
                     break;
                 case R.id.logoutMenu: {
-                    App.getInstance().setAuthed(false);
+                    App.getUserSettings().setAuthed(false).write();
                     navigateToAuth();
                 }
                 break;
@@ -230,9 +228,7 @@ public class HomeFragment extends Fragment {
 
         if (getArguments().containsKey(getString(R.string.keyUpdateList))) {
             displayList();
-        }
-
-        else if (getArguments().containsKey(getString(R.string.keyDownloadDb)))
+        } else if (getArguments().containsKey(getString(R.string.keyDownloadDb)))
             downloadNewDb();
     }
 

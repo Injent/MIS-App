@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.databinding.CallListItemBinding;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,13 +26,6 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
     protected CallAdapter(OnItemClickListener listener) {
         super(diffCallback);
         this.listener = listener;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-
-        //If type ... then
-        return super.getItemViewType(position);
     }
 
     static DiffUtil.ItemCallback<CallInfo> diffCallback = new DiffUtil.ItemCallback<>() {
@@ -77,18 +70,22 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
             binding.listId.setText(String.valueOf(position + 1));
             binding.listHeader.setText(callInfo.getFullName());
             binding.listAddress.setText(callInfo.getResidence());
-            binding.listAge.setText(callInfo.getAge() + " " + App.getInstance().getString(R.string.age));
-            if (Boolean.TRUE.equals(callInfo.isInspected()))
+            binding.listAge.setText(callInfo.getAge() + " " + binding.getRoot().getContext().getString(R.string.age));
+            if (callInfo.isInspected()) {
                 binding.statusBar.setBackgroundResource(R.drawable.status_bar_done);
-
+            }
             itemView.setOnClickListener(v -> listener.onClick(callInfo.getId()));
         }
     }
 
     @Override
     public void submitList(@Nullable List<CallInfo> list) {
-        list.sort(Comparator.comparing(CallInfo::isInspected));
-        super.submitList(list);
+        if (list != null) {
+            list.sort(Comparator.comparing(CallInfo::isInspected));
+            super.submitList(list);
+        } else {
+            super.submitList(Collections.emptyList());
+        }
     }
 
     public interface OnItemClickListener {

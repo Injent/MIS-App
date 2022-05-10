@@ -12,6 +12,8 @@
         android:drawablePadding="8dp"
         android:fontFamily="@font/clear_sans_medium"
         android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
         android:text=""
         android:textColor="@color/darkGrayText"
         android:textSize="@dimen/mediumFont"

@@ -4,11 +4,11 @@
         <shape android:shape="oval">
             <solid android:color="@color/colorPrimary"/>
             <size android:height="30dp" android:width="30dp"/>
-            <stroke android:color="@color/focused" android:width="3dp"/>
+            <stroke android:color="@color/gray" android:width="3dp"/>
         </shape>
     </item>
 
-    <item android:drawable="@drawable/ic_offline_download_on"
+    <item android:drawable="@drawable/ic_phone_disabled"
         android:bottom="4dp"
         android:top="4dp"
         android:left="4dp"

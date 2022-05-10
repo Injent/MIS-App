@@ -23,16 +23,24 @@ public class CallStuffViewModel extends ViewModel {
 
     private final MutableLiveData<CallInfo> selectedCall = new MutableLiveData<>();
     private final MutableLiveData<Throwable> callError = new MutableLiveData<>();
-    private final MutableLiveData<String> currentDiagnoses = new MutableLiveData<>();
     private final MutableLiveData<String> currentInspection = new MutableLiveData<>();
     private final MutableLiveData<String> currentRecommendation = new MutableLiveData<>();
+    private final MutableLiveData<List<Diagnosis>> currentDiagnoses = new MutableLiveData<>();
     private final MutableLiveData<Throwable> error = new MutableLiveData<>();
-    private final MutableLiveData<List<Diagnosis>> diagnosesList = new MutableLiveData<>();
+    private final MutableLiveData<List<Diagnosis>> diagnosesDatabaseList = new MutableLiveData<>();
 
     public CallStuffViewModel() {
         registryRepository = new RegistryRepository();
         homeRepository = new HomeRepository();
         diagnosisRepository = new DiagnosisRepository();
+    }
+
+    public LiveData<List<Diagnosis>> getCurrentDiagnosesLiveData() {
+        return currentDiagnoses;
+    }
+
+    public void setCurrentDiagnoses(List<Diagnosis> list) {
+        currentDiagnoses.setValue(list);
     }
 
     public LiveData<CallInfo> getCallLiveData() {
@@ -48,54 +56,58 @@ public class CallStuffViewModel extends ViewModel {
             callError.postValue(throwable);
             return null;
         }, callInfo -> {
-            if (callInfo == null) {
-                callError.postValue(new UnknownError());
-            } else
+            if (callInfo != null) {
                 selectedCall.postValue(callInfo);
+            } else {
+                callError.postValue(new UnknownError());
+            }
         }, callId);
     }
 
-    public void saveRegistry(Registry registry) {
+    public void saveRegistry() {
+        if (selectedCall.getValue() == null || currentDiagnoses.getValue() == null) {
+            error.postValue(new IllegalStateException());
+            return;
+        }
+        Registry registry = new Registry();
+        registry.setRecommendations(currentRecommendation.getValue());
+        registry.setInspection(currentInspection.getValue());
+        registry.setDiagnosisId(selectedCall.getValue().getId());
+        registry.setName(selectedCall.getValue().getFullName());
+        registry.setDiagnosisCode(Diagnosis.listToStringCodes(currentDiagnoses.getValue()));
         registryRepository.insertRegistry(registry);
     }
 
-    public String getCurrentRecommendation() {
-        return currentRecommendation.getValue();
+    public LiveData<String> getCurrentRecommendationLiveData() {
+        return currentRecommendation;
     }
 
     public void setCurrentRecommendation(String s) {
         currentRecommendation.setValue(s);
     }
 
-    public String getCurrentInspection() {
-        return currentInspection.getValue();
+    public LiveData<String> getCurrentInspectionLiveData() {
+        return currentInspection;
     }
 
     public void setCurrentInspection(String s) {
         currentInspection.setValue(s);
     }
 
-    public void setCurrentDiagnoses(String s) {
-        currentDiagnoses.setValue(s);
-    }
-
-    public String getDiagnosesList() {
-        return currentDiagnoses.getValue();
-    }
-
-    public void loadDiagnosis() {
+    public void loadDiagnosisDatabase() {
         diagnosisRepository.getAllDiagnosis(throwable -> {
             error.postValue(throwable);
             return Collections.emptyList();
         }, diagnoses -> {
-            if (diagnoses == null || diagnoses.isEmpty())
+            if (!diagnoses.isEmpty()) {
+                diagnosesDatabaseList.postValue(diagnoses);
+            } else {
                 error.postValue(new ListEmptyException());
-            else
-                CallStuffViewModel.this.diagnosesList.postValue(diagnoses);
+            }
         });
     }
 
-    public LiveData<List<Diagnosis>> getDiagnosisLiveData() {
-        return diagnosesList;
+    public LiveData<List<Diagnosis>> getDiagnosisDatabaseListLiveData() {
+        return diagnosesDatabaseList;
     }
 }

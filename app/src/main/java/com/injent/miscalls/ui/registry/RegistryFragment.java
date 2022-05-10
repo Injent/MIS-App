@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -43,7 +44,7 @@ public class RegistryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(RegistryViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(RegistryViewModel.class);
         navController = Navigation.findNavController(requireView());
 
         //Observers
@@ -54,11 +55,18 @@ public class RegistryFragment extends Fragment {
         });
 
         //RecyclerView
-        setupProtocolRecyclerView();
         setupSectionRecyclerView();
+        setupDiagnosisRecyclerView();
 
         //Listeners
         binding.backFromSavedProtocols.setOnClickListener(view0 -> navigateToHome());
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToHome();
+            }
+        });
     }
 
     private void undoDeletingSnackbar() {
@@ -70,19 +78,18 @@ public class RegistryFragment extends Fragment {
         snackbar.show();
     }
 
-    private void setupProtocolRecyclerView() {
+    private void setupDiagnosisRecyclerView() {
         adapter = new RegistryAdapter(new RegistryAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-//
+
             }
 
             @Override
             public void onLongClick(int position) {
-//
+
             }
         });
-
         binding.registryItemRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.registryItemRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         binding.registryItemRecyclerView.setAdapter(adapter);
@@ -115,7 +122,7 @@ public class RegistryFragment extends Fragment {
     }
 
     private boolean notMatchingDestination() {
-        return Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.savedProtocolsFragment;
+        return Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.registryFragment;
     }
 
     @Override

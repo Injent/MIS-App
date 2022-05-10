@@ -19,7 +19,10 @@ public interface CallInfoDao {
     CallInfo getById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CallInfo... callInfo);
+    void insert(CallInfo callInfo);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<CallInfo> list);
 
     @Update
     void update(CallInfo callInfo);

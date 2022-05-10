@@ -9,7 +9,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.data.calllist.CallInfo;
 import com.injent.miscalls.data.calllist.CallInfoDao;
 import com.injent.miscalls.data.diagnosis.Diagnosis;
@@ -25,16 +24,18 @@ import net.sqlcipher.database.SupportFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
 
 @Database(entities = {Diagnosis.class, Registry.class, CallInfo.class, Recommendation.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
 
     public static final String DB_NAME = "database.db";
-    private static final String MKB = "mkb10.csv";
+    private static final String MKB10_FILE_PATH = "databases/mkb10.csv";
 
-    public static AppDatabase INSTANCE;
+    private static AppDatabase instance;
 
     public abstract DiagnosisDao diagnosisDao();
 
@@ -44,59 +45,56 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract RecommendationDao recommendationDao();
 
-    public static final Callback roomDatabaseCallback = new Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-
+    public static AppDatabase getInstance(Context context, char[] passphrase) {
+        if (instance != null || passphrase == null) {
+            return instance;
         }
-    };
 
-    public static AppDatabase getInstance(Context context) {
-        if (INSTANCE != null) return INSTANCE;
+        final byte[] passphraseBytes = SQLiteDatabase.getBytes(passphrase);
+        final SupportFactory factory = new SupportFactory(passphraseBytes);
 
-        final char[] userEnteredPassphrase = new char[]{'a', 'b'};
-        final byte[] passphrase = SQLiteDatabase.getBytes(userEnteredPassphrase);
-        final SupportFactory factory = new SupportFactory(passphrase);
-
-        INSTANCE = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
-                .addCallback(new CallbackQQQ(context))
+        instance = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
                 .openHelperFactory(factory)
+                .addCallback(new RoomPreloadCallback(context))
                 .build();
-        return INSTANCE;
+        return instance;
     }
 
-    private static class CallbackQQQ extends Callback {
+    private static class RoomPreloadCallback extends Callback {
 
         private final Context context;
 
-        public CallbackQQQ(Context context) {
+        public RoomPreloadCallback(Context context) {
             this.context = context;
         }
 
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            try {
-                AssetManager assetManager = context.getAssets();
-                InputStream inputStream = assetManager.open(MKB);
-                Scanner scanner = new Scanner(inputStream);
+            super.onCreate(db);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                //Prepopulate database with mkb10 codes
+                try {
+                    AssetManager assetManager = context.getAssets();
+                    InputStream inputStream = assetManager.open(MKB10_FILE_PATH);
+                    Scanner scanner = new Scanner(inputStream);
 
-                ArrayList<Diagnosis> arrayList = new ArrayList<>();
+                    List<Diagnosis> list = new ArrayList<>();
 
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String[] strings = line.split(",");
-                    Diagnosis diagnosis = new Diagnosis(strings[])
-                    arrayList.add(diagnosis);
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        String[] strings = line.split(";");
+                        Diagnosis diagnosis = new Diagnosis(strings);
+                        list.add(diagnosis);
+
+                    }
+                    scanner.close();
+
+                    DiagnosisDao dao = instance.diagnosisDao();
+                    dao.insertAll(list);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                scanner.close();
-
-                DiagnosisDao dao = INSTANCE.diagnosisDao();
-                dao.insert(new Diagnosis());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            });
         }
     }
 }
