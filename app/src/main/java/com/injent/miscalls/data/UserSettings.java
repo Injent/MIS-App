@@ -53,6 +53,15 @@ public class UserSettings {
     public boolean isInit() {
         return sp.getBoolean(res.getString(R.string.keyInit), false);
     }
+
+    public UserSettings setDbDate(String date) {
+        editor.putString(res.getString(R.string.keyDbDate), date);
+        return this;
+    }
+
+    public String getDbDate() {
+        return sp.getString(res.getString(R.string.keyDbDate), "");
+    }
     
     public void write() {
         editor.apply();

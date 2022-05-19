@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/switchItemLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/displayPadding"
+    android:foreground="?attr/selectableItemBackground">
+
+
+    <TextView
+        android:id="@+id/settingsSwitchTitle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/clear_sans_medium"
+        android:gravity="center_vertical"
+        android:textColor="@color/darkGrayText"
+        android:textSize="@dimen/mediumFont"
+        app:layout_constraintBottom_toBottomOf="@+id/settingsSwitch"
+        app:layout_constraintEnd_toStartOf="@+id/settingsSwitch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/settingsSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/settingsSwitchHint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:fontFamily="@font/clear_sans_medium"
+        android:textColor="@color/lightGrayText"
+        android:textSize="@dimen/hintFont"
+        app:layout_constraintEnd_toEndOf="@+id/settingsSwitchTitle"
+        app:layout_constraintStart_toStartOf="@+id/settingsSwitchTitle"
+        app:layout_constraintTop_toBottomOf="@+id/settingsSwitchTitle" />
+</androidx.constraintlayout.widget.ConstraintLayout>

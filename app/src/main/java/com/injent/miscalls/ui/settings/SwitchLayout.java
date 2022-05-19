@@ -2,20 +2,20 @@ package com.injent.miscalls.ui.settings;
 
 public class SwitchLayout implements SettingLayout {
 
-    private int viewType;
     private int drawableResId;
     private int drawableColorResId;
     private int stringResId;
+    private int stringHintResId;
     private boolean state;
     private int thumbResId;
     private int trackResId;
     private OnFlickListener listener;
 
-    public SwitchLayout(int drawableResId, int drawableColorResId, int stringResId, boolean state, int thumbResId, int trackResId, OnFlickListener listener) {
-        this.viewType = 1;
+    public SwitchLayout(int drawableResId, int drawableColorResId, int stringResId, int stringHintResId, boolean state, int thumbResId, int trackResId, OnFlickListener listener) {
         this.drawableResId = drawableResId;
         this.drawableColorResId = drawableColorResId;
         this.stringResId = stringResId;
+        this.stringHintResId = stringHintResId;
         this.state = state;
         this.thumbResId = thumbResId;
         this.trackResId = trackResId;
@@ -24,7 +24,7 @@ public class SwitchLayout implements SettingLayout {
 
     @Override
     public int getViewType() {
-        return viewType;
+        return 1;
     }
 
     public int getDrawableResId() {
@@ -51,6 +51,14 @@ public class SwitchLayout implements SettingLayout {
         this.stringResId = stringResId;
     }
 
+    public int getStringHintResId() {
+        return stringHintResId;
+    }
+
+    public void setStringHintResId(int stringHintResId) {
+        this.stringHintResId = stringHintResId;
+    }
+
     public boolean getState() {
         return state;
     }
@@ -65,10 +73,6 @@ public class SwitchLayout implements SettingLayout {
 
     public void setListener(OnFlickListener listener) {
         this.listener = listener;
-    }
-
-    public void setViewType(int viewType) {
-        this.viewType = viewType;
     }
 
     public int getThumbResId() {

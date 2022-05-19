@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,14 +25,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.diagnosis.Diagnosis;
 import com.injent.miscalls.databinding.FragmentCallStuffBinding;
-import com.injent.miscalls.ui.diagnosis.DiagnosisFragment;
 import com.injent.miscalls.ui.callinfo.CallInfoFragment;
+import com.injent.miscalls.ui.diagnosis.DiagnosisFragment;
 import com.injent.miscalls.ui.inspection.InspectionFragment;
 import com.injent.miscalls.ui.recommendations.RecommendationsFragment;
-
-import java.util.List;
 
 public class CallStuffFragment extends Fragment {
 
@@ -59,6 +55,7 @@ public class CallStuffFragment extends Fragment {
         }
 
         binding.doneButton.setOnClickListener(view0 -> save());
+        binding.doneButton.setVisibility(View.VISIBLE);
 
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
@@ -105,11 +102,28 @@ public class CallStuffFragment extends Fragment {
                     break;
                     default: throw new IllegalStateException();
                 }
+
+                @SuppressLint("InflateParams")
+                TabLayout.TabView tabView = tab.view;
+                ImageView tabIcon = tabView.findViewById(R.id.tabIcon);
+                tabIcon.animate()
+                        .setDuration(200L)
+                        .scaleX(1.05f)
+                        .scaleY(1.05f)
+                        .start();
+
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                //
+                @SuppressLint("InflateParams")
+                TabLayout.TabView tabView = tab.view;
+                ImageView tabIcon = tabView.findViewById(R.id.tabIcon);
+                tabIcon.animate()
+                        .setDuration(200L)
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .start();
             }
 
             @Override
@@ -125,11 +139,7 @@ public class CallStuffFragment extends Fragment {
     }
 
     private void checkForDoneInspection() {
-        String recommendation = viewModel.getCurrentRecommendationLiveData().getValue();
-        String inspection = viewModel.getCurrentInspectionLiveData().getValue();
-        List<Diagnosis> diagnosisList = viewModel.getCurrentDiagnosesLiveData().getValue();
-        if (recommendation == null || inspection == null || diagnosisList == null) return;
-        if (!recommendation.trim().isEmpty() && !inspection.trim().isEmpty() && !diagnosisList.isEmpty()) {
+        if (viewModel.isInspectionDone()) {
             binding.doneButton.setVisibility(View.VISIBLE);
         } else {
             binding.doneButton.setVisibility(View.GONE);
@@ -137,13 +147,17 @@ public class CallStuffFragment extends Fragment {
     }
 
     private void confirmExitAction() {
-        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.exitFromEditing)
-                .setMessage(R.string.dataWontSave)
-                .setPositiveButton(R.string.cancel, (dialog, button0) -> dialog.dismiss())
-                .setNegativeButton(R.string.ok, (dialog, button1) -> navigateToHome())
-                .create();
-        alertDialog.show();
+        if (!viewModel.isInspectionDone()) {
+            AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.exitFromEditing)
+                    .setMessage(R.string.dataWontSave)
+                    .setPositiveButton(R.string.cancel, (dialog, button0) -> dialog.dismiss())
+                    .setNegativeButton(R.string.ok, (dialog, button1) -> navigateToHome())
+                    .create();
+            alertDialog.show();
+        } else {
+            navigateToHome();
+        }
     }
 
     private void save() {
@@ -173,7 +187,7 @@ public class CallStuffFragment extends Fragment {
             break;
             case 1: {
                 tabIcon.setImageResource(R.drawable.ic_inspection);
-                tabText.setText(R.string.inspection);
+                tabText.setText(R.string.inspectionShort);
             }
             break;
             case 2: {
@@ -231,6 +245,7 @@ public class CallStuffFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        viewModel.onCleared();
         binding = null;
     }
 

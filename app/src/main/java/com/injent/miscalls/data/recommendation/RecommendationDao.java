@@ -21,6 +21,9 @@ public interface RecommendationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Recommendation... protocol);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Recommendation> list);
+
     @Update
     void update(Recommendation protocol);
 

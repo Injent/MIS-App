@@ -3,7 +3,7 @@ package com.injent.miscalls.data;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
-import com.injent.miscalls.data.calllist.QueryToken;
+import com.injent.miscalls.network.QueryToken;
 
 public class User {
 

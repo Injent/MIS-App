@@ -8,6 +8,16 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Recommendation {
 
+    public Recommendation() {
+    }
+
+    public Recommendation(String[] array) {
+        this.id = Integer.parseInt(array[0]);
+        this.name = array[1];
+        this.content = array[2];
+        this.description = array[3];
+    }
+
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = false)
     private int id;

@@ -21,11 +21,14 @@
                 android:id="@+id/statusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/colorPrimary"
                 android:elevation="@dimen/cardElevation"
                 android:fontFamily="@font/clear_sans_bold"
-                android:padding="4dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
                 android:text="@string/inspected"
                 android:textColor="@color/green"
                 android:textSize="@dimen/mediumFont"
@@ -62,6 +65,7 @@
                 android:textColor="@color/grayText"
                 android:textColorHighlight="@color/highlight"
                 android:textSize="@dimen/hintFont"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/complaintsHeader"
                 app:layout_constraintTop_toBottomOf="@+id/complaintsHeader" />
@@ -81,11 +85,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/infoLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/list"
             android:elevation="2dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/patientInfoHeader"
@@ -104,7 +110,6 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/infoList"
                 android:layout_width="match_parent"
-                android:animateLayoutChanges="false"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/displayPadding"
                 android:background="@null"
@@ -125,8 +130,8 @@
                 android:id="@+id/callButton"
                 android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
-                android:layout_marginEnd="@dimen/displayPadding"
-                android:layout_marginBottom="@dimen/displayPadding"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:backgroundTint="@color/green"
                 android:clickable="true"
                 android:src="@drawable/ic_call"

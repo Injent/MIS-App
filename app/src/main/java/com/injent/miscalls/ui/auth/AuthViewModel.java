@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.UserNotFoundException;
-import com.injent.miscalls.domain.HttpManager;
+import com.injent.miscalls.network.UserNotFoundException;
+import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.domain.repositories.AuthRepository;
@@ -29,7 +29,7 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void auth(String login, String password) {
-        if (!HttpManager.isInternetAvailable()) {
+        if (!NetworkManager.isInternetAvailable()) {
             errorUser.postValue(new NetworkErrorException());
             return;
         }

@@ -3,44 +3,53 @@ package com.injent.miscalls.domain;
 import static com.injent.miscalls.App.CHANNEL_ID;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.navigation.NavDeepLinkBuilder;
 
-import com.injent.miscalls.App;
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class ForegroundServiceApp extends Service {
 
     private boolean init = false;
     private static final int FOREGROUND_ID = 1;
-    public static final long UPDATE_TIME = 5L;
+
+    @Override
+    public void onCreate() {
+        createNotificationChannel();
+        super.onCreate();
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.putExtra(getString(R.string.keyOffUpdates),true);
+        PendingIntent pendingIntent = new NavDeepLinkBuilder(getApplicationContext())
+                .setComponentName(MainActivity.class)
+                .setGraph(R.navigation.nav_graph)
+                .setDestination(R.id.settingsFragment)
+                .createPendingIntent();
 
-        ScheduledExecutorService es = new ScheduledThreadPoolExecutor(1);
-        es.scheduleAtFixedRate(() -> App.getInstance().getSharedPreferences().edit().putBoolean("newDb", true).apply(),0, UPDATE_TIME, TimeUnit.SECONDS);
-
-        Notification notification = new Notification.Builder(this, CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getText(R.string.receivingDataOn))
                 .setContentText(getText(R.string.moveToSettings))
-                .setSmallIcon(R.drawable.ic_notif_on)
+                .setSmallIcon(R.drawable.ic_clock)
+                .setContentIntent(pendingIntent)
                 .build();
 
         init = true;
-        Log.e("FOREGROUNDING","START");
 
         startForeground(FOREGROUND_ID,notification);
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Nullable
@@ -59,5 +68,16 @@ public class ForegroundServiceApp extends Service {
 
     public boolean isRunning() {
         return init;
+    }
+
+    private void createNotificationChannel() {
+        NotificationChannel serviceChannel = new NotificationChannel(
+                CHANNEL_ID,
+                getString(R.string.managerName),
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(serviceChannel);
     }
 }

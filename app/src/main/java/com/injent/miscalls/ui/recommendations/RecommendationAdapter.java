@@ -23,12 +23,10 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
 
     private final OnItemClickListener listener;
     private List<Recommendation> searchList;
-    private final boolean editMode;
 
-    protected RecommendationAdapter(OnItemClickListener listener, boolean editMode) {
+    protected RecommendationAdapter(OnItemClickListener listener) {
         super(diffCallback);
         this.listener = listener;
-        this.editMode = editMode;
     }
 
     public void submitList(@Nullable List<Recommendation> list, boolean searchList) {
@@ -59,35 +57,29 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setData(getItem(position), editMode);
+        holder.setData(getItem(position));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemRecommendationBinding binding;
         private final OnItemClickListener listener;
 
-        public ViewHolder(ItemRecommendationBinding binding, OnItemClickListener listener) {
+        public ViewHolder(@NonNull ItemRecommendationBinding binding, OnItemClickListener listener) {
             super(binding.getRoot());
             this.binding = binding;
             this.listener = listener;
         }
 
-        public void setData(Recommendation recommendation, boolean editMode) {
+        public void setData(@NonNull Recommendation recommendation) {
             binding.listProtocolName.setText(recommendation.getName());
             binding.listProtocolDesc.setText(recommendation.getDescription());
-
-            if (editMode) {
-                binding.modeImage.setBackgroundResource(R.drawable.ic_edit);
-            } else {
-                binding.modeImage.setBackgroundResource(R.drawable.ic_navigate_right);
-            }
 
             binding.protocolTempCard.setOnClickListener(view0 -> listener.onClick(recommendation.getId()));
         }
     }
 
     public interface OnItemClickListener {
-        void onClick(int protocolTempId);
+        void onClick(int recommendationId);
     }
 
     @Override
@@ -96,6 +88,7 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
     }
 
     private final Filter filter = new Filter() {
+        @NonNull
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             List<Recommendation> filteredList = new ArrayList<>();
@@ -116,8 +109,7 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
         }
 
         @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            //TODO
+        protected void publishResults(CharSequence charSequence, @NonNull FilterResults filterResults) {
             submitList((List<Recommendation>) filterResults.values, false);
         }
     };

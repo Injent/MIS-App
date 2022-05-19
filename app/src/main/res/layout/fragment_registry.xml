@@ -18,7 +18,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/savedProtocolsTitle"
+                android:id="@+id/registryTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/displayPadding"
@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/backFromSavedProtocols"
+                android:id="@+id/backFromRegistry"
                 android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
                 android:layout_marginStart="8dp"
@@ -49,12 +49,91 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/darkGrayText" />
+
+            <ImageView
+                android:id="@+id/registrySearchButton"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:background="?android:attr/actionBarItemBackground"
+                android:src="@drawable/ic_search"
+                app:layout_constraintBottom_toBottomOf="@+id/registryMore"
+                app:layout_constraintEnd_toStartOf="@+id/registryMore"
+                app:layout_constraintTop_toTopOf="@+id/registryMore"
+                app:tint="@color/darkGrayText" />
+
+            <ImageView
+                android:id="@+id/registryMore"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:layout_marginEnd="8dp"
+                android:background="?android:attr/actionBarItemBackground"
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_more"
+                app:tint="@color/darkGrayText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/registrySearchLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search"
+                android:padding="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/registryTitle"
+                app:layout_constraintEnd_toEndOf="@+id/registrySearchButton"
+                app:layout_constraintStart_toEndOf="@+id/backFromRegistry"
+                app:layout_constraintTop_toTopOf="@+id/registryTitle">
+
+                <EditText
+                    android:id="@+id/registrySearchText"
+                    android:layout_width="0dp"
+                    android:inputType="text"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@null"
+                    android:drawablePadding="8dp"
+                    android:ems="10"
+                    android:fontFamily="@font/clear_sans_medium"
+                    android:hint="@string/search"
+                    android:maxLines="1"
+                    android:scrollbarThumbHorizontal="@null"
+                    android:scrollbarTrackHorizontal="@null"
+                    android:scrollbars="horizontal"
+                    android:textColor="@color/darkGrayText"
+                    android:textColorHighlight="@color/highlight"
+                    android:textColorHint="@color/lowGray"
+                    android:textSize="@dimen/mediumFont"
+                    app:drawableStartCompat="@drawable/search_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/registrySearchCancel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/registrySearchCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cancel"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/registrySectionsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:padding="@dimen/displayPadding" />
 
         <ScrollView

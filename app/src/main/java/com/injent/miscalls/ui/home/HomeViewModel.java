@@ -1,22 +1,25 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.AppDatabase;
-import com.injent.miscalls.domain.HttpManager;
+import com.injent.miscalls.data.database.AppDatabase;
+import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.App;
-import com.injent.miscalls.data.calllist.CallInfo;
-import com.injent.miscalls.data.calllist.FailedDownloadDb;
-import com.injent.miscalls.data.calllist.ListEmptyException;
+import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.data.database.FailedDownloadDb;
+import com.injent.miscalls.data.database.calls.ListEmptyException;
 import com.injent.miscalls.domain.repositories.HomeRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,8 +28,8 @@ public class HomeViewModel extends ViewModel {
 
     private final HomeRepository homeRepository;
 
-    private final MutableLiveData<List<CallInfo>> callList = new MutableLiveData<>();
-    private final MutableLiveData<Throwable> callListError = new MutableLiveData<>();
+    private MutableLiveData<List<CallInfo>> callList = new MutableLiveData<>();
+    private MutableLiveData<Throwable> callListError = new MutableLiveData<>();
 
     private final MutableLiveData<String> dbDate = new MutableLiveData<>();
 
@@ -68,7 +71,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void downloadCallsDb() {
-        if (!HttpManager.isInternetAvailable()) {
+        if (!NetworkManager.isInternetAvailable()) {
             callListError.postValue(new NetworkErrorException());
             return;
         }
@@ -78,7 +81,10 @@ public class HomeViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     List<CallInfo> list = response.body();
                     if (list != null) {
-                        homeRepository.insertCallsWithDropTable(list);
+                        homeRepository.insertCallsWithDropTable(throwable -> {
+                            callListError.postValue(throwable);
+                            return null;
+                        }, list);
                         callList.postValue(list);
                         setNewDbDate();
                     }
@@ -92,5 +98,14 @@ public class HomeViewModel extends ViewModel {
                 callListError.postValue(t);
             }
         });
+    }
+
+    @Override
+    protected void onCleared() {
+        callList = new MutableLiveData<>();
+        callListError = new MutableLiveData<>();
+
+        homeRepository.cancelFutures();
+        super.onCleared();
     }
 }

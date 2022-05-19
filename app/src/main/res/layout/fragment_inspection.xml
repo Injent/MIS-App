@@ -31,7 +31,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/clear_sans_bold"
                         android:gravity="center_horizontal"
-                        android:text="LASTNAME FIRSTNAME MIDDLENAME"
                         android:textAlignment="center"
                         android:textColor="@color/grayText"
                         android:textSize="@dimen/mediumFont" />
@@ -42,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/clear_sans_medium"
-                        android:text="@string/patientsProtocol"
+                        android:text="@string/writingPatientsInspection"
                         android:textAlignment="center"
                         android:textColor="@color/lightGrayText"
                         android:textSize="@dimen/hintFont" />
@@ -55,7 +54,7 @@
                         android:orientation="horizontal">
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/useRecommendationCard"
+                            android:id="@+id/presetCard"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:clickable="true"
@@ -70,15 +69,17 @@
                             app:layout_constraintEnd_toEndOf="parent">
 
                             <TextView
-                                android:id="@+id/useRecommendationText"
+                                android:id="@+id/presetCardText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:drawablePadding="8dp"
                                 android:fontFamily="@font/clear_sans_medium"
-                                android:text="@string/useRecommendation"
+                                android:padding="4dp"
+                                android:text="@string/usePatientInfos"
                                 android:textAlignment="textStart"
                                 android:textColor="@color/grayText"
                                 android:textSize="@dimen/headerFont"
-                                app:drawableStartCompat="@drawable/ic_receipt"
+                                app:drawableStartCompat="@drawable/ic_present"
                                 app:drawableTint="@color/lightBlue" />
                         </androidx.cardview.widget.CardView>
 
@@ -100,12 +101,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/fieldRecyclerView"
+                <EditText
+                    android:id="@+id/inspectionField"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:overScrollMode="never" />
-
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/displayPadding"
+                    android:background="@drawable/edit_text"
+                    android:ems="10"
+                    android:fontFamily="@font/clear_sans_regular"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:padding="6dp"
+                    android:text="@string/inspectionPreset"
+                    android:textColor="@color/darkGrayText"
+                    android:textColorHighlight="@color/highlight"
+                    android:textSize="@dimen/headerFont" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

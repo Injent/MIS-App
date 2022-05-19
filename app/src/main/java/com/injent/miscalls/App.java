@@ -3,25 +3,36 @@ package com.injent.miscalls;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
-import com.injent.miscalls.data.AppDatabase;
+import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.UserSettings;
-import com.injent.miscalls.data.calllist.CallInfoDao;
-import com.injent.miscalls.data.diagnosis.DiagnosisDao;
+import com.injent.miscalls.data.database.calls.CallInfoDao;
+import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
 import com.injent.miscalls.data.recommendation.RecommendationDao;
-import com.injent.miscalls.data.registry.RegistryDao;
+import com.injent.miscalls.data.database.registry.RegistryDao;
+import com.injent.miscalls.domain.BackgroundWorker;
+import com.injent.miscalls.domain.ForegroundServiceApp;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class App extends Application {
 
@@ -59,6 +70,8 @@ public class App extends Application {
         initSettings();
         initEncryptedPreferences();
         connectDatabase();
+        cancelWork();
+        //startWork();
     }
 
     private void connectDatabase() {
@@ -130,7 +143,7 @@ public class App extends Application {
             userSettings
                     .setMode(0)
                     .setAuthed(false)
-                    .setAnonCall(true)
+                    .setAnonCall(false)
                     .setInit(true)
                     .write();
         }
@@ -170,5 +183,56 @@ public class App extends Application {
     public static void hideKeyBoard(Context context, View view) {
         InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    private WorkInfo.State getWorkState() {
+        try {
+            List<WorkInfo> workInfos = WorkManager.getInstance(getApplicationContext()).getWorkInfosByTag(BackgroundWorker.TAG).get();
+            if (!workInfos.isEmpty()) {
+                return workInfos.get(0).getState();
+            } else {
+                return WorkInfo.State.CANCELLED;
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            return WorkInfo.State.CANCELLED;
+        }
+    }
+
+    public void startWork() {
+        if (App.getUserSettings().getMode() != 1 && (getWorkState() == WorkInfo.State.RUNNING || getWorkState() == WorkInfo.State.ENQUEUED)) {
+            stopService();
+            cancelWork();
+            return;
+        }
+        if (getWorkState() == WorkInfo.State.CANCELLED || getWorkState() == WorkInfo.State.FAILED) {
+            startService();
+
+            Constraints constraints = new Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.NOT_ROAMING)
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build();
+            WorkRequest backgroundWorkRequest = new PeriodicWorkRequest.Builder(BackgroundWorker.class,30, TimeUnit.MINUTES)
+                    .addTag(BackgroundWorker.TAG)
+                    .setConstraints(constraints)
+                    .build();
+            WorkManager.getInstance(getApplicationContext())
+                    .enqueue(backgroundWorkRequest);
+        }
+    }
+
+    public void startService() {
+        Intent service = new Intent(getApplicationContext(), ForegroundServiceApp.class);
+        startForegroundService(service);
+    }
+
+    public void stopService() {
+        Intent service = new Intent(getApplicationContext(), ForegroundServiceApp.class);
+        stopService(service);
+    }
+
+    public void cancelWork() {
+        WorkManager.getInstance(getApplicationContext()).cancelAllWork();
     }
 }

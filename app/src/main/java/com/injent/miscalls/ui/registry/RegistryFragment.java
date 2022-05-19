@@ -2,6 +2,7 @@ package com.injent.miscalls.ui.registry;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentRegistryBinding;
 import com.injent.miscalls.ui.Section;
 import com.injent.miscalls.ui.SectionAdapter;
+import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +62,11 @@ public class RegistryFragment extends Fragment {
         setupDiagnosisRecyclerView();
 
         //Listeners
-        binding.backFromSavedProtocols.setOnClickListener(view0 -> navigateToHome());
+        binding.backFromRegistry.setOnClickListener(view0 -> navigateToHome());
+
+        binding.registrySearchButton.setOnClickListener(view0 -> showSearch());
+
+        binding.registrySearchCancel.setOnClickListener(view0 -> hideSearch());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
@@ -82,12 +89,12 @@ public class RegistryFragment extends Fragment {
         adapter = new RegistryAdapter(new RegistryAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-
+                //
             }
 
             @Override
             public void onLongClick(int position) {
-
+                //
             }
         });
         binding.registryItemRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -114,6 +121,20 @@ public class RegistryFragment extends Fragment {
         sectionAdapter.submitList(sectionList);
     }
 
+    private void showSearch() {
+        binding.registryTitle.setVisibility(View.INVISIBLE);
+        binding.registrySearchLayout.setVisibility(View.VISIBLE);
+        binding.registrySearchButton.setVisibility(View.GONE);
+    }
+
+    private void hideSearch() {
+        binding.registryTitle.setVisibility(View.VISIBLE);
+        binding.registrySearchLayout.setVisibility(View.GONE);
+        binding.registrySearchButton.setVisibility(View.VISIBLE);
+        binding.registrySearchText.setText("");
+        App.hideKeyBoard(requireContext(), requireView());
+    }
+
     private void navigateToHome() {
         if (notMatchingDestination()) return;
         Bundle bundle = new Bundle();
@@ -128,6 +149,7 @@ public class RegistryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        viewModel.onCleared();
         binding = null;
     }
 }

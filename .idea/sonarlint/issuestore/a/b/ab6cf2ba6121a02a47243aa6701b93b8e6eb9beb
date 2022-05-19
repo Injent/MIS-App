@@ -1,9 +1,0 @@
-
-I
-java:S1874$"3Remove this use of "NetworkInfo"; it is deprecated.(ÿ»¶Ã
-R
-java:S1874$"<Remove this use of "getActiveNetworkInfo"; it is deprecated.(ÿ»¶Ã
-c
-java:S1126%"AReplace this if-then-else statement by a single return statement.(Òï•Øÿÿÿÿÿ8íªöƒˆ0
-a
-java:S1874%"?Remove this use of "isConnectedOrConnecting"; it is deprecated.(Òï•Øÿÿÿÿÿ8îªöƒˆ0

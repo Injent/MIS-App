@@ -6,7 +6,9 @@
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/add_diagnosis_bg.xml" value="0.22135416666666666" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/background_gradient.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/button.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/call_list_top_ripple.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/diagnosis_background.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/diagnosis_focused_effect.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/divider_layer.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/focusable_search.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/header_background.xml" value="0.3402777777777778" />
@@ -54,10 +56,16 @@
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/list_divider.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/pincode_ic_selector.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/popup_list.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/ripple.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/rounded_view.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/scroll.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/search.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/search_selector.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/section_selector.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/settings_divider.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/spinner_bottom_item_ripple.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/spinner_ripple.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/spinner_top_item_ripple.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/stroke_list.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/switch_notifications_thumb_on.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/switch_offline_thumb.xml" value="0.3828125" />
@@ -68,15 +76,17 @@
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/switch_track.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/tab_indicator.xml" value="0.19675925925925927" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/transparent_glass.xml" value="0.3402777777777778" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/call_list_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/diagnosis_item.xml" value="0.5" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/diagnosis_item_select.xml" value="0.1824074074074074" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/field_item.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_auth.xml" value="0.20520833333333333" />
-        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_call_info.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_call_info.xml" value="0.3296875" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_call_stuff.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_diagnosis.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_handbook.xml" value="0.33" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_home.xml" value="0.3364102564102564" />
-        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_inspection.xml" value="0.67" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_inspection.xml" value="0.5" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_med_card.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_medications.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_patient_card.xml" value="0.36666666666666664" />
@@ -85,24 +95,32 @@
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_protocol_edit.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_protocol_temp.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_recommendations.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_registry.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_saved_protocols.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_sign_in.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/hand_book_fragment.xml" value="0.1691919191919192" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_base_field.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_call_info.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_extra_field.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_handbook_diagnosis.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_inspection.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_registry.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_setting_section.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_setting_spinner.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_setting_updates.xml" value="0.33" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_settings_anonimous_call.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_settings_switch.xml" value="0.35833333333333334" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/med_card.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/med_item.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/mode_spinner_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/nav_header.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/patient_card_item.xml" value="0.20520833333333333" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/patient_list_item.xml" value="0.5" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/protocol_temp_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/recent_protocols_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/saved_protocols_item.xml" value="0.36666666666666664" />
-        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/section_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/section_item.xml" value="0.4672435105067985" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/tab_view.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/menu/navigation_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/menu/search.xml" value="0.32592592592592595" />

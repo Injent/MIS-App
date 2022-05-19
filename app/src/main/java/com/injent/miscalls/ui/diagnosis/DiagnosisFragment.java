@@ -13,14 +13,13 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.diagnosis.Diagnosis;
+import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.databinding.FragmentDiagnosisBinding;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
@@ -65,7 +64,7 @@ public class DiagnosisFragment extends Fragment {
             }
         });
 
-        binding.cancelSearch.setOnClickListener(view12 -> {
+        binding.cancelSearch.setOnClickListener(view0 -> {
             binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
             binding.searchDiagnosisText.setText("");
             binding.searchDiagnosisLayout.setVisibility(View.GONE);
@@ -92,6 +91,7 @@ public class DiagnosisFragment extends Fragment {
                 }
                 diagnosisList.remove(idToDelete);
                 diagnosisUsedAdapter.submitList(diagnosisList);
+                viewModel.setCurrentDiagnoses(diagnosisList);
                 Toast.makeText(requireContext(),R.string.diagnoseDeleted,Toast.LENGTH_SHORT).show();
             }
 
@@ -137,5 +137,12 @@ public class DiagnosisFragment extends Fragment {
         binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
         binding.searchDiagnosisText.setText("");
         binding.searchDiagnosisLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getViewModelStore().clear();
+        binding = null;
     }
 }

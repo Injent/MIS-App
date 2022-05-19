@@ -65,6 +65,7 @@ public class SettingsFragment extends Fragment {
         binding.settingsRecyclerView.addItemDecoration(divider);
         binding.settingsRecyclerView.setAdapter(settingAdapter);
         List<SettingLayout> list = new ArrayList<>();
+        list.add(new SectionLayout(R.string.miscellaneous));
         list.add(new SpinnerLayout(R.drawable.ic_clock, R.color.icClock, R.string.regularUpdates, App.getUserSettings().getMode(), R.array.modes, new SpinnerLayout.OnItemClickListener() {
                     @Override
                     public void onOpen() {
@@ -73,15 +74,17 @@ public class SettingsFragment extends Fragment {
 
                     @Override
                     public void onSelect(int position) {
-                        App.getUserSettings().setMode(position).write();
+                        //App.getUserSettings().setMode(position).write();
+                        //App.getInstance().startWork();
                     }
                 }));
-        list.add(new SwitchLayout(R.drawable.ic_call, R.color.green, R.string.anonCall, App.getUserSettings().isAnonCall(), R.drawable.switch_thumb_phone, R.drawable.switch_track, new SwitchLayout.OnFlickListener() {
+        list.add(new SwitchLayout(R.drawable.ic_call, R.color.green, R.string.anonCall, R.string.anonCallDesc, App.getUserSettings().isAnonCall(), R.drawable.switch_thumb_phone, R.drawable.switch_track, new SwitchLayout.OnFlickListener() {
             @Override
             public void onFlick(boolean state) {
                 App.getUserSettings().setAnonCall(state).write();
             }
         }));
+        list.add(new SectionLayout(R.string.interfaceName));
         settingAdapter.submitList(list);
     }
 

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.calllist.CallInfo;
+import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.databinding.CallListItemBinding;
 
 import java.util.Collections;
@@ -67,6 +67,7 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
 
         @SuppressLint("SetTextI18n")
         public void setData(CallInfo callInfo, int position){
+            if (position == 0) binding.callCardView.setBackgroundResource(R.drawable.call_list_top_ripple);
             binding.listId.setText(String.valueOf(position + 1));
             binding.listHeader.setText(callInfo.getFullName());
             binding.listAddress.setText(callInfo.getResidence());

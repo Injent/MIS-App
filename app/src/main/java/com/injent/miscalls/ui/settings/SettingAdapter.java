@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -61,9 +60,9 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
         switch (viewType) {
             case 0: view = inflater.inflate(R.layout.item_setting_spinner, parent, false);
             break;
-            case 1: view = inflater.inflate(R.layout.item_settings_switch, parent, false);
+            case 1: view = inflater.inflate(R.layout.item_setting_switch, parent, false);
             break;
-            default: view = inflater.inflate(R.layout.tab_view, parent, false);
+            default: view = inflater.inflate(R.layout.item_setting_section, parent, false);
             break;
         }
         return new ViewHolder(view, context);
@@ -71,12 +70,13 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        SettingLayout layout = getItem(position);
         switch (holder.getItemViewType()) {
-            case 0: holder.setSpinnerData(getItem(position));
+            case 0: holder.setSpinnerData(layout);
             break;
-            case 1: holder.setSwitchData(getItem(position));
+            case 1: holder.setSwitchData(layout);
             break;
-            default: //Nothing to do
+            default: holder.setSectionData(layout);
         }
     }
 
@@ -131,6 +131,11 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
             DrawableCompat.setTint(icon, ContextCompat.getColor(context,R.color.green));
             title.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
             title.setCompoundDrawablePadding(context.getResources().getDimensionPixelSize(R.dimen.icPadding));
+            if (switchLayout.getStringHintResId() != 0) {
+                TextView hint = view.findViewById(R.id.settingsSwitchHint);
+                hint.setVisibility(View.VISIBLE);
+                hint.setText(switchLayout.getStringHintResId());
+            }
 
             SwitchCompat switchCompat = view.findViewById(R.id.settingsSwitch);
             switchCompat.setChecked(switchLayout.getState());
@@ -142,6 +147,12 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
                 switchLayout.getListener().onFlick(!switchCompat.isChecked());
                 switchCompat.setChecked(!switchCompat.isChecked());
             });
+        }
+
+        public void setSectionData(SettingLayout layout) {
+            SectionLayout sectionLayout = (SectionLayout) layout;
+            TextView sectionName = view.findViewById(R.id.settingSectionName);
+            sectionName.setText(sectionLayout.getStringResId());
         }
     }
 }

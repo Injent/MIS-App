@@ -63,7 +63,7 @@ public class SectionAdapter extends ListAdapter<Section,SectionAdapter.ViewHolde
 
         public void setData(Section section) {
             binding.sectionName.setText(section.getSectionName());
-            binding.sectionLayout.setOnClickListener(view -> listener.onClick(section.getSectionType()));
+            binding.sectionName.setOnClickListener(view -> listener.onClick(section.getSectionType()));
         }
     }
 }

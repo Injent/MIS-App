@@ -2,7 +2,6 @@ package com.injent.miscalls.ui.settings;
 
 public class SpinnerLayout implements SettingLayout {
 
-    private int viewType;
     private int drawableResId;
     private int drawableColorResId;
     private int stringResId;
@@ -11,7 +10,6 @@ public class SpinnerLayout implements SettingLayout {
     private OnItemClickListener listener;
 
     public SpinnerLayout(int drawableResId, int drawableColorResId, int stringResId, int selectedItemPosition, int stringArrayResId, OnItemClickListener listener) {
-        this.viewType = 0;
         this.drawableResId = drawableResId;
         this.drawableColorResId = drawableColorResId;
         this.stringResId = stringResId;
@@ -22,7 +20,7 @@ public class SpinnerLayout implements SettingLayout {
 
     @Override
     public int getViewType() {
-        return viewType;
+        return 0;
     }
 
     public int getDrawableResId() {

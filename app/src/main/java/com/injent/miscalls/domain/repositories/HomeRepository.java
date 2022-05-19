@@ -1,14 +1,11 @@
 package com.injent.miscalls.domain.repositories;
 
-import android.content.SharedPreferences;
-import android.util.Log;
-
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.calllist.CallInfo;
-import com.injent.miscalls.data.calllist.CallInfoDao;
-import com.injent.miscalls.data.calllist.QueryToken;
-import com.injent.miscalls.domain.HttpManager;
+import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.data.database.calls.CallInfoDao;
+import com.injent.miscalls.network.NetworkManager;
+import com.injent.miscalls.network.QueryToken;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,50 +23,60 @@ import retrofit2.Call;
 public class HomeRepository {
 
     private final CallInfoDao dao;
-    private final ExecutorService es;
 
     public HomeRepository() {
         dao = App.getInstance().getCallInfoDao();
-        es = Executors.newSingleThreadExecutor();
     }
 
     public String setNewPatientDbDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy / HH:mm", Locale.getDefault());
         String currentDate = sdf.format(new Date());
 
-        SharedPreferences sp = App.getInstance().getSharedPreferences();
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(App.getInstance().getString(R.string.keyDbDate),currentDate);
-        editor.apply();
+        App.getUserSettings().setDbDate(currentDate).write();
         return currentDate;
     }
 
     public String getPatientDbDate() {
-        return App.getInstance().getSharedPreferences().getString(App.getInstance().getString(R.string.keyDbDate), "");
+        return App.getUserSettings().getDbDate();
     }
 
     public Call<List<CallInfo>> getPatientList(QueryToken token) {
-        return HttpManager.getMisAPI().patients(token);
+        return NetworkManager.getMisAPI().patients(token);
     }
 
+    private CompletableFuture<CallInfo> callInfoFuture;
+
     public void getCallById(Function<Throwable, CallInfo> ex, Consumer<CallInfo> consumer, int id) {
-        CompletableFuture<CallInfo> future = CompletableFuture
+        callInfoFuture = CompletableFuture
                 .supplyAsync(() -> dao.getById(id))
                 .exceptionally(ex);
-        future.thenAcceptAsync(consumer);
+        callInfoFuture.thenAcceptAsync(consumer);
+    }
+
+    private CompletableFuture<List<CallInfo>> callInfoListFuture;
+
+    public void cancelFutures() {
+        if (callInfoListFuture != null) {
+            callInfoListFuture.cancel(true);
+        }
+        if (callInfoFuture != null) {
+            callInfoFuture.cancel(true);
+        }
     }
 
     public void getAll(Function<Throwable, List<CallInfo>> ex, Consumer<List<CallInfo>> consumer) {
-        CompletableFuture<List<CallInfo>> future = CompletableFuture
+        callInfoListFuture = CompletableFuture
                 .supplyAsync(dao::getAll)
                 .exceptionally(ex);
-        future.thenAcceptAsync(consumer);
+        callInfoListFuture.thenAcceptAsync(consumer);
     }
 
-    public void insertCallsWithDropTable(List<CallInfo> list) {
-        es.submit(() -> {
-            dao.clearAll();
-            dao.insertAll(list);
-        });
+    public void insertCallsWithDropTable(Function<Throwable,Void> ex, List<CallInfo> list) {
+        CompletableFuture
+                .supplyAsync((Supplier<Void>) () -> {
+                    dao.insertAll(list);
+                    return null;
+                })
+                .exceptionally(ex);
     }
 }

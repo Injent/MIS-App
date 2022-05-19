@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.diagnosis.Diagnosis;
+import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.databinding.DiagnosisItemSelectBinding;
 
 import java.util.ArrayList;

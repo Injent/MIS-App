@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/handbookItemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="@drawable/diagnosis_focused_effect"
+        android:padding="@dimen/displayPadding">
+
+        <TextView
+            android:id="@+id/diagnosisCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/clear_sans_bold"
+            android:textColor="@color/darkGrayText"
+            android:textSize="@dimen/mediumFont"
+            app:layout_constraintEnd_toStartOf="@+id/handbookArrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/diagnosisCategory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/clear_sans_regular"
+            android:textColor="@color/darkGrayText"
+            android:textSize="@dimen/mediumFont"
+            app:layout_constraintEnd_toEndOf="@+id/diagnosisCode"
+            app:layout_constraintStart_toStartOf="@+id/diagnosisCode"
+            app:layout_constraintTop_toBottomOf="@+id/diagnosisCode" />
+
+        <ImageView
+            android:id="@+id/handbookArrow"
+            android:layout_width="@dimen/minDp"
+            android:layout_height="@dimen/minDp"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_navigate_right" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

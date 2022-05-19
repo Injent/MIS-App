@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/patientCardView"
+        android:id="@+id/callCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -14,12 +14,11 @@
         <TextView
             android:id="@+id/listId"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="@dimen/displayPadding"
             android:fontFamily="@font/clear_sans_bold"
-            android:text="0"
             android:textAlignment="textStart"
-            android:textColor="@color/grayText"
+            android:textColor="@color/darkGrayText"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,36 +52,38 @@
             <TextView
                 android:id="@+id/listHeader"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/clear_sans_bold"
                 android:maxWidth="280dp"
-                android:text="Header"
-                android:textColor="@color/grayText"
+                android:textColor="@color/darkGrayText"
                 android:textSize="@dimen/headerFont"
                 android:textStyle="normal"
                 app:layout_constraintEnd_toStartOf="@+id/listAge"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:ellipsize="end"
+                android:maxLines="1"/>
 
             <TextView
                 android:id="@+id/listAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/clear_sans_medium"
-                android:text="Subheading"
+                android:maxLines="1"
                 android:textColor="@color/lowGray"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/listAge"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/listHeader" />
 
             <TextView
                 android:id="@+id/listAge"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:fontFamily="@font/clear_sans_medium"
-                android:text="20"
-                android:textColor="@color/lowGray"
+                android:textColor="@color/darkGrayText"
                 android:textSize="@dimen/headerFont"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/listHeader" />

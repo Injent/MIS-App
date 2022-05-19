@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.calllist.CallInfo;
+import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.databinding.FragmentCallInfoBinding;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
-
-import java.util.Objects;
 
 public class CallInfoFragment extends Fragment {
 
@@ -35,7 +32,7 @@ public class CallInfoFragment extends Fragment {
     private CallStuffViewModel viewModel;
 
     public CallInfoFragment() {
-        //Need for working
+        //Nothing to do
     }
 
     @Nullable
@@ -57,16 +54,10 @@ public class CallInfoFragment extends Fragment {
         viewModel.getCallLiveData().observe(getViewLifecycleOwner(), this::setInfo);
     }
 
-    private void call(String number) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_DIAL); // Action for what intent called for
-        intent.setData(Uri.parse("tel: " + number)); // Data with intent respective action on intent
-        startActivity(intent);
-    }
-
     private void setupRecyclerViewInfo() {
         adapter = new InfoAdapter(getResources().getStringArray(R.array.infoType));
         binding.infoList.setAdapter(adapter);
+        binding.infoList.setItemAnimator(null);
         binding.complaintField.setMovementMethod(new ScrollingMovementMethod());
     }
 
@@ -77,18 +68,61 @@ public class CallInfoFragment extends Fragment {
         Toast.makeText(requireContext(), R.string.textCopied,Toast.LENGTH_SHORT).show();
     }
 
+    private void callToPerson(String number) {
+        if (App.getUserSettings().isAnonCall()) {
+            number = number.replace("+7","#31#8");
+        }
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null));
+        startActivity(intent);
+    }
+
     @SuppressLint("SetTextI18n")
     private void setInfo(CallInfo callInfo) {
         binding.complaintField.setText(callInfo.getComplaints());
 
         //Listeners
-        binding.copyComplaints.setOnClickListener(view1 -> copyText(callInfo.getComplaints()));
-        binding.callButton.setOnClickListener(view1 -> call(callInfo.getPhoneNumber()));
+        binding.copyComplaints.setOnClickListener(view -> copyText(callInfo.getComplaints()));
+        binding.callButton.setOnClickListener(view -> callToPerson(callInfo.getPhoneNumber()));
 
         if (callInfo.isInspected())
             binding.statusText.setVisibility(View.VISIBLE);
 
         adapter.submitList(callInfo.getData());
+
+        playSetupAnimation();
+    }
+
+    private void playSetupAnimation() {
+        binding.complaintField.animate()
+                .translationXBy(-binding.complaintField.getWidth())
+                .setDuration(0L)
+                .start();
+        binding.complaintField.setVisibility(View.VISIBLE);
+        binding.complaintField.animate()
+                .setDuration(500L)
+                .translationXBy(binding.complaintField.getWidth())
+                .start();
+
+        binding.infoLayout.animate()
+                .translationYBy(binding.infoLayout.getHeight())
+                .setDuration(0L)
+                .start();
+        binding.infoLayout.setVisibility(View.VISIBLE);
+        binding.infoLayout.animate()
+                .setStartDelay(50L)
+                .setDuration(400L)
+                .translationYBy(- binding.infoLayout.getHeight())
+                .start();
+
+        binding.callButton.animate()
+                .translationXBy(binding.callButton.getWidth())
+                .setDuration(0L)
+                .start();
+
+        binding.callButton.animate()
+                .translationXBy(-binding.callButton.getWidth())
+                .setDuration(800L)
+                .start();
     }
 
     @Override

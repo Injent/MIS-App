@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.calllist.ListEmptyException;
-import com.injent.miscalls.data.registry.Registry;
+import com.injent.miscalls.data.database.calls.ListEmptyException;
+import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
 
 import java.util.Collections;
@@ -14,8 +14,8 @@ import java.util.List;
 public class RegistryViewModel extends ViewModel {
 
     private final RegistryRepository repository;
-    private final MutableLiveData<List<Registry>> registryItems = new MutableLiveData<>();
-    private final MutableLiveData<Throwable> error = new MutableLiveData<>();
+    private MutableLiveData<List<Registry>> registryItems = new MutableLiveData<>();
+    private MutableLiveData<Throwable> error = new MutableLiveData<>();
 
     public RegistryViewModel() {
         this.repository = new RegistryRepository();
@@ -26,7 +26,7 @@ public class RegistryViewModel extends ViewModel {
     }
 
     public void loadRegistryItems() {
-        repository.getRegistry(throwable -> {
+        repository.getRegistries(throwable -> {
             error.postValue(throwable);
             return Collections.emptyList();
         }, list -> {
@@ -39,5 +39,11 @@ public class RegistryViewModel extends ViewModel {
 
     public LiveData<Throwable> getErrorLiveData() {
         return error;
+    }
+
+    @Override
+    protected void onCleared() {
+        registryItems = new MutableLiveData<>();
+        error = new MutableLiveData<>();
     }
 }

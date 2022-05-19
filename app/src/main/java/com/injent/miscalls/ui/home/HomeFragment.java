@@ -2,9 +2,11 @@ package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +28,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
-import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.User;
-import com.injent.miscalls.data.calllist.FailedDownloadDb;
-import com.injent.miscalls.data.calllist.ListEmptyException;
+import com.injent.miscalls.data.database.FailedDownloadDb;
+import com.injent.miscalls.data.database.calls.ListEmptyException;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 
 import java.util.Objects;
@@ -60,7 +61,9 @@ public class HomeFragment extends Fragment {
         //Listeners
         binding.patientListSection.setOnClickListener(view0 -> downloadNewDb());
 
-        binding.moreButton.setOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
+        binding.moreButton.setOnClickListener(view1 -> {
+            binding.drawerLayout.openDrawer(GravityCompat.START);
+        });
 
         //Observers
         viewModel.getCallListLiveData().observe(getViewLifecycleOwner(), callList -> {
@@ -80,7 +83,7 @@ public class HomeFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                MainActivity.getInstance().confirmExit();
+                confirmExit();
             }
         });
 
@@ -90,6 +93,7 @@ public class HomeFragment extends Fragment {
 
     public void displayList() {
         hideLoading();
+        hideErrorMessage();
         viewModel.loadCallList();
     }
 
@@ -174,6 +178,11 @@ public class HomeFragment extends Fragment {
         navController.navigate(R.id.registryFragment);
     }
 
+    private void navigateToHandbook() {
+        if (notMatchingDestination()) return;
+        navController.navigate(R.id.handBookFragment);
+    }
+
     private boolean notMatchingDestination() {
         return Objects.requireNonNull(navController.getCurrentDestination(), "CURRENT DESTINATION EMPTY").getId() != R.id.homeFragment;
     }
@@ -190,6 +199,8 @@ public class HomeFragment extends Fragment {
                 case R.id.help: moveToSite(getString(R.string.helpLink));
                     break;
                 case R.id.registry: navigateToRegistry();
+                    break;
+                case R.id.handbookMKB: navigateToHandbook();
                     break;
                 case R.id.logoutMenu: {
                     App.getUserSettings().setAuthed(false).write();
@@ -232,9 +243,24 @@ public class HomeFragment extends Fragment {
             downloadNewDb();
     }
 
+    public void confirmExit() {
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.exit)
+                .setPositiveButton(R.string.yes, (dialog, button0) -> closeApp())
+                .setNegativeButton(R.string.no, (dialog, button1) -> dialog.dismiss())
+                .create();
+        alertDialog.show();
+    }
+
+    public void closeApp() {
+        requireActivity().finish();
+        System.exit(0);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        viewModel.onCleared();
         binding = null;
     }
 }

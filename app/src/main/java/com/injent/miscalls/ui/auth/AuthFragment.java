@@ -2,6 +2,7 @@ package com.injent.miscalls.ui.auth;
 
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +19,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
-import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.UserNotFoundException;
+import com.injent.miscalls.network.UserNotFoundException;
 import com.injent.miscalls.databinding.FragmentAuthBinding;
 
 public class AuthFragment extends Fragment {
 
     private FragmentAuthBinding binding;
     private AuthViewModel viewModel;
+    private NavController navController;
 
     @Nullable
     @Override
@@ -44,8 +45,13 @@ public class AuthFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        navController = Navigation.findNavController(requireView());
 
         if (App.getUserSettings().isAuthed()) {
+            if (getArguments() != null && getArguments().getBoolean(getString(R.string.keyOffUpdates), false)) {
+                navigateToSettings();
+                return;
+            }
             navigateToHome(false);
             return;
         }
@@ -71,7 +77,7 @@ public class AuthFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
-                        MainActivity.getInstance().confirmExit();
+                        confirmExit();
                 }
         });
 
@@ -114,13 +120,31 @@ public class AuthFragment extends Fragment {
             args.putBoolean(getString(R.string.keyDownloadDb), true);
         else
             args.putBoolean(getString(R.string.keyUpdateList), true);
-        NavController navController = Navigation.findNavController(requireView());
         navController.navigate(R.id.homeFragment, args);
+    }
+
+    private void navigateToSettings() {
+        navController.navigate(R.id.settingsFragment);
+    }
+
+    public void confirmExit() {
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.exit)
+                .setPositiveButton(R.string.yes, (dialog, button0) -> closeApp())
+                .setNegativeButton(R.string.no, (dialog, button1) -> dialog.dismiss())
+                .create();
+        alertDialog.show();
+    }
+
+    public void closeApp() {
+        requireActivity().finish();
+        System.exit(0);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        getViewModelStore().clear();
         binding = null;
     }
 }

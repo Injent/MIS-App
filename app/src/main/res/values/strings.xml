@@ -9,10 +9,6 @@
     <string name="protocolEdit">Редактирование протокола</string>
     <string name="savedProtocols">Сохраненные протоколы</string>
 
-    <!-- Tabs -->
-    <string name="medCardShort">Мед. карта</string>
-    <string name="inspection">Осмотр</string>
-
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
     <string name="regularUpdates">Регулярные\nобновления</string>
@@ -25,6 +21,8 @@
     <string name="updateList">Обновить список</string>
     <string name="card">Карта</string>
     <string name="sendAll">Отправить все</string>
+    <string name="miscellaneous">Разное</string>
+    <string name="interfaceName">Интерфейс</string>
 
     <!-- Menu -->
     <string name="registry">Реестр</string>
@@ -34,28 +32,28 @@
     <string name="account">Учетная запись</string>
     <string name="logout">Выйти</string>
     <string name="handbookMKB10">Справочник МКБ10</string>
-
+    <string name="inspection">Общий осмотр</string>
+    <string name="inspectionShort">Осмотр</string>
     <string name="anonCall">Анонимность звонков</string>
 
     <!-- Hints -->
-    <string name="regularUpdatesDesc">Получать регулярные обновления базы данных пациентов</string>
+    <string name="anonCallDesc">Оператор может взимать дополнительную плату за услугу</string>
     <string name="writeResultOfInspection">Напишите результаты осмотра…</string>
     <string name="writeConclusion">Напишите заключение…</string>
     <string name="treatmentHint">Напишите…</string>
     <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
-    <string name="patientsProtocol">Заполнение клинического протокола пациента</string>
+    <string name="writingPatientsInspection">Заполнение общего осмотра пациента</string>
     <string name="recDownloadHint"> Может потребоваться много места на устройстве</string>
     <string name="recDownloadDesc">Скачайте доступные рекомендации по лечению и используйте их при
         заполнении осмотра пациента</string>
-    <string name="protocolName">Название протокола</string>
-    <string name="protocolDesc">Описание протокола</string>
     <string name="dataWillBeDeletedForever">Данные навсегда удалятся</string>
     <string name="dataWontSave">Данные не сохранятся!</string>
+    <string name="commentary">Комментарий…</string>
 
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
     <string name="saveAsPdf">Сохранить\nкак pdf</string>
-    <string name="useRecommendation">Использовать\nрекомендации</string>
+    <string name="usePatientInfos">Использовать\nинформацию пацента</string>
     <string name="exit">Выйти</string>
     <string name="ok">Ок</string>
     <string name="no">Нет</string>
@@ -76,16 +74,15 @@
     <string name="age">лет</string>
     <string name="inspected">Осмотрен</string>
     <string name="inspectionPreset">Значение 1: \nЗначение 2: \nЗначение 3: \nЗначение 4: \n</string>
-    <string name="loading">Загрузка...</string>
+    <string name="loading"></string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>
     <string name="updated">Обновлен %s</string>
     <string name="receivingDataOn">Обновление данных включено</string>
-    <string name="moveToSettings">Перейдите в настройки приложения для отключения</string>
-    <string name="protocolTempSaved">Протокол лечения %s сохранен</string>
+    <string name="moveToSettings">Нажмите, чтобы отключить обновления</string>
     <string name="protocolTempsCleared">Все протоколы сброшены</string>
-    <string name="appliedTemp">Применен протокол</string>
+    <string name="usedInfo">Применена информация о пациенте</string>
     <string name="protocolDeleted">Протокол %s удален</string>
     <string name="textCopied">Текст скопирован</string>
     <string name="undoDeleting">Отменить</string>
@@ -129,17 +126,22 @@
     </string-array>
 
     <string-array name="fieldType">
-        <item>Осмотр</item>
+        <item>Общий осмотр</item>
         <item>Рекомендации</item>
     </string-array>
 
     <string-array name="fieldHint">
-        <item>Осмотр…</item>
+        <item>Общий осмотр…</item>
         <item>Рекоменции…</item>
     </string-array>
 
+    <string-array name="infoFieldPreset">
+        <item>СНИЛС:</item>
+        <item>Значение 2:</item>
+    </string-array>
+
     <string-array name="modes">
-        <item>При входе в прилож…</item>
+        <item>При входе в приложение</item>
         <item>Каждый час</item>
         <item>Вручную</item>
     </string-array>
@@ -165,5 +167,6 @@
     <string name="keyToken">token</string>
     <string name="keyLogin">login</string>
     <string name="keyPassword">password</string>
+    <string name="keyOffUpdates">offUpdates</string>
 
 </resources>
