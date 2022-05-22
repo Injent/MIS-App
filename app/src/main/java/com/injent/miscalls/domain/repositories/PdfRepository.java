@@ -118,6 +118,7 @@ public class PdfRepository {
                     .replace("$docname", App.getUser().getFullName())
                     .replace("$complaints", registry.getCallInfo().getComplaints())
                     .replace("$recommendations", registry.getRecommendation())
+                    .replace("$date", registry.getCreateDate())
                     .replace("$diagnoses", Diagnosis.listToStringNames(registry.getDiagnoses(), "\n"));
         } catch (IOException e) {
             e.printStackTrace();

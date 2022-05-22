@@ -20,13 +20,13 @@ import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.databinding.ItemHandbookDiagnosisBinding;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.ViewHolder> implements Filterable {
 
     private final OnItemClickListener listener;
-    private List<Diagnosis> fullList;
-    private boolean backAction;
+    private ArrayList<Diagnosis> fullList;
 
     public DiagnosisAdapter(OnItemClickListener listener) {
         super(diffCallback);
@@ -46,12 +46,10 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
         }
     };
 
-    public void submitList(@Nullable List<Diagnosis> list, boolean backAction) {
-        this.backAction = backAction;
-        this.fullList = new ArrayList<>(list);
+    public void submitList(@Nullable List<Diagnosis> list, boolean updateFullList) {
         super.submitList(list);
-        if (backAction) {
-            listener.previousPage(getItem(0).getParentId());
+        if (updateFullList && list != null) {
+            fullList = new ArrayList<>(list);
         }
     }
 
@@ -107,8 +105,8 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
         @NonNull
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<Diagnosis> filteredList = new ArrayList<>();
-            if (charSequence == null || charSequence.length() == 0) {
+            ArrayList<Diagnosis> filteredList = new ArrayList<>();
+            if (charSequence == null || charSequence.length() == 0 || charSequence.toString().isEmpty()) {
                 filteredList.addAll(fullList);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
@@ -126,7 +124,7 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
 
         @Override
         protected void publishResults(CharSequence charSequence, @NonNull FilterResults filterResults) {
-            submitList((List<Diagnosis>) filterResults.values);
+            submitList((List<Diagnosis>) filterResults.values, false);
         }
     };
 }

@@ -31,8 +31,6 @@ n
 >app/src/main/java/com/injent/miscalls/ui/home/CallAdapter.java,6\4\64b06185878d0532f78c02781a6ee27f413c25f6
 }
 Mapp/src/main/java/com/injent/miscalls/data/database/registry/RegistryDao.java,e\6\e621e9f759f94cc80c24771036d0daff9ab10365
-t
-Dapp/src/main/java/com/injent/miscalls/ui/mkb10/HandBookFragment.java,4\f\4fe861d42925f295fa63738f302d2d0294ef988e
 u
 Eapp/src/main/java/com/injent/miscalls/ui/mkb10/HandBookViewModel.java,7\5\755861ce2e1e70b24bb6b8d774fcb3414271dae1
 }

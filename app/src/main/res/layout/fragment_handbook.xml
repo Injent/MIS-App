@@ -38,13 +38,80 @@
                 android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
                 android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="?attr/actionBarItemBackground"
                 android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:src="@drawable/ic_search"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/darkGrayText" />
+
+            <ImageView
+                android:id="@+id/handbookBack"
+                android:background="?attr/actionBarItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:layout_marginStart="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_back_arrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/darkGrayText" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/handbookSearchLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/search"
+                android:padding="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/titleHandBook"
+                app:layout_constraintEnd_toStartOf="@+id/handbookSearch"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/handbookBack"
+                app:layout_constraintTop_toTopOf="@+id/titleHandBook">
+
+                <EditText
+                    android:id="@+id/handbookSearchText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:background="@null"
+                    android:drawablePadding="8dp"
+                    android:ems="10"
+                    android:fontFamily="@font/clear_sans_medium"
+                    android:hint="@string/search"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:scrollbarThumbHorizontal="@null"
+                    android:scrollbarTrackHorizontal="@null"
+                    android:scrollbars="horizontal"
+                    android:textColor="@color/darkGrayText"
+                    android:textColorHighlight="@color/highlight"
+                    android:textColorHint="@color/lowGray"
+                    android:textSize="@dimen/mediumFont"
+                    app:drawableStartCompat="@drawable/search_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/handbookSearchCancel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/handbookSearchCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cancel"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -77,9 +77,7 @@
     <string name="noName">Безымянный</string>
     <string name="age">лет</string>
     <string name="inspected">Осмотрен</string>
-    <string name="inspectionPreset">
-        Рост:\nВес:\nИмт:\nТемп. тела:\nЧисло дыханий:\nЧастота пульса:\nАД справа:\nАД слева:\n
-    </string>
+    <string name="inspectionPreset">Значение 1:\nЗначение 2:</string>
 
     <string name="loading">Текст</string>
 

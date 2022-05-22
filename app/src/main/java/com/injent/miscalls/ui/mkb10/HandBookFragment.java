@@ -1,6 +1,8 @@
 package com.injent.miscalls.ui.mkb10;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +30,6 @@ public class HandBookFragment extends Fragment {
     private HandBookViewModel viewModel;
     private FragmentHandbookBinding binding;
     private DiagnosisAdapter adapter;
-    private int previousPage;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class HandBookFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(HandBookViewModel.class);
 
         viewModel.getDiagnosesLiveData().observe(getViewLifecycleOwner(), list -> adapter.submitList(list));
-        viewModel.getBackDiagnosis().observe(getViewLifecycleOwner(), list -> adapter.submitList(list,true));
+        viewModel.getBackDiagnosis().observe(getViewLifecycleOwner(), list -> adapter.submitList(list, true));
         viewModel.getSelectedDiagnosisLiveData().observe(getViewLifecycleOwner(), this::showDiagnosis);
 
         setupHandbookRecyclerView();
@@ -56,6 +57,10 @@ public class HandBookFragment extends Fragment {
                 navigateToHome();
             }
         });
+
+        binding.handbookBack.setOnClickListener(v -> navigateToHome());
+
+        setupSearch();
     }
 
     private void setupHandbookRecyclerView() {
@@ -75,9 +80,6 @@ public class HandBookFragment extends Fragment {
             public void onClick(Diagnosis diagnosis) {
                 if (diagnosis.isParent())
                     viewModel.loadDiagnosesByParent(diagnosis.getId());
-                else {
-                    Log.d("AE", "onClick: " + diagnosis.getName());
-                }
             }
 
             @Override
@@ -87,8 +89,7 @@ public class HandBookFragment extends Fragment {
 
             @Override
             public void previousPage(int id) {
-                previousPage = id;
-                Log.d("TAG", "previousPage: " + id);
+
             }
         });
         binding.handbookRecycler.setAdapter(adapter);
@@ -96,6 +97,46 @@ public class HandBookFragment extends Fragment {
 
     private void showDiagnosis(Diagnosis diagnosis) {
         Log.e("TAG", "showDiagnosis: " + diagnosis.getName() );
+    }
+
+    private void setupSearch() {
+        binding.handbookSearchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Nothing to do
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Nothing to do
+            }
+        });
+
+        binding.handbookSearchCancel.setOnClickListener(v -> {
+            binding.handbookSearchText.setText("");
+            hideSearch();
+        });
+
+        //binding.handbookSearch.setOnClickListener(v -> showSearch());
+    }
+
+    private void showSearch() {
+        binding.handbookSearchLayout.setVisibility(View.VISIBLE);
+        binding.titleHandBook.setVisibility(View.INVISIBLE);
+        binding.handbookSearch.setVisibility(View.INVISIBLE);
+        binding.handbookSearch.setEnabled(false);
+    }
+
+    private void hideSearch() {
+        binding.handbookSearchLayout.setVisibility(View.GONE);
+        binding.titleHandBook.setVisibility(View.VISIBLE);
+        binding.handbookSearch.setVisibility(View.VISIBLE);
+        binding.handbookSearch.setEnabled(true);
     }
 
     private void navigateToHome() {

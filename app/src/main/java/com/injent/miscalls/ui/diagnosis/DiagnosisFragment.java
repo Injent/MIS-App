@@ -57,7 +57,7 @@ public class DiagnosisFragment extends Fragment {
 
         //Observer
         viewModel.getDiagnosesListLiveData().observe(getViewLifecycleOwner(), list -> {
-            diagnosesSearchAdapter.submitList(list);
+            diagnosesSearchAdapter.submitList(list, true);
         });
 
         binding.diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

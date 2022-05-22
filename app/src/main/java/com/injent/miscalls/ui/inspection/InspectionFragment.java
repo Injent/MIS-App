@@ -42,7 +42,7 @@ public class InspectionFragment extends Fragment {
 
         viewModel.getCallLiveData().observe(getViewLifecycleOwner(), this::setInfo);
 
-        binding.presetCard.setOnClickListener(view0 -> setPresetInfo(viewModel.getCallLiveData().getValue()));
+        binding.presetCard.setOnClickListener(v -> setPresetInfo(viewModel.getCallLiveData().getValue()));
 
         binding.inspectionField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,7 +69,10 @@ public class InspectionFragment extends Fragment {
 
     private void setPresetInfo(CallInfo callInfo) {
         if (callInfo == null) return;
-        binding.inspectionField.setText(getString(R.string.inspectionPreset));
+        StringBuilder sb = new StringBuilder();
+        sb.append("Значение 1: ").append(callInfo.getBornDate()).append("\n")
+                .append("Значение 2: ").append(callInfo.getPolis());
+        binding.inspectionField.setText(sb.toString());
         Toast.makeText(requireContext(),R.string.tempUsed,Toast.LENGTH_SHORT).show();
     }
 
