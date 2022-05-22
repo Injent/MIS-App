@@ -51,8 +51,8 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
     }
 
     public interface OnItemClickListener {
-        void onClick(int position);
-        void onLongClick(int position);
+        void onClick(int id);
+        void onLongClick(int id);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,7 +68,7 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
 
         public void setData(@NonNull Registry registry) {
             binding.registryPatient.setText(registry.getCallInfo().getFullName());
-            binding.registryDiagnosis.setText(Diagnosis.listToStringCodes(registry.getDiagnoses()));
+            binding.registryDiagnosis.setText(Diagnosis.listToStringCodes(registry.getDiagnoses(),','));
 
             binding.editRegistry.setOnClickListener(view -> listener.onClick(registry.getId()));
             binding.protocolCard.setOnLongClickListener(view -> {

@@ -22,8 +22,8 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.databinding.FragmentDiagnosisBinding;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
+import com.injent.miscalls.ui.mkb10.DiagnosisAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +31,7 @@ public class DiagnosisFragment extends Fragment {
 
     private FragmentDiagnosisBinding binding;
     private DiagnosisUsedAdapter diagnosisUsedAdapter;
-    private DiagnosisSearchAdapter diagnosisSearchAdapter;
+    private DiagnosisAdapter diagnosesSearchAdapter;
     private CallStuffViewModel viewModel;
 
     @Override
@@ -47,23 +47,6 @@ public class DiagnosisFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
 
-        binding.searchDiagnosisText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                diagnosisSearchAdapter.getFilter().filter(charSequence);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                //
-            }
-        });
-
         binding.cancelSearch.setOnClickListener(view0 -> {
             binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
             binding.searchDiagnosisText.setText("");
@@ -73,25 +56,16 @@ public class DiagnosisFragment extends Fragment {
         setupSearchRecyclerView();
 
         //Observer
-        viewModel.getDiagnosisDatabaseListLiveData().observe(getViewLifecycleOwner(), list -> diagnosisSearchAdapter.submitList(list));
-
-        viewModel.loadDiagnosisDatabase();
+        viewModel.getDiagnosesListLiveData().observe(getViewLifecycleOwner(), list -> {
+            diagnosesSearchAdapter.submitList(list);
+        });
 
         binding.diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         diagnosisUsedAdapter = new DiagnosisUsedAdapter(new DiagnosisUsedAdapter.OnItemClickListener() {
             @Override
-            public void onClick(Diagnosis diagnosis) {
-                List<Diagnosis> diagnosisList = new ArrayList<>(diagnosisUsedAdapter.getCurrentList());
-                int idToDelete = 0;
-                for (int i = 0; i < diagnosisList.size(); i++) {
-                    if (diagnosisList.get(i).equals(diagnosis)) {
-                        idToDelete = i;
-                        break;
-                    }
-                }
-                diagnosisList.remove(idToDelete);
-                diagnosisUsedAdapter.submitList(diagnosisList);
-                viewModel.setCurrentDiagnoses(diagnosisList);
+            public void onLongClick(Diagnosis diagnosis) {
+                List<Diagnosis> newList = viewModel.deleteItemFromList(diagnosisUsedAdapter.getCurrentList(), diagnosis);
+                diagnosisUsedAdapter.submitList(newList);
                 Toast.makeText(requireContext(),R.string.diagnoseDeleted,Toast.LENGTH_SHORT).show();
             }
 
@@ -106,33 +80,65 @@ public class DiagnosisFragment extends Fragment {
 
     private void setupSearchRecyclerView() {
         binding.diagnosisSelectRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        diagnosisSearchAdapter = new DiagnosisSearchAdapter(this::addDiagnosis);
+        binding.diagnosisSelectRecyclerView.setItemAnimator(null);
+        diagnosesSearchAdapter = new DiagnosisAdapter(new DiagnosisAdapter.OnItemClickListener() {
+            @Override
+            public void onClickStar(int diagnosisId) {
+
+            }
+
+            @Override
+            public void onClick(Diagnosis diagnosis) {
+                if (!diagnosis.isParent()) {
+                    addDiagnosis(diagnosis);
+                } else {
+                    viewModel.loadDiagnosisList(diagnosis.getId());
+                }
+            }
+
+            @Override
+            public void nextPage(int id) {
+
+            }
+
+            @Override
+            public void previousPage(int id) {
+
+            }
+        });
         DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.divider_layer, requireContext().getTheme())));
         binding.diagnosisSelectRecyclerView.addItemDecoration(divider);
-        binding.diagnosisSelectRecyclerView.setAdapter(diagnosisSearchAdapter);
+        binding.diagnosisSelectRecyclerView.setAdapter(diagnosesSearchAdapter);
+
+        binding.searchDiagnosisText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Nothing to do
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                diagnosesSearchAdapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Nothing to do
+            }
+        });
     }
 
     private void showDiagnosisSearch() {
         binding.searchDiagnosisLayout.setVisibility(View.VISIBLE);
         binding.diagnosisRecyclerView.setVisibility(View.GONE);
+        viewModel.loadDiagnosisList(-1);
     }
 
     private void addDiagnosis(Diagnosis diagnosis) {
-        List<Diagnosis> currentList = new ArrayList<>(diagnosisUsedAdapter.getCurrentList());
-        boolean added = false;
-        for (Diagnosis d : currentList) {
-            if (d.equals(diagnosis)) {
-                Toast.makeText(requireContext(),R.string.diagnosisAlreadyAdded,Toast.LENGTH_SHORT).show();
-                added = true;
-                break;
-            }
-        }
-        if (added) return;
+        List<Diagnosis> newList = viewModel.addItemToList(requireContext(), diagnosisUsedAdapter.getCurrentList(), diagnosis);
         App.hideKeyBoard(requireContext(), requireView());
-        currentList.add(diagnosis);
-        diagnosisUsedAdapter.submitList(currentList);
-        viewModel.setCurrentDiagnoses(currentList);
+        diagnosisUsedAdapter.submitList(newList);
 
         binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
         binding.searchDiagnosisText.setText("");
@@ -142,7 +148,6 @@ public class DiagnosisFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getViewModelStore().clear();
         binding = null;
     }
 }

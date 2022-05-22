@@ -1,7 +1,6 @@
 package com.injent.miscalls.domain.repositories;
 
 import com.injent.miscalls.App;
-import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
 import com.injent.miscalls.network.NetworkManager;
@@ -12,8 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -23,6 +20,11 @@ import retrofit2.Call;
 public class HomeRepository {
 
     private final CallInfoDao dao;
+
+    private CompletableFuture<CallInfo> callById;
+    private CompletableFuture<List<CallInfo>> allCallsInfo;
+    private CompletableFuture<Void> insertCallsWithDropTable;
+    private CompletableFuture<CallInfo> insertCallInfo;
 
     public HomeRepository() {
         dao = App.getInstance().getCallInfoDao();
@@ -44,37 +46,49 @@ public class HomeRepository {
         return NetworkManager.getMisAPI().patients(token);
     }
 
-    private CompletableFuture<CallInfo> callInfoFuture;
-
-    public void getCallById(Function<Throwable, CallInfo> ex, Consumer<CallInfo> consumer, int id) {
-        callInfoFuture = CompletableFuture
+    public void loadCallInfoById(Function<Throwable, CallInfo> ex, Consumer<CallInfo> consumer, int id) {
+        callById = CompletableFuture
                 .supplyAsync(() -> dao.getById(id))
                 .exceptionally(ex);
-        callInfoFuture.thenAcceptAsync(consumer);
+        callById.thenAcceptAsync(consumer);
     }
-
-    private CompletableFuture<List<CallInfo>> callInfoListFuture;
 
     public void cancelFutures() {
-        if (callInfoListFuture != null) {
-            callInfoListFuture.cancel(true);
+        if (allCallsInfo != null) {
+            allCallsInfo.cancel(true);
         }
-        if (callInfoFuture != null) {
-            callInfoFuture.cancel(true);
+        if (callById != null) {
+            callById.cancel(true);
+        }
+        if (insertCallInfo != null) {
+            insertCallInfo.cancel(true);
+        }
+        if (insertCallsWithDropTable != null) {
+            insertCallsWithDropTable.cancel(true);
         }
     }
 
-    public void getAll(Function<Throwable, List<CallInfo>> ex, Consumer<List<CallInfo>> consumer) {
-        callInfoListFuture = CompletableFuture
+    public void loadAllCallsInfo(Function<Throwable, List<CallInfo>> ex, Consumer<List<CallInfo>> consumer) {
+        allCallsInfo = CompletableFuture
                 .supplyAsync(dao::getAll)
                 .exceptionally(ex);
-        callInfoListFuture.thenAcceptAsync(consumer);
+        allCallsInfo.thenAcceptAsync(consumer);
     }
 
     public void insertCallsWithDropTable(Function<Throwable,Void> ex, List<CallInfo> list) {
-        CompletableFuture
+        insertCallsWithDropTable = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
+                    dao.clearAll();
                     dao.insertAll(list);
+                    return null;
+                })
+                .exceptionally(ex);
+    }
+
+    public void insertCall(Function<Throwable, CallInfo> ex, CallInfo callInfo) {
+        insertCallInfo = CompletableFuture
+                .supplyAsync((Supplier<CallInfo>) () -> {
+                    dao.insert(callInfo);
                     return null;
                 })
                 .exceptionally(ex);

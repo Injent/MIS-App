@@ -55,10 +55,27 @@ public class RecommendationsFragment extends Fragment {
                 // Nothing to do
             }
         });
+
+        binding.recommendationsText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Nothing to do
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                viewModel.setCurrentRecommendation(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Nothing to do
+            }
+        });
     }
 
     private void setupRecyclerView() {
-        adapter = new RecommendationAdapter(recommendationId -> viewModel.setCurrentRecommendation(recommendationId));
+        adapter = new RecommendationAdapter(recommendationId -> viewModel.findRecommendation(recommendationId));
         binding.recommendationRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recommendationRecycler.setOverScrollMode(View.OVER_SCROLL_NEVER);
         binding.recommendationRecycler.setAdapter(adapter);

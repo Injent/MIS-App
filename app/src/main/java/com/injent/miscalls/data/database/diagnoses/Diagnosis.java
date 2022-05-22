@@ -5,7 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 
 import java.util.List;
 
@@ -47,13 +46,43 @@ public class Diagnosis {
     public Diagnosis() {
     }
 
-    public static String listToStringCodes(List<Diagnosis> list) {
-        StringBuilder sb = new StringBuilder("");
+    public static String listToStringCodes(List<Diagnosis> list, char separator) {
+        StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < list.size(); i++) {
             sb.append(list.get(i).getCode());
             if (i != list.size() - 1) {
-                sb.append(", ");
+                sb.append(separator);
+                if (separator == ',') {
+                    sb.append(" ");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String listToStringIds(List<Diagnosis> list, char separator) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i).getId());
+            if (i != list.size() - 1) {
+                sb.append(separator);
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String listToStringNames(List<Diagnosis> list, String s) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.size() != 1) {
+                sb.append(i).append(1).append(". ");
+            }
+            sb.append(list.get(i).getName());
+            if (i != list.size() - 1) {
+                sb.append(s);
             }
         }
         return sb.toString();
@@ -166,5 +195,20 @@ public class Diagnosis {
         if (obj instanceof Diagnosis)
             return ((Diagnosis) obj).id == id;
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getRecCode().hashCode();
+        result = 31 * result + getCode().hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getParentId();
+        result = 31 * result + getAddlCode();
+        result = 31 * result + getActual();
+        result = 31 * result + getDate().hashCode();
+        result = 31 * result + getCallInfoId();
+        result = 31 * result + (isParent() ? 1 : 0);
+        return result;
     }
 }

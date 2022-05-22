@@ -2,7 +2,6 @@ package com.injent.miscalls.data;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.injent.miscalls.R;
 

@@ -55,7 +55,6 @@ public class CallStuffFragment extends Fragment {
         }
 
         binding.doneButton.setOnClickListener(view0 -> save());
-        binding.doneButton.setVisibility(View.VISIBLE);
 
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override

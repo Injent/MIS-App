@@ -69,4 +69,13 @@ public class Recommendation {
             return ((Recommendation) obj).getId() == id;
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getDescription().hashCode();
+        result = 31 * result + getContent().hashCode();
+        return result;
+    }
 }

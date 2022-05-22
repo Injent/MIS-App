@@ -1,6 +1,8 @@
 package com.injent.miscalls.ui.settings;
 
-public class SectionLayout implements SettingLayout {
+import com.injent.miscalls.ui.ViewType;
+
+public class SectionLayout implements ViewType {
 
     private int stringResId;
 

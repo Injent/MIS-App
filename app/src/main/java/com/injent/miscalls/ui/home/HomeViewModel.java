@@ -1,7 +1,6 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -18,7 +17,6 @@ import com.injent.miscalls.domain.repositories.HomeRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,7 +56,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void loadCallList() {
-        homeRepository.getAll(throwable -> {
+        homeRepository.loadAllCallsInfo(throwable -> {
             callListError.postValue(throwable);
             return Collections.emptyList();
         }, list -> {

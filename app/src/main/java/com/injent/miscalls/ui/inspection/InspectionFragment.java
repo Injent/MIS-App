@@ -69,10 +69,8 @@ public class InspectionFragment extends Fragment {
 
     private void setPresetInfo(CallInfo callInfo) {
         if (callInfo == null) return;
-        String preset = viewModel.getAutoFilledField(callInfo, getResources().getStringArray(R.array.infoFieldPreset));
-
-        binding.inspectionField.setText(preset);
-        Toast.makeText(requireContext(),R.string.usedInfo,Toast.LENGTH_SHORT).show();
+        binding.inspectionField.setText(getString(R.string.inspectionPreset));
+        Toast.makeText(requireContext(),R.string.tempUsed,Toast.LENGTH_SHORT).show();
     }
 
     @Override

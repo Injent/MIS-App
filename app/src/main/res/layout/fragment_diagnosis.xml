@@ -32,7 +32,6 @@
             android:layout_height="0dp"
             android:background="@color/colorPrimaryDark"
             android:orientation="vertical"
-            android:padding="@dimen/displayPadding"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,6 +41,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/displayPadding"
                 android:background="@drawable/focusable_search">
 
                 <EditText
@@ -82,7 +82,6 @@
                 android:id="@+id/diagnosisSelectRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/displayPadding"
                 android:overScrollMode="never"
                 android:scrollbarTrackVertical="@drawable/scroll" />
 

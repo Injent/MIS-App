@@ -21,11 +21,12 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
+import com.injent.miscalls.ui.ViewType;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.ViewHolder> {
+public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHolder> {
 
     private final Context context;
 
@@ -39,15 +40,15 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
         return getItem(position).getViewType();
     }
 
-    static DiffUtil.ItemCallback<SettingLayout> diffCallback = new DiffUtil.ItemCallback<>() {
+    static DiffUtil.ItemCallback<ViewType> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull SettingLayout oldItem, @NonNull SettingLayout newItem) {
+        public boolean areItemsTheSame(@NonNull ViewType oldItem, @NonNull ViewType newItem) {
             return oldItem.equals(newItem);
         }
 
         @SuppressLint("DiffUtilEquals")
         @Override
-        public boolean areContentsTheSame(@NonNull SettingLayout oldItem, @NonNull SettingLayout newItem) {
+        public boolean areContentsTheSame(@NonNull ViewType oldItem, @NonNull ViewType newItem) {
             return oldItem.equals(newItem);
         }
     };
@@ -70,7 +71,7 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SettingLayout layout = getItem(position);
+        ViewType layout = getItem(position);
         switch (holder.getItemViewType()) {
             case 0: holder.setSpinnerData(layout);
             break;
@@ -91,7 +92,7 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
             this.context = context;
         }
 
-        public void setSpinnerData(SettingLayout layout) {
+        public void setSpinnerData(ViewType layout) {
             SpinnerLayout spinnerLayout = (SpinnerLayout) layout;
             TextView title = view.findViewById(R.id.settingSpinnerTitle);
             title.setText(spinnerLayout.getStringResId());
@@ -121,7 +122,7 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
             });
         }
 
-        public void setSwitchData(SettingLayout layout) {
+        public void setSwitchData(ViewType layout) {
             SwitchLayout switchLayout = (SwitchLayout) layout;
             TextView title = view.findViewById(R.id.settingsSwitchTitle);
             title.setText(switchLayout.getStringResId());
@@ -149,7 +150,7 @@ public class SettingAdapter extends ListAdapter<SettingLayout, SettingAdapter.Vi
             });
         }
 
-        public void setSectionData(SettingLayout layout) {
+        public void setSectionData(ViewType layout) {
             SectionLayout sectionLayout = (SectionLayout) layout;
             TextView sectionName = view.findViewById(R.id.settingSectionName);
             sectionName.setText(sectionLayout.getStringResId());

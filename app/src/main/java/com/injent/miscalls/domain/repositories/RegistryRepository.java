@@ -1,5 +1,8 @@
 package com.injent.miscalls.domain.repositories;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.print.PDFPrint;
 import android.util.Log;
 
 import com.injent.miscalls.App;
@@ -9,11 +12,19 @@ import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.data.database.registry.RegistryDao;
+import com.injent.miscalls.data.recommendation.Recommendation;
+import com.tejpratapsingh.pdfcreator.utils.FileManager;
+import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -24,6 +35,10 @@ public class RegistryRepository {
     private final RegistryDao dao;
     private final DiagnosisDao diagnosisDao;
     private final CallInfoDao callInfoDao;
+
+    private CompletableFuture<Registry> registryFuture;
+    private CompletableFuture<Void> insertFuture;
+    private CompletableFuture<List<Registry>> registriesFuture;
 
     public RegistryRepository() {
         this.dao = App.getInstance().getRegistryDao();
@@ -40,8 +55,6 @@ public class RegistryRepository {
             registryFuture.cancel(true);
     }
 
-    private CompletableFuture<Void> insertFuture;
-
     public void insertRegistry(Function<Throwable, Void> ex, Registry registry) {
         insertFuture = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
@@ -50,8 +63,6 @@ public class RegistryRepository {
                 })
                 .exceptionally(ex);
     }
-
-    private CompletableFuture<List<Registry>> registriesFuture;
 
     public void getRegistries(Function<Throwable, List<Registry>> ex, Consumer<List<Registry>> consumer) {
         registriesFuture = CompletableFuture
@@ -67,9 +78,7 @@ public class RegistryRepository {
         registriesFuture.thenAcceptAsync(consumer);
     }
 
-    private CompletableFuture<Registry> registryFuture;
-
-    public void getRegistryById(Function<Throwable, Registry> ex, Consumer<Registry> consumer, int id) {
+    public void loadRegistryById(Function<Throwable, Registry> ex, Consumer<Registry> consumer, int id) {
         registryFuture = CompletableFuture
                 .supplyAsync(() -> fletchRegistry(dao.getById(id)))
                 .exceptionally(ex);

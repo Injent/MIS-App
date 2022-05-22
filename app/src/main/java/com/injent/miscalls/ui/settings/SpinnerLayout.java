@@ -1,6 +1,8 @@
 package com.injent.miscalls.ui.settings;
 
-public class SpinnerLayout implements SettingLayout {
+import com.injent.miscalls.ui.ViewType;
+
+public class SpinnerLayout implements ViewType {
 
     private int drawableResId;
     private int drawableColorResId;

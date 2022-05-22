@@ -1,6 +1,8 @@
 package com.injent.miscalls.ui.settings;
 
-public class SwitchLayout implements SettingLayout {
+import com.injent.miscalls.ui.ViewType;
+
+public class SwitchLayout implements ViewType {
 
     private int drawableResId;
     private int drawableColorResId;

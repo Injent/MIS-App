@@ -6,8 +6,8 @@
     <string name="callInfo">Вызов</string>
     <string name="auth">Авторизация</string>
     <string name="settings">Настройки</string>
-    <string name="protocolEdit">Редактирование протокола</string>
-    <string name="savedProtocols">Сохраненные протоколы</string>
+    <string name="editor">Редактор</string>
+    <string name="pdfViewer">Документ</string>
 
     <!-- Sections -->
     <string name="complaints">Жалобы</string>
@@ -52,9 +52,12 @@
 
     <!-- Actions -->
     <string name="actionAuth">Авторизоваться</string>
-    <string name="saveAsPdf">Сохранить\nкак pdf</string>
+    <string name="saveChanges">Сохранить изменения</string>
+    <string name="changesAreSaved">Изменения сохранены</string>
+    <string name="saveAsPdf">Сохранить\nдокумент как pdf</string>
     <string name="usePatientInfos">Использовать\nинформацию пацента</string>
     <string name="exit">Выйти</string>
+    <string name="allow">Разрешите доступ для сохранения файла</string>
     <string name="ok">Ок</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
@@ -64,6 +67,7 @@
     <string name="delete">Удалить</string>
     <string name="moveToEditProtocol">Перейти к редактированию протокола</string>
     <string name="addDiagnosis">Добавить диагноз</string>
+    <string name="saveDocument">Сохранить документ</string>
 
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
@@ -73,8 +77,11 @@
     <string name="noName">Безымянный</string>
     <string name="age">лет</string>
     <string name="inspected">Осмотрен</string>
-    <string name="inspectionPreset">Значение 1: \nЗначение 2: \nЗначение 3: \nЗначение 4: \n</string>
-    <string name="loading"></string>
+    <string name="inspectionPreset">
+        Рост:\nВес:\nИмт:\nТемп. тела:\nЧисло дыханий:\nЧастота пульса:\nАД справа:\nАД слева:\n
+    </string>
+
+    <string name="loading">Текст</string>
 
     <!-- Toasts -->
     <string name="successfulAuth">Успешная авторизация</string>
@@ -82,7 +89,7 @@
     <string name="receivingDataOn">Обновление данных включено</string>
     <string name="moveToSettings">Нажмите, чтобы отключить обновления</string>
     <string name="protocolTempsCleared">Все протоколы сброшены</string>
-    <string name="usedInfo">Применена информация о пациенте</string>
+    <string name="tempUsed">Шаблон использован</string>
     <string name="protocolDeleted">Протокол %s удален</string>
     <string name="textCopied">Текст скопирован</string>
     <string name="undoDeleting">Отменить</string>
@@ -92,6 +99,7 @@
     <string name="diagnoseDeleted">Диагноз удален</string>
     <string name="diagnosisAlreadyAdded">Этот диагноз уже записан</string>
     <string name="docMovedTo">Документ перемещен в раздел</string>
+    <string name="documentSaved">Документ сохранен в папке «Документы»</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>
@@ -135,11 +143,6 @@
         <item>Рекоменции…</item>
     </string-array>
 
-    <string-array name="infoFieldPreset">
-        <item>СНИЛС:</item>
-        <item>Значение 2:</item>
-    </string-array>
-
     <string-array name="modes">
         <item>При входе в приложение</item>
         <item>Каждый час</item>
@@ -148,12 +151,16 @@
 
     <!-- Arguments Keys -->
     <string name="keyCallId">callId</string>
+    <string name="keySaveFragment">saveFragment</string>
     <string name="keyCallParcelable">callParcelable</string>
     <string name="keyRecommendationId">recommendationId</string>
     <string name="keyEditMode">editMode</string>
     <string name="keyUpdateList">updateList</string>
+    <string name="keyFileName">fileName</string>
     <string name="keyDownloadDb">downloadDb</string>
     <string name="keyDbDate">dbDate</string>
+    <string name="keyPath">keyPath</string>
+    <string name="keyRegistryId">registryId</string>
 
     <!-- Shared Preferences Keys -->
     <string name="keyInit">init</string>

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.database.calls.ListEmptyException;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
 
@@ -30,10 +29,7 @@ public class RegistryViewModel extends ViewModel {
             error.postValue(throwable);
             return Collections.emptyList();
         }, list -> {
-            if (list.isEmpty()) {
-                error.postValue(new ListEmptyException());
-            } else
-                registryItems.postValue(list);
+            registryItems.postValue(list);
         });
     }
 
@@ -45,5 +41,8 @@ public class RegistryViewModel extends ViewModel {
     protected void onCleared() {
         registryItems = new MutableLiveData<>();
         error = new MutableLiveData<>();
+
+        repository.cancelFutures();
+        super.onCleared();
     }
 }

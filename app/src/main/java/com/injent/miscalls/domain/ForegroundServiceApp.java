@@ -20,8 +20,7 @@ import com.injent.miscalls.R;
 
 public class ForegroundServiceApp extends Service {
 
-    private boolean init = false;
-    private static final int FOREGROUND_ID = 1;
+    private static final int FOREGROUND_ID = 132005;
 
     @Override
     public void onCreate() {
@@ -42,11 +41,9 @@ public class ForegroundServiceApp extends Service {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getText(R.string.receivingDataOn))
                 .setContentText(getText(R.string.moveToSettings))
-                .setSmallIcon(R.drawable.ic_clock)
+                .setSmallIcon(R.drawable.ic_medical_suitcase)
                 .setContentIntent(pendingIntent)
                 .build();
-
-        init = true;
 
         startForeground(FOREGROUND_ID,notification);
         return START_NOT_STICKY;
@@ -55,19 +52,7 @@ public class ForegroundServiceApp extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-    public class LocalBinder extends Binder {
-        public ForegroundServiceApp getService() {
-            return ForegroundServiceApp.this;
-        }
-    }
-
-    private final IBinder binder = new LocalBinder();
-
-    public boolean isRunning() {
-        return init;
+        return null;
     }
 
     private void createNotificationChannel() {

@@ -14,6 +14,7 @@ import java.util.List;
 public class Registry {
 
     public Registry() {
+        // Empty
     }
 
     @Ignore
@@ -33,6 +34,9 @@ public class Registry {
 
     @ColumnInfo(name = "diagnoses")
     private String diagnosesId;
+
+    @ColumnInfo(name = "create_date")
+    private String createDate;
 
     public int getId() {
         return id;
@@ -80,5 +84,13 @@ public class Registry {
 
     public void setDiagnosesId(String diagnosesId) {
         this.diagnosesId = diagnosesId;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
     }
 }

@@ -44,4 +44,14 @@
         android:name="com.injent.miscalls.ui.mkb10.HandBookFragment"
         android:label="hand_book_fragment"
         tools:layout="@layout/fragment_handbook" />
+    <fragment
+        android:id="@+id/editorFragment"
+        android:name="com.injent.miscalls.ui.editor.EditorFragment"
+        android:label="fragment_editor"
+        tools:layout="@layout/fragment_editor" />
+    <fragment
+        android:id="@+id/pdfPreviewFragment"
+        android:name="com.injent.miscalls.ui.pdfviewer.PdfPreviewFragment"
+        android:label="fragment_pdf_preview"
+        tools:layout="@layout/fragment_pdf_preview" />
 </navigation>

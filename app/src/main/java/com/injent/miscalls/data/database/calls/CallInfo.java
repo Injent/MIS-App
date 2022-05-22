@@ -16,7 +16,7 @@ public class CallInfo {
 
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey
     private int id;
 
     @SerializedName("edit_card_date")
@@ -50,7 +50,7 @@ public class CallInfo {
 
     @SerializedName("sex")
     @ColumnInfo(name = "sex")
-    private boolean sex;
+    private int sex;
 
     @SerializedName("residence")
     @ColumnInfo(name = "residence")
@@ -116,8 +116,12 @@ public class CallInfo {
         return lastname;
     }
 
-    public boolean isSex() {
+    public int getSex() {
         return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
     }
 
     public String getPhoneNumber() {
@@ -158,10 +162,6 @@ public class CallInfo {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public void setSex(boolean sex) {
-        this.sex = sex;
     }
 
     public void setPhoneNumber(String phoneNumber) {
@@ -208,7 +208,7 @@ public class CallInfo {
         List<String> list = new ArrayList<>();
         list.add(editCardDate);
         list.add(lastname + " " + firstname + " " + getMiddleName());
-        if (sex) list.add("Муж.");
+        if (sex == 1) list.add("Муж.");
         else list.add("Жен.");
         list.add(bornDate);
         list.add(residence);
@@ -219,6 +219,17 @@ public class CallInfo {
         list.add(passport);
         list.add(phoneNumber);
         return list;
+    }
+
+    public static String autoFillString(CallInfo callInfo, String s) {
+        return s.replace("@фио", callInfo.getFullName())
+                .replace("@др", callInfo.getBornDate())
+                .replace("@полис", callInfo.getPolis())
+                .replace("@снилс", callInfo.getSnils())
+                .replace("@адрес", callInfo.getResidence())
+                .replace("@имя", callInfo.getFirstname())
+                .replace("@фамилия", callInfo.getLastname())
+                .replace("@отчество", callInfo.getMiddleName());
     }
 
     public String getMiddleName() {
@@ -245,5 +256,26 @@ public class CallInfo {
         if (obj instanceof CallInfo)
             return ((CallInfo) obj).getId() == id;
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getEditCardDate().hashCode();
+        result = 31 * result + getComplaints().hashCode();
+        result = 31 * result + getBenefitCategoryCode().hashCode();
+        result = 31 * result + (isInspected() ? 1 : 0);
+        result = 31 * result + getFirstname().hashCode();
+        result = 31 * result + getMiddleName().hashCode();
+        result = 31 * result + getLastname().hashCode();
+        result = 31 * result + getSex();
+        result = 31 * result + getResidence().hashCode();
+        result = 31 * result + getPhoneNumber().hashCode();
+        result = 31 * result + getBornDate().hashCode();
+        result = 31 * result + getSnils().hashCode();
+        result = 31 * result + getPolis().hashCode();
+        result = 31 * result + getOrganization().hashCode();
+        result = 31 * result + getPassport().hashCode();
+        return result;
     }
 }

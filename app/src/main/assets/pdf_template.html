@@ -1,56 +1,54 @@
-<!DOCTYPE html>
-<html>
+<style type="text/css">table.GeneratedTable {
+  width: 80%;
+  background-color: #ffffff;
+  border-collapse: collapse;
+  border-width: 2px;
+  border-color: #000000;
+  border-style: solid;
+  color: #000000;
+}
 
-<title>Результат осмотра</title>
+table.GeneratedTable td, table.GeneratedTable th {
+  border-width: 2px;
+  border-color: #000000;
+  border-style: solid;
+  padding: 8px;
+}
 
-<head>
-    <style>
-
-   #left { text-align: left; }
-   #right { text-align: right; }
-   #center { text-align: center; }
-   #layer{text-align: left;
-          padding: 20px; /* Поля вокруг текста */}
+table.GeneratedTable thead {
+  background-color: #ffffff;
+}
 </style>
-</head>
+<meta charset="utf-8" />
+<body style="padding:5%">
+<title></title>
+<h1><strong>Результаты осмотра</strong></h1>
 
-<body id="layer">
-<header>
+<p><strong>Врач: </strong>$docname</p>
 
-    <h1><div class="content">Результаты осмотра </div></h1>
+<p><strong>Пациент: </strong>$patientname</p>
 
-    <h2 id="center"><div class="content">Протокол №123</div></h2>
+<p><strong>Дата заполнения: </strong>$date</p>
 
-    <h3 id="left"><div class="content">Врач: Зеленкин Биба Бобович</div></h4>
-
-        <h4 id="right"><div class="content">Дата создания: 12 мая 2022 года</div></h4>
-
-</header>
-
-<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diem
-    nonummy nibh euismod tincidunt ut lacreet dolore magna aliguam erat volutpat.</p>
-
-<p>Ut wisis enim ad minim veniam, quis nostrud exerci tution ullamcorper
-    suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
-
-<table cellspacing="0" border="1" cellpadding="12" width="600" >
-
+<table border="2" class="GeneratedTable" style="width: 80%;">
+    <tbody>
     <tr>
-        <th><div id="left"><div class="content">Жалобы </div></div></th>
-        <td><div class="content">Бла-бла-бла </div></td>
+        <td>Жалобы</td>
+        <td>$complaints</td>
     </tr>
-
     <tr>
-        <th><div id="left"><div class="content">Диагноз</div></div></th>
-        <td><div class="content">Бла-бла-бла </div></td>
+        <td>Рекомендация</td>
+        <td>$recommendations</td>
     </tr>
-
+    <tr>
+        <td>Диагоноз</td>
+        <td>$diagnoses</td>
+    </tr>
+    </tbody>
 </table>
 
-<h3><div class="content">Подпись врача </div></h3>
-<hr align= "center" width="350" size="3" color="#000000" />
+<p>&nbsp;</p>
 
+<h3>Подпись врача:&nbsp; <ins>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</ins></h3>
 
 </body>
-
-</html>

@@ -24,7 +24,8 @@
             android:padding="12dp"
             android:textColor="@color/darkGrayText"
             android:textColorHint="@color/lowGray"
-            android:textSize="@dimen/mediumFont" />
+            android:textSize="@dimen/mediumFont"
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommendationRecycler"
@@ -32,9 +33,42 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:overScrollMode="never"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/recHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="@dimen/displayPadding"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/clear_sans_medium"
+            android:text="@string/recommendations"
+            android:textColor="@color/darkGrayText"
+            android:textSize="@dimen/mediumFont" />
+
+        <EditText
+            android:id="@+id/recommendationsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/displayPadding"
+            android:layout_marginEnd="@dimen/displayPadding"
+            android:background="@drawable/edit_text"
+            android:ems="10"
+            android:fontFamily="@font/clear_sans_regular"
+            android:gravity="start|top"
+            android:hint="@string/recommendations"
+            android:inputType="textMultiLine"
+            android:minHeight="72dp"
+            android:padding="8dp"
+            android:textColor="@color/darkGrayText"
+            android:textColorHighlight="@color/highlight"
+            android:textColorHint="@color/lightGrayText"
+            android:textSize="@dimen/headerFont" />
 
     </LinearLayout>
 

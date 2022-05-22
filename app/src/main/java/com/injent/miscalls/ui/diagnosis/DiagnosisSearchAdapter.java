@@ -18,22 +18,23 @@ import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.databinding.DiagnosisItemSelectBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSearchAdapter.ViewHolder> implements Filterable {
 
     private final OnItemClickListener listener;
-    private List<Diagnosis> searchList;
+    private List<Diagnosis> fullList;
 
     protected DiagnosisSearchAdapter(OnItemClickListener listener) {
         super(diffCallback);
         this.listener = listener;
     }
 
-    public void submitList(@Nullable List<Diagnosis> list, boolean searchList) {
+    @Override
+    public void submitList(@Nullable List<Diagnosis> list) {
+        fullList = list;
         super.submitList(list);
-        if (searchList && list != null)
-            this.searchList = new ArrayList<>(list);
     }
 
     static DiffUtil.ItemCallback<Diagnosis> diffCallback = new DiffUtil.ItemCallback<>() {
@@ -59,19 +60,6 @@ public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSear
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.setData(getItem(position));
-    }
-
-    @Override
-    public void submitList(@Nullable List<Diagnosis> list) {
-        if (list == null) return;
-        List<Diagnosis> sortedList = new ArrayList<>();
-        for (Diagnosis d : list) {
-            if (!d.getCode().isEmpty()) {
-                sortedList.add(d);
-            }
-        }
-        searchList = sortedList;
-        super.submitList(sortedList);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -105,15 +93,16 @@ public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSear
     }
 
     private final Filter filter = new Filter() {
+        @NonNull
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             List<Diagnosis> filteredList = new ArrayList<>();
             if (charSequence == null || charSequence.length() == 0) {
-                filteredList.addAll(searchList);
+                filteredList.addAll(fullList);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
-                for (Diagnosis item : searchList) {
+                for (Diagnosis item : fullList) {
                     if (item.getName().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
@@ -125,9 +114,8 @@ public class DiagnosisSearchAdapter extends ListAdapter<Diagnosis, DiagnosisSear
         }
 
         @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            //TODO
-            submitList((List<Diagnosis>) filterResults.values, false);
+        protected void publishResults(CharSequence charSequence, @NonNull FilterResults filterResults) {
+            submitList((List<Diagnosis>) filterResults.values);
         }
     };
 }

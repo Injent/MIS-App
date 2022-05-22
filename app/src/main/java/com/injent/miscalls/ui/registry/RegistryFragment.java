@@ -88,8 +88,8 @@ public class RegistryFragment extends Fragment {
     private void setupDiagnosisRecyclerView() {
         adapter = new RegistryAdapter(new RegistryAdapter.OnItemClickListener() {
             @Override
-            public void onClick(int position) {
-                //
+            public void onClick(int id) {
+                navigateToEditor(id);
             }
 
             @Override
@@ -140,6 +140,12 @@ public class RegistryFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putBoolean(getString(R.string.keyUpdateList), true);
         navController.navigate(R.id.homeFragment, bundle);
+    }
+
+    private void navigateToEditor(int id) {
+        Bundle args = new Bundle();
+        args.putInt(getString(R.string.keyRegistryId), id);
+        navController.navigate(R.id.editorFragment, args);
     }
 
     private boolean notMatchingDestination() {

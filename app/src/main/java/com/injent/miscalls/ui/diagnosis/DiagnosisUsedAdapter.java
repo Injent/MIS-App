@@ -62,7 +62,7 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
     }
 
     public interface OnItemClickListener {
-        void onClick(Diagnosis diagnosis);
+        void onLongClick(Diagnosis diagnosis);
         void onAddClick();
     }
 
@@ -80,7 +80,7 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
         public void setData(Diagnosis diagnosis) {
             binding.usedDiagnosisText.setText(diagnosis.getName());
             binding.usedDiagnosisText.setOnLongClickListener(view -> {
-                listener.onClick(diagnosis);
+                listener.onLongClick(diagnosis);
                 return false;
             });
         }

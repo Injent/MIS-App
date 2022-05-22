@@ -22,4 +22,27 @@
         <item name="android:textColor">@color/darkGrayText</item>
         <item name="maxLines">1</item>
     </style>
+
+    <style name="headerText">
+        <item name="android:textSize">@dimen/mediumFont</item>
+        <item name="fontFamily">@font/clear_sans_medium</item>
+        <item name="android:textColor">@color/darkGrayText</item>
+        <item name="maxLines">1</item>
+    </style>
+
+    <style name="editText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/headerFont</item>
+        <item name="fontFamily">@font/clear_sans_regular</item>
+        <item name="android:textColor">@color/darkGrayText</item>
+        <item name="android:textColorHighlight">@color/highlight</item>
+        <item name="hintTextColor">@color/lightGrayText</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="shadow">
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:shadowDx">10</item>
+        <item name="android:shadowDy">10</item>
+        <item name="android:shadowRadius">5</item>
+    </style>
 </resources>

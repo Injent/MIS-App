@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,11 +19,13 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.databinding.ItemHandbookDiagnosisBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.ViewHolder> {
+public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.ViewHolder> implements Filterable {
 
     private final OnItemClickListener listener;
+    private List<Diagnosis> fullList;
     private boolean backAction;
 
     public DiagnosisAdapter(OnItemClickListener listener) {
@@ -44,6 +48,7 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
 
     public void submitList(@Nullable List<Diagnosis> list, boolean backAction) {
         this.backAction = backAction;
+        this.fullList = new ArrayList<>(list);
         super.submitList(list);
         if (backAction) {
             listener.previousPage(getItem(0).getParentId());
@@ -92,4 +97,36 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
             binding.handbookItemLayout.setOnClickListener(view -> listener.onClick(diagnosis));
         }
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private final Filter filter = new Filter() {
+        @NonNull
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<Diagnosis> filteredList = new ArrayList<>();
+            if (charSequence == null || charSequence.length() == 0) {
+                filteredList.addAll(fullList);
+            } else {
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+
+                for (Diagnosis item : fullList) {
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, @NonNull FilterResults filterResults) {
+            submitList((List<Diagnosis>) filterResults.values);
+        }
+    };
 }
