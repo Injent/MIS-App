@@ -85,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/search"
                 android:padding="8dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/registryTitle"
                 app:layout_constraintEnd_toEndOf="@+id/registrySearchButton"
                 app:layout_constraintStart_toEndOf="@+id/backFromRegistry"

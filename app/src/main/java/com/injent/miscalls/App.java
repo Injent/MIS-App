@@ -1,54 +1,39 @@
 package com.injent.miscalls;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
+import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
-import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.User;
 import com.injent.miscalls.data.UserSettings;
+import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
-import com.injent.miscalls.data.recommendation.RecommendationDao;
 import com.injent.miscalls.data.database.registry.RegistryDao;
-import com.injent.miscalls.domain.BackgroundDownloader;
-import com.injent.miscalls.domain.ForegroundServiceApp;
+import com.injent.miscalls.data.recommendation.RecommendationDao;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executor;
 
 public class App extends Application {
 
     private static WeakReference<App> instance;
 
-    public static final String APP_VERSION = "snapshot 22w18b";
     public static final String PREFERENCES_NAME = "settings";
     public static final String ENCRYPTED_PREFERENCES_NAME = "security-data";
     public static final String CHANNEL_ID = "service-v1";
 
-    private AppDatabase appDatabase;
     private DiagnosisDao diagnosisDao;
     private RegistryDao registryDao;
     private RecommendationDao recommendationDao;
@@ -81,7 +66,7 @@ public class App extends Application {
         if (userSettings.isAuthed()) {
             SharedPreferences esp = getEncryptedPreferences();
             String key = esp.getString(getString(R.string.keyToken),null);
-            appDatabase = AppDatabase.getInstance(getApplicationContext(),key.toCharArray());
+            AppDatabase appDatabase = AppDatabase.getInstance(getApplicationContext(), key.toCharArray());
 
             diagnosisDao = appDatabase.diagnosisDao();
             registryDao = appDatabase.registryDao();
@@ -96,10 +81,6 @@ public class App extends Application {
 
     private static void setUserSettings(UserSettings us) {
         userSettings = us;
-    }
-
-    public AppDatabase getAppDatabase() {
-        return appDatabase;
     }
 
     public DiagnosisDao getDiagnosisDao() {
@@ -183,8 +164,8 @@ public class App extends Application {
         connectDatabase();
     }
 
-    public static void hideKeyBoard(Context context, View view) {
-        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    public static void hideKeyBoard(View view) {
+        InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

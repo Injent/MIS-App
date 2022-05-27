@@ -19,21 +19,21 @@ import java.util.List;
 public class SpinnerAdapter extends BaseAdapter {
 
     private final Context context;
-    private final List<String> modes;
+    private final String[] modes;
 
-    public SpinnerAdapter(Context context, List<String> modes) {
+    public SpinnerAdapter(Context context, String[] modes) {
         this.context = context;
         this.modes = modes;
     }
 
     @Override
     public int getCount() {
-        return modes.size();
+        return modes.length;
     }
 
     @Override
     public String getItem(int position) {
-        return modes.get(position);
+        return modes[position];
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SpinnerAdapter extends BaseAdapter {
                 viewGroup, false);
 
         TextView textView = rootView.findViewById(R.id.modeText);
-        textView.setText(modes.get(position));
+        textView.setText(modes[position]);
 
         return rootView;
     }

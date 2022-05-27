@@ -11,6 +11,7 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.registry.Registry;
+import com.injent.miscalls.data.recommendation.Recommendation;
 import com.injent.miscalls.domain.repositories.DiagnosisRepository;
 import com.injent.miscalls.domain.repositories.HomeRepository;
 import com.injent.miscalls.domain.repositories.RecommendationRepository;
@@ -37,6 +38,7 @@ public class CallStuffViewModel extends ViewModel {
     private MutableLiveData<List<Diagnosis>> currentDiagnoses = new MutableLiveData<>();
     private MutableLiveData<Throwable> error = new MutableLiveData<>();
     private MutableLiveData<List<Diagnosis>> diagnosesDatabaseList = new MutableLiveData<>();
+    private MutableLiveData<List<Recommendation>> recommendationsList = new MutableLiveData<>();
 
     public CallStuffViewModel() {
         registryRepository = new RegistryRepository();
@@ -121,7 +123,7 @@ public class CallStuffViewModel extends ViewModel {
         String diagnosisString = Diagnosis.listToStringIds(list, ';');
         registry.setDiagnosesId(diagnosisString);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nhh:mm", Locale.getDefault());
         String currentDate = sdf.format(new Date());
 
         registry.setCreateDate(currentDate);
@@ -152,6 +154,18 @@ public class CallStuffViewModel extends ViewModel {
             error.postValue(throwable);
             return null;
         }, recommendation -> currentRecommendation.postValue(recommendation.getContent()), id);
+    }
+
+
+    public LiveData<List<Recommendation>> getRecommendationsListLiveData() {
+        return recommendationsList;
+    }
+
+    public void loadRecommendationsList() {
+        recommendationRepository.loadAllRecommendations(throwable -> {
+            error.postValue(throwable);
+            return Collections.emptyList();
+        }, list -> recommendationsList.postValue(list));
     }
 
     public LiveData<String> getCurrentInspectionLiveData() {
@@ -185,6 +199,7 @@ public class CallStuffViewModel extends ViewModel {
         currentRecommendation = new MutableLiveData<>();
         currentDiagnoses = new MutableLiveData<>();
         error = new MutableLiveData<>();
+        recommendationsList = new MutableLiveData<>();
         diagnosesDatabaseList = new MutableLiveData<>();
 
         diagnosisRepository.cancelFutures();

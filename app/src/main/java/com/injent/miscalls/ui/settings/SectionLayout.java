@@ -1,6 +1,6 @@
 package com.injent.miscalls.ui.settings;
 
-import com.injent.miscalls.ui.ViewType;
+import com.injent.miscalls.ui.adapters.ViewType;
 
 public class SectionLayout implements ViewType {
 
@@ -20,6 +20,6 @@ public class SectionLayout implements ViewType {
 
     @Override
     public int getViewType() {
-        return -1;
+        return ViewType.SETTINGS_SECTION;
     }
 }

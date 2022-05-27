@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
         //Listeners
         binding.patientListSection.setOnClickListener(view0 -> downloadNewDb());
 
-        binding.moreButton.setOnClickListener(view1 -> {
+        binding.moreButton.setOnClickListener(v -> {
             binding.drawerLayout.openDrawer(GravityCompat.START);
         });
 

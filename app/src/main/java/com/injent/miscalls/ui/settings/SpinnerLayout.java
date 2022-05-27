@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.settings;
 
-import com.injent.miscalls.ui.ViewType;
+import com.injent.miscalls.R;
+import com.injent.miscalls.ui.adapters.ViewType;
 
 public class SpinnerLayout implements ViewType {
 
@@ -22,7 +23,7 @@ public class SpinnerLayout implements ViewType {
 
     @Override
     public int getViewType() {
-        return 0;
+        return ViewType.SETTING_SPINNER;
     }
 
     public int getDrawableResId() {

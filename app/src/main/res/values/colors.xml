@@ -16,6 +16,7 @@
     <color name="colorSecondaryPrimaryDark">#e2e2e2</color>
     <color name="line">#EAEAEA</color>
     <color name="green">#3ba55d</color>
+    <color name="greenTransparent">#B33BA55D</color>
     <color name="gray">#e8e8e8</color>
     <color name="lightBlue">#0a95ff</color>
     <color name="statusBar">#21201e</color>
@@ -29,7 +30,7 @@
     <color name="icClock">#0091FF</color>
     <color name="icClear">#FF6F00</color>
     <color name="uiGray">#f2f2f2</color>
-    <color name="uiLightGray">#e6e6e6</color>
+    <color name="uiLightGray">#ecedf0</color>
 
     <color name="sectionButtonGradientStart">#89daff</color>
     <color name="sectionButtonGradientEnd">#449cfc</color>

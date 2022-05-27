@@ -1,13 +1,11 @@
-package com.injent.miscalls.ui.editor;
+package com.injent.miscalls.ui.adapters;
 
-import com.injent.miscalls.ui.ViewType;
-
-public class EditFieldLayout implements ViewType {
+public class Field implements ViewType {
 
     private int nameStringResId;
     private int hintStringResId;
 
-    public EditFieldLayout(int nameStringResId, int hintStringResId) {
+    public Field(int nameStringResId, int hintStringResId) {
         this.nameStringResId = nameStringResId;
         this.hintStringResId = hintStringResId;
     }
@@ -30,6 +28,6 @@ public class EditFieldLayout implements ViewType {
 
     @Override
     public int getViewType() {
-        return 0;
+        return ViewType.FIELD_EDIT;
     }
 }

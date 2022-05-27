@@ -16,7 +16,6 @@ import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.databinding.CallListItemBinding;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
@@ -81,12 +80,10 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
 
     @Override
     public void submitList(@Nullable List<CallInfo> list) {
-        if (list != null) {
-            list.sort(Comparator.comparing(CallInfo::isInspected));
+        if (list != null)
             super.submitList(list);
-        } else {
-            super.submitList(Collections.emptyList());
-        }
+        else
+            submitList(Collections.emptyList());
     }
 
     public interface OnItemClickListener {

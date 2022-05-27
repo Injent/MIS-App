@@ -1,10 +1,8 @@
 package com.injent.miscalls.domain;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -36,7 +34,7 @@ public class BackgroundDownloaderStartReceiver extends BroadcastReceiver {
                 .build();
 
         Intent service = new Intent(context, ForegroundServiceApp.class);
-        ((Activity) context).startForegroundService(service);
+        context.startForegroundService(service);
 
         WorkManager workManager = WorkManager.getInstance(context);
 

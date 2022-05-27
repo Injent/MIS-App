@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
-import com.injent.miscalls.ui.ViewType;
+import com.injent.miscalls.ui.adapters.ViewType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupSettingsRecyclerView() {
-        SettingAdapter settingAdapter = new SettingAdapter(requireContext());
+        SettingAdapter settingAdapter = new SettingAdapter();
 
         binding.settingsRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         binding.settingsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

@@ -21,18 +21,15 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.ui.ViewType;
+import com.injent.miscalls.ui.adapters.ViewType;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHolder> {
 
-    private final Context context;
-
-    public SettingAdapter(Context context) {
+    public SettingAdapter() {
         super(diffCallback);
-        this.context = context;
     }
 
     @Override
@@ -57,25 +54,18 @@ public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHol
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view;
-        switch (viewType) {
-            case 0: view = inflater.inflate(R.layout.item_setting_spinner, parent, false);
-            break;
-            case 1: view = inflater.inflate(R.layout.item_setting_switch, parent, false);
-            break;
-            default: view = inflater.inflate(R.layout.item_setting_section, parent, false);
-            break;
-        }
-        return new ViewHolder(view, context);
+        View view = inflater.inflate(viewType, parent, false);
+        return new ViewHolder(view);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ViewType layout = getItem(position);
         switch (holder.getItemViewType()) {
-            case 0: holder.setSpinnerData(layout);
+            case ViewType.SETTING_SPINNER: holder.setSpinnerData(layout);
             break;
-            case 1: holder.setSwitchData(layout);
+            case ViewType.SETTING_SWITCH: holder.setSwitchData(layout);
             break;
             default: holder.setSectionData(layout);
         }
@@ -86,10 +76,10 @@ public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHol
         private final View view;
         private final Context context;
 
-        public ViewHolder(@NonNull View itemView, Context context) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.view = itemView;
-            this.context = context;
+            this.context = itemView.getContext();
         }
 
         public void setSpinnerData(ViewType layout) {
@@ -103,10 +93,9 @@ public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHol
             title.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
             title.setCompoundDrawablePadding(context.getResources().getDimensionPixelSize(R.dimen.icPadding));
 
-            List<String> modeList = Arrays.asList(context.getResources().getStringArray(spinnerLayout.getStringArrayResId()));
-
             Spinner spinner  = view.findViewById(R.id.spinner);
-            SpinnerAdapter spinnerAdapter = new SpinnerAdapter(context, modeList);
+            String[] modes = context.getResources().getStringArray(spinnerLayout.getStringArrayResId());
+            SpinnerAdapter spinnerAdapter = new SpinnerAdapter(context, modes);
             spinner.setAdapter(spinnerAdapter);
             spinner.setSelection(spinnerLayout.getSelectedItemPosition());
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

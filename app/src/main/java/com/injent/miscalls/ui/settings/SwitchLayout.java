@@ -1,6 +1,6 @@
 package com.injent.miscalls.ui.settings;
 
-import com.injent.miscalls.ui.ViewType;
+import com.injent.miscalls.ui.adapters.ViewType;
 
 public class SwitchLayout implements ViewType {
 
@@ -26,7 +26,7 @@ public class SwitchLayout implements ViewType {
 
     @Override
     public int getViewType() {
-        return 1;
+        return ViewType.SETTING_SWITCH;
     }
 
     public int getDrawableResId() {

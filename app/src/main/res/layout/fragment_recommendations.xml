@@ -4,11 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.recommendations.RecommendationTempFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recSearchLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/searchRecommendations"
@@ -22,54 +21,76 @@
             android:hint="@string/search"
             android:maxLines="1"
             android:padding="12dp"
-            android:textColor="@color/darkGrayText"
+            android:textColor="@color/grayText"
             android:textColorHint="@color/lowGray"
             android:textSize="@dimen/mediumFont"
-            android:visibility="gone" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recommendationRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:overScrollMode="never"
+        <ImageView
+            android:id="@+id/recSearchCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/ic_cancel"
             android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            app:layout_constraintBottom_toBottomOf="@+id/searchRecommendations"
+            app:layout_constraintEnd_toEndOf="@+id/searchRecommendations"
+            app:layout_constraintTop_toTopOf="@+id/searchRecommendations"
+            app:tint="@color/grayText" />
 
         <TextView
             android:id="@+id/recHeader"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="@dimen/displayPadding"
-            android:layout_marginBottom="4dp"
             android:fontFamily="@font/clear_sans_medium"
             android:text="@string/recommendations"
             android:textColor="@color/darkGrayText"
-            android:textSize="@dimen/mediumFont" />
+            android:textSize="@dimen/mediumFont"
+            app:layout_constraintEnd_toEndOf="@+id/recommendationsText"
+            app:layout_constraintStart_toStartOf="@+id/recommendationsText"
+            app:layout_constraintTop_toBottomOf="@+id/searchRecommendations" />
 
         <EditText
             android:id="@+id/recommendationsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/displayPadding"
-            android:layout_marginEnd="@dimen/displayPadding"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/edit_text"
             android:ems="10"
             android:fontFamily="@font/clear_sans_regular"
             android:gravity="start|top"
             android:hint="@string/recommendations"
             android:inputType="textMultiLine"
-            android:minHeight="72dp"
+            android:minHeight="96dp"
             android:padding="8dp"
             android:textColor="@color/darkGrayText"
             android:textColorHighlight="@color/highlight"
             android:textColorHint="@color/lightGrayText"
-            android:textSize="@dimen/headerFont" />
+            android:textSize="@dimen/headerFont"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recHeader" />
 
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommendationRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:background="@null"
+            android:overScrollMode="never"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchRecommendations">
 
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

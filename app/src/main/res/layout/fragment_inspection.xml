@@ -4,119 +4,120 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.registry.ProtocolFragment">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:background="@color/colorPrimaryDark">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/displayPadding">
-
-                    <TextView
-                        android:id="@+id/fullnameText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/clear_sans_bold"
-                        android:gravity="center_horizontal"
-                        android:textAlignment="center"
-                        android:textColor="@color/grayText"
-                        android:textSize="@dimen/mediumFont" />
-
-                    <TextView
-                        android:id="@+id/protocolHintText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:fontFamily="@font/clear_sans_medium"
-                        android:text="@string/writingPatientsInspection"
-                        android:textAlignment="center"
-                        android:textColor="@color/lightGrayText"
-                        android:textSize="@dimen/hintFont" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="32dp"
-                        android:gravity="start|center_vertical"
-                        android:orientation="horizontal">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/presetCard"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:clipToPadding="false"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            app:cardCornerRadius="@dimen/cardCorners"
-                            app:cardElevation="@dimen/cardElevation"
-                            app:cardUseCompatPadding="true"
-                            app:contentPadding="6dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent">
-
-                            <TextView
-                                android:id="@+id/presetCardText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:drawablePadding="8dp"
-                                android:fontFamily="@font/clear_sans_medium"
-                                android:padding="4dp"
-                                android:text="@string/usePatientInfos"
-                                android:textAlignment="textStart"
-                                android:textColor="@color/grayText"
-                                android:textSize="@dimen/headerFont"
-                                app:drawableStartCompat="@drawable/ic_present"
-                                app:drawableTint="@color/lightBlue" />
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="2dp"
-            android:scrollbarThumbVertical="@null"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@color/colorSecondaryPrimary"
+                android:orientation="vertical"
+                android:padding="@dimen/displayPadding">
 
-                <EditText
-                    android:id="@+id/inspectionField"
+                <TextView
+                    android:id="@+id/fullnameText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/displayPadding"
-                    android:background="@drawable/edit_text"
-                    android:ems="10"
-                    android:fontFamily="@font/clear_sans_regular"
-                    android:gravity="start|top"
-                    android:inputType="textMultiLine"
-                    android:padding="6dp"
-                    android:text="@string/inspectionPreset"
-                    android:textColor="@color/darkGrayText"
-                    android:textColorHighlight="@color/highlight"
-                    android:textSize="@dimen/headerFont" />
+                    android:fontFamily="@font/clear_sans_bold"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textColor="@color/grayText"
+                    android:textSize="@dimen/mediumFont" />
+
+                <TextView
+                    android:id="@+id/protocolHintText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/clear_sans_medium"
+                    android:text="@string/writingPatientsInspection"
+                    android:textAlignment="center"
+                    android:textColor="@color/lightGrayText"
+                    android:textSize="@dimen/hintFont" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="32dp"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/presetCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:clipToPadding="false"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardCornerRadius="@dimen/cardCorners"
+                        app:cardElevation="@dimen/cardElevation"
+                        app:cardUseCompatPadding="true"
+                        app:contentPadding="6dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <TextView
+                            android:id="@+id/presetCardText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="8dp"
+                            android:fontFamily="@font/clear_sans_medium"
+                            android:padding="4dp"
+                            android:text="@string/usePatientInfos"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/grayText"
+                            android:textSize="@dimen/headerFont"
+                            app:drawableStartCompat="@drawable/ic_present"
+                            app:drawableTint="@color/lightBlue" />
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <EditText
+                android:id="@+id/inspectionField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/displayPadding"
+                android:background="@drawable/edit_text"
+                android:ems="10"
+                android:fontFamily="@font/clear_sans_regular"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:minHeight="96dp"
+                android:padding="6dp"
+                android:text="@string/inspectionPreset"
+                android:textColor="@color/darkGrayText"
+                android:textColorHighlight="@color/highlight"
+                android:textSize="@dimen/headerFont" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fieldsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/fieldAddButton"
+                android:layout_width="100dp"
+                android:layout_height="@dimen/minDp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/add_button" />
+
+
+        </LinearLayout>
+    </ScrollView>
 </layout>

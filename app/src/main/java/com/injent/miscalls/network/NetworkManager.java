@@ -1,13 +1,16 @@
 package com.injent.miscalls.network;
 
+import static com.injent.miscalls.network.MisAPI.BASE_URL;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.injent.miscalls.App;
-import com.injent.miscalls.network.MisAPI;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -15,8 +18,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkManager {
-
-    static final String BASE_URL = "https://exitoso.ru/injent/";
 
     private static MisAPI misAPI;
 
@@ -39,6 +40,10 @@ public class NetworkManager {
         return true;
     }
 
+    /**
+     * @return {@link MisAPI} interface that send requests to the server to get data
+     */
+    @NonNull
     public static MisAPI getAPI() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);

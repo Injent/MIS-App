@@ -137,7 +137,7 @@ public class DiagnosisFragment extends Fragment {
 
     private void addDiagnosis(Diagnosis diagnosis) {
         List<Diagnosis> newList = viewModel.addItemToList(requireContext(), diagnosisUsedAdapter.getCurrentList(), diagnosis);
-        App.hideKeyBoard(requireContext(), requireView());
+        App.hideKeyBoard(requireView());
         diagnosisUsedAdapter.submitList(newList);
 
         binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);

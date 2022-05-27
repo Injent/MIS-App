@@ -72,14 +72,20 @@ public class EditorFragment extends Fragment {
         activityResultLauncher.launch(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
 
         viewModel.getRegistryLiveData().observe(getViewLifecycleOwner(), this::loadRegistryData);
+
         if (!getArguments().getBoolean(getString(R.string.keySaveFragment)))
             viewModel.loadRegistry(getArguments().getInt(getString(R.string.keyRegistryId)));
+
         viewModel.getGeneratedPdfItemsLiveData().observe(getViewLifecycleOwner(), bundle -> {
             if (!getArguments().getBoolean(getString(R.string.keySaveFragment))) {
                 generatePdf(bundle);
             }
         });
 
+        setListeners();
+    }
+
+    private void setListeners() {
         binding.editorBack.setOnClickListener(v -> navigateToRegistry());
 
         binding.editorCard.setOnClickListener(v -> loadPdfGenerator());
@@ -122,13 +128,11 @@ public class EditorFragment extends Fragment {
             }
         });
 
-        binding.editorDelete.setOnClickListener(view1 -> {
-
-        });
+        binding.editorDelete.setOnClickListener(v -> confirmDelete());
     }
 
     private void loadRegistryData(@NonNull Registry registry) {
-        if (getArguments().getBoolean(getString(R.string.keySaveFragment))) {
+        if (getArguments() != null && getArguments().getBoolean(getString(R.string.keySaveFragment))) {
             registry = viewModel.getRegistryLiveData().getValue();
             if (registry == null) return;
         }
@@ -171,11 +175,21 @@ public class EditorFragment extends Fragment {
         alertDialog.show();
     }
 
+    private void confirmDelete() {
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.dataWillDeleteForever)
+                .setPositiveButton(R.string.ok, (dialog, b) -> viewModel.deleteCurrentRegistry())
+                .setNegativeButton(R.string.cancel, (dialog, b) -> dialog.dismiss())
+                .create();
+        alertDialog.show();
+    }
+
     private void navigateToRegistry() {
         saveFragment = false;
         if (!changesAreSaved) {
             AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.dataWontSave)
+                    .setMessage(R.string.beforeExitSaveData)
                     .setPositiveButton(R.string.ok, (dialog, b) -> navController.navigate(R.id.registryFragment))
                     .setNegativeButton(R.string.cancel, (dialog, b) -> dialog.dismiss())
                     .create();

@@ -14,6 +14,7 @@ import com.injent.miscalls.domain.repositories.RegistryRepository;
 import com.injent.miscalls.ui.pdfviewer.PdfBundle;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class EditorViewModel extends ViewModel {
 
@@ -62,8 +63,6 @@ public class EditorViewModel extends ViewModel {
 
         registry.setInspection(inspection.getValue());
         registry.setRecommendation(recommendation.getValue());
-        //String ids = Diagnosis.listToStringIds(list,';');
-        //registry.setDiagnosesId(ids);
 
         registryRepository.insertRegistry(throwable -> {
             error.postValue(throwable);
@@ -71,13 +70,19 @@ public class EditorViewModel extends ViewModel {
         }, registry);
     }
 
+    public void deleteCurrentRegistry() {
+        if (selectedRegistry.getValue() == null) return;
+        registryRepository.deleteRegistry(throwable -> {
+            error.postValue(throwable);
+            return null;
+        }, selectedRegistry.getValue().getId());
+    }
+
     public void generatePdf(Context context) {
         pdfRepository.generatePdf(context, selectedRegistry.getValue(), throwable -> {
             error.postValue(throwable);
             return null;
-        }, pdfBundle -> {
-            generatedPdfItems.postValue(pdfBundle);
-        });
+        }, pdfBundle -> generatedPdfItems.postValue(pdfBundle));
     }
 
     @Override

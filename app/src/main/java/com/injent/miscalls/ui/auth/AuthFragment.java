@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,15 +21,21 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.injent.miscalls.App;
+import com.injent.miscalls.BuildConfig;
 import com.injent.miscalls.R;
 import com.injent.miscalls.network.UserNotFoundException;
 import com.injent.miscalls.databinding.FragmentAuthBinding;
+
+import java.util.concurrent.Executor;
 
 public class AuthFragment extends Fragment {
 
     private FragmentAuthBinding binding;
     private AuthViewModel viewModel;
     private NavController navController;
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
 
     @Nullable
     @Override
@@ -47,6 +55,34 @@ public class AuthFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         navController = Navigation.findNavController(requireView());
 
+        executor = ContextCompat.getMainExecutor(requireContext());
+
+        biometricPrompt = new BiometricPrompt(AuthFragment.this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(requireContext(), "Error" + errString, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                successfulAuth();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Биометрическая авторизация")
+                .setSubtitle("Приложите палец")
+                .setNegativeButtonText("Отмена")
+                .build();
+
         if (App.getUserSettings().isAuthed()) {
             if (getArguments() != null && getArguments().getBoolean(getString(R.string.keyOffUpdates), false)) {
                 navigateToSettings();
@@ -57,10 +93,12 @@ public class AuthFragment extends Fragment {
         }
 
         //Listeners
-        binding.signInButton.setOnClickListener(view0 -> {
+        binding.signInButton.setOnClickListener(v -> {
             showLoading();
             actionAuth();
         });
+
+        binding.authFingerprint.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
 
         //Observers
         viewModel.getAuthorized().observe(this, authed -> {
@@ -82,7 +120,7 @@ public class AuthFragment extends Fragment {
         });
 
         binding.copyrightText.setText(getString(R.string.app_name));
-        binding.version.setText(App.APP_VERSION);
+        binding.version.setText(BuildConfig.VERSION_NAME);
     }
 
     private void actionAuth() {

@@ -46,8 +46,9 @@
     <string name="recDownloadHint"> Может потребоваться много места на устройстве</string>
     <string name="recDownloadDesc">Скачайте доступные рекомендации по лечению и используйте их при
         заполнении осмотра пациента</string>
-    <string name="dataWillBeDeletedForever">Данные навсегда удалятся</string>
+    <string name="beforeExitSaveData">Перед закрытием нажмите «Сохранить изменения» если не хотите потерять данные</string>
     <string name="dataWontSave">Данные не сохранятся!</string>
+    <string name="dataWillDeleteForever">Данные навсегда удалятся</string>
     <string name="commentary">Комментарий…</string>
 
     <!-- Actions -->
@@ -68,6 +69,7 @@
     <string name="moveToEditProtocol">Перейти к редактированию протокола</string>
     <string name="addDiagnosis">Добавить диагноз</string>
     <string name="saveDocument">Сохранить документ</string>
+    <string name="selectExtraField">Выберите тип дополнительного поля</string>
 
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
@@ -98,6 +100,7 @@
     <string name="diagnosisAlreadyAdded">Этот диагноз уже записан</string>
     <string name="docMovedTo">Документ перемещен в раздел</string>
     <string name="documentSaved">Документ сохранен в папке «Документы»</string>
+    <string name="recommendationSelected">Рекомендация выбрана</string>
 
     <!-- Field types -->
     <string name="email">Эл. почта</string>
@@ -145,6 +148,14 @@
         <item>При входе в приложение</item>
         <item>Каждый час</item>
         <item>Вручную</item>
+    </string-array>
+
+    <string-array name="extraFields">
+        <item>Температура</item>
+        <item>Давление</item>
+        <item>Травмы</item>
+        <item>Боли</item>
+        <item>Лечение дома</item>
     </string-array>
 
     <!-- Arguments Keys -->

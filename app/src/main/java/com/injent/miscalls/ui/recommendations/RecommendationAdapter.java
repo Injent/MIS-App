@@ -74,7 +74,7 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
             binding.listProtocolName.setText(recommendation.getName());
             binding.listProtocolDesc.setText(recommendation.getDescription());
 
-            binding.protocolTempCard.setOnClickListener(view0 -> listener.onClick(recommendation.getId()));
+            binding.protocolTempCard.setOnClickListener(v -> listener.onClick(recommendation.getId()));
         }
     }
 

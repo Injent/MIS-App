@@ -132,7 +132,7 @@ public class RegistryFragment extends Fragment {
         binding.registrySearchLayout.setVisibility(View.GONE);
         binding.registrySearchButton.setVisibility(View.VISIBLE);
         binding.registrySearchText.setText("");
-        App.hideKeyBoard(requireContext(), requireView());
+        App.hideKeyBoard(requireView());
     }
 
     private void navigateToHome() {
