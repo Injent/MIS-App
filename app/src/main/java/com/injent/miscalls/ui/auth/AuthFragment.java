@@ -23,9 +23,10 @@ import androidx.navigation.Navigation;
 import com.injent.miscalls.App;
 import com.injent.miscalls.BuildConfig;
 import com.injent.miscalls.R;
-import com.injent.miscalls.network.UserNotFoundException;
 import com.injent.miscalls.databinding.FragmentAuthBinding;
+import com.injent.miscalls.network.AuthorizationException;
 
+import java.net.SocketTimeoutException;
 import java.util.concurrent.Executor;
 
 public class AuthFragment extends Fragment {
@@ -33,7 +34,6 @@ public class AuthFragment extends Fragment {
     private FragmentAuthBinding binding;
     private AuthViewModel viewModel;
     private NavController navController;
-    private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
@@ -55,13 +55,13 @@ public class AuthFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         navController = Navigation.findNavController(requireView());
 
-        executor = ContextCompat.getMainExecutor(requireContext());
+        Executor executor = ContextCompat.getMainExecutor(requireContext());
 
         biometricPrompt = new BiometricPrompt(AuthFragment.this, executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
-                Toast.makeText(requireContext(), "Error" + errString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -73,7 +73,7 @@ public class AuthFragment extends Fragment {
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
-                Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.unknownError, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -83,14 +83,14 @@ public class AuthFragment extends Fragment {
                 .setNegativeButtonText("Отмена")
                 .build();
 
-        if (App.getUserSettings().isAuthed()) {
-            if (getArguments() != null && getArguments().getBoolean(getString(R.string.keyOffUpdates), false)) {
-                navigateToSettings();
-                return;
-            }
-            navigateToHome(false);
-            return;
-        }
+//        if (App.getEncryptedUserDataManager().getBoolean(R.string.keyAuthed)) {
+//            if (getArguments() != null && getArguments().getBoolean(getString(R.string.keyOffUpdates), false)) {
+//                navigateToSettings();
+//                return;
+//            }
+//            navigateToHome(false);
+//            return;
+//        }
 
         //Listeners
         binding.signInButton.setOnClickListener(v -> {
@@ -124,6 +124,7 @@ public class AuthFragment extends Fragment {
     }
 
     private void actionAuth() {
+        binding.error.setVisibility(View.INVISIBLE);
         String email = binding.emailField.getText().toString().trim();
         String password = binding.passwordField.getText().toString().trim();
         viewModel.auth(email, password);
@@ -131,12 +132,15 @@ public class AuthFragment extends Fragment {
 
     private void displayError(Throwable throwable) {
         binding.error.setVisibility(View.VISIBLE);
-        if (throwable instanceof UserNotFoundException) {
-            binding.error.setText(R.string.userNotFound);
+        if (throwable instanceof AuthorizationException) {
+            binding.error.setText(throwable.getMessage());
         } else if (throwable instanceof NetworkErrorException) {
             binding.error.setText(R.string.noInternetConnection);
+        } else if (throwable instanceof SocketTimeoutException) {
+            binding.error.setText(R.string.socketTimeOut);
         } else {
             binding.error.setText(R.string.unknownError);
+            throwable.printStackTrace();
         }
     }
 
@@ -182,7 +186,7 @@ public class AuthFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getViewModelStore().clear();
+        viewModel.onCleared();
         binding = null;
     }
 }

@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -8,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.data.database.AppDatabase;
+import com.injent.miscalls.network.JResponse;
 import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.database.calls.CallInfo;
@@ -73,19 +75,21 @@ public class HomeViewModel extends ViewModel {
             callListError.postValue(new NetworkErrorException());
             return;
         }
-        homeRepository.getPatientList(App.getUser().getQueryToken()).enqueue(new Callback<>() {
+        homeRepository.getPatientList(App.getUser().getToken()).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<CallInfo>> call, @NonNull Response<List<CallInfo>> response) {
-                if (response.isSuccessful()) {
-                    List<CallInfo> list = response.body();
-                    if (list != null) {
-                        homeRepository.insertCallsWithDropTable(throwable -> {
-                            callListError.postValue(throwable);
-                            return null;
-                        }, list);
-                        callList.postValue(list);
-                        setNewDbDate();
+                if (response.code() == 200) {
+                    Log.e("A", response.body().toString());
+                    if (response.body() == null) {
+                        return;
                     }
+                    homeRepository.insertCallsWithDropTable(throwable -> {
+                        callListError.postValue(throwable);
+                        return null;
+                    }, response.body());
+                    callList.postValue(response.body());
+                    setNewDbDate();
+
                 } else {
                     callListError.postValue(new FailedDownloadDb(AppDatabase.DB_NAME));
                 }

@@ -11,6 +11,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.injent.miscalls.App;
+import com.injent.miscalls.R;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +19,7 @@ public class BackgroundDownloaderStartReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (App.getUserSettings().getMode() != 1) {
+        if (App.getUserDataManager().getInt(R.string.keyMode) != 1) {
             return;
         }
 

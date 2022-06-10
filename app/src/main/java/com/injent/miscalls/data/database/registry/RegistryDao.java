@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import java.util.List;
 
@@ -20,5 +21,16 @@ public interface RegistryDao {
     void delete(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Registry registry);
+    void insertRegistry(Registry registry);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertObjectively(Objectively objectively);
+
+    @Transaction
+    @Query("SELECT * FROM Registry WHERE id =:id LIMIT 1")
+    List<RegistryAndObjectively> getRegAndObj(int id);
+
+    @Transaction
+    @Query("DELETE FROM Registry WHERE id =:id")
+    void deleteRegAndObj(int id);
 }

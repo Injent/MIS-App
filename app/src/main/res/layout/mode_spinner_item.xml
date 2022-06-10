@@ -3,12 +3,12 @@
     android:id="@+id/modeText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:ellipsize="end"
     android:fontFamily="@font/clear_sans_medium"
-    android:textColor="@color/grayText"
-    android:textSize="@dimen/headerFont"
-    android:padding="@dimen/displayPadding"
     android:foreground="@drawable/spinner_ripple"
     android:maxLines="1"
-    android:ellipsize="end">
+    android:padding="8dp"
+    android:textColor="@color/grayText"
+    android:textSize="@dimen/headerFont">
 
 </TextView>

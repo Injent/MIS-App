@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.editor;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.print.PDFPrint;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,10 +23,6 @@ import androidx.navigation.Navigation;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.databinding.FragmentEditorBinding;
-import com.injent.miscalls.ui.pdfviewer.PdfBundle;
-import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
-
-import java.io.File;
 
 public class EditorFragment extends Fragment {
 
@@ -38,8 +33,9 @@ public class EditorFragment extends Fragment {
 
     private final ActivityResultLauncher<String[]> activityResultLauncher;
 
-    private boolean saveFragment;
+    private boolean keepData;
     private boolean changesAreSaved;
+    private int registryId;
 
     public EditorFragment() {
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -56,6 +52,10 @@ public class EditorFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            registryId = getArguments().getInt(getString(R.string.keyRegistryId));
+            keepData = getArguments().getBoolean(getString(R.string.keyKeepData));
+        }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_editor, container, false);
         return binding.getRoot();
     }
@@ -67,28 +67,18 @@ public class EditorFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(EditorViewModel.class);
         navController = Navigation.findNavController(requireView());
 
-        if (getArguments() == null) return;
-
         activityResultLauncher.launch(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
 
         viewModel.getRegistryLiveData().observe(getViewLifecycleOwner(), this::loadRegistryData);
 
-        if (!getArguments().getBoolean(getString(R.string.keySaveFragment)))
-            viewModel.loadRegistry(getArguments().getInt(getString(R.string.keyRegistryId)));
-
-        viewModel.getGeneratedPdfItemsLiveData().observe(getViewLifecycleOwner(), bundle -> {
-            if (!getArguments().getBoolean(getString(R.string.keySaveFragment))) {
-                generatePdf(bundle);
-            }
-        });
+        viewModel.loadRegistry(registryId);
 
         setListeners();
     }
 
     private void setListeners() {
+        binding.editorCard.setOnClickListener(view -> navigateToPdfPreview());
         binding.editorBack.setOnClickListener(v -> navigateToRegistry());
-
-        binding.editorCard.setOnClickListener(v -> loadPdfGenerator());
 
         binding.editorSaveDoc.setOnClickListener(v -> saveChanges());
 
@@ -132,38 +122,20 @@ public class EditorFragment extends Fragment {
     }
 
     private void loadRegistryData(@NonNull Registry registry) {
-        if (getArguments() != null && getArguments().getBoolean(getString(R.string.keySaveFragment))) {
+        if (keepData) {
             registry = viewModel.getRegistryLiveData().getValue();
-            if (registry == null) return;
         }
+        if (registry == null) return;
         binding.editorRecText.setText(registry.getRecommendation());
         binding.editorFullName.setText(registry.getCallInfo().getFullName());
-        binding.editorInspectionText.setText(registry.getInspection());
+        binding.editorInspectionText.setText(registry.getAnamnesis());
         binding.createDateText.setText(registry.getCreateDate());
-    }
-
-    private void loadPdfGenerator() {
-        viewModel.generatePdf(requireContext());
     }
 
     private void saveChanges() {
         changesAreSaved = true;
         Toast.makeText(requireContext(), R.string.changesAreSaved, Toast.LENGTH_SHORT).show();
         viewModel.saveChanges();
-    }
-
-    private void generatePdf(@NonNull PdfBundle bundle) {
-        PDFUtil.generatePDFFromHTML(requireActivity(), new File(bundle.getFilePath()), bundle.getHtml(), new PDFPrint.OnPDFPrintListener() {
-            @Override
-            public void onSuccess(File file) {
-                navigateToPdfPreview(file.getAbsolutePath());
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     private void requestPermission() {
@@ -185,7 +157,7 @@ public class EditorFragment extends Fragment {
     }
 
     private void navigateToRegistry() {
-        saveFragment = false;
+        keepData = false;
         if (!changesAreSaved) {
             AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.dataWontSave)
@@ -199,20 +171,18 @@ public class EditorFragment extends Fragment {
         }
     }
 
-    private void navigateToPdfPreview(String path) {
-        saveFragment = true;
-        Registry registry = viewModel.getRegistryLiveData().getValue();
-        if (registry == null) return;
+    private void navigateToPdfPreview() {
+        if (navController.getCurrentDestination() == null) return;
+        keepData = true;
         Bundle args = new Bundle();
-        args.putString(getString(R.string.keyPath), path);
-        args.putString(getString(R.string.keyFileName), registry.getCallInfo().getFullName() + "-" + registry.getCreateDate());
-        navController.navigate(R.id.pdfPreviewFragment, args);
+        args.putInt(getString(R.string.keyFragmentId), navController.getCurrentDestination().getId());
+        navController.navigate(R.id.pdfViewerFragment, args);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (!saveFragment) {
+        if (!keepData) {
             viewModel.onCleared();
         }
         binding = null;

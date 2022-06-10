@@ -10,12 +10,14 @@ import androidx.lifecycle.ViewModel;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
+import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.data.recommendation.Recommendation;
 import com.injent.miscalls.domain.repositories.DiagnosisRepository;
 import com.injent.miscalls.domain.repositories.HomeRepository;
 import com.injent.miscalls.domain.repositories.RecommendationRepository;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
+import com.injent.miscalls.ui.adapters.Field;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class CallStuffViewModel extends ViewModel {
     private MutableLiveData<Throwable> error = new MutableLiveData<>();
     private MutableLiveData<List<Diagnosis>> diagnosesDatabaseList = new MutableLiveData<>();
     private MutableLiveData<List<Recommendation>> recommendationsList = new MutableLiveData<>();
+    private MutableLiveData<Objectively> objectively = new MutableLiveData<>();
 
     public CallStuffViewModel() {
         registryRepository = new RegistryRepository();
@@ -118,7 +121,7 @@ public class CallStuffViewModel extends ViewModel {
         registry.setId(newCallInfo.getId());
         registry.setRecommendation(currentRecommendation.getValue());
         String formedInspection = CallInfo.autoFillString(newCallInfo,currentInspection.getValue());
-        registry.setInspection(formedInspection);
+        registry.setAnamnesis(formedInspection);
 
         String diagnosisString = Diagnosis.listToStringIds(list, ';');
         registry.setDiagnosesId(diagnosisString);
@@ -188,7 +191,46 @@ public class CallStuffViewModel extends ViewModel {
     }
 
     public boolean isInspectionDone() {
-        return currentDiagnoses.getValue() != null && !currentDiagnoses.getValue().isEmpty() && currentInspection.getValue() != null && !currentInspection.getValue().isEmpty() && currentRecommendation.getValue() != null;
+        return currentDiagnoses.getValue() != null
+                && !currentDiagnoses.getValue().isEmpty()
+                && currentInspection.getValue() != null
+                && !currentInspection.getValue().isEmpty()
+                && currentRecommendation.getValue() != null;
+    }
+
+    public LiveData<Objectively> getObjectively() {
+        return objectively;
+    }
+
+    public void setObjectivelyData(int index, String s) {
+        Objectively obj = objectively.getValue();
+        if (obj == null) {
+            error.setValue(new NullPointerException());
+            return;
+        }
+        switch (index) {
+            case Field.GENERAL_STATE: obj.setGeneralState(s);
+            break;
+            case Field.BODY_BUILD: obj.setBodyBuild(s);
+            break;
+            case Field.SKIN: obj.setSkin(s);
+            break;
+            case Field.NODES_GLAND: obj.setNodeAndGland(s);
+            break;
+            case Field.PHARYNX: obj.setPharynx(s);
+            break;
+            case Field.BREATHING: obj.setBreathing(s);
+            break;
+            case Field.ARTERIAL_PRESSURE: obj.setArterialPressure(s);
+            break;
+            case Field.PULSE: obj.setPulse(s);
+            break;
+            case Field.PENSIONER: obj.setPensioner(Boolean.parseBoolean(s));
+            break;
+            case Field.SICK: obj.setSick(Boolean.parseBoolean(s));
+            break;
+            default: throw new IllegalStateException();
+        }
     }
 
     @Override
@@ -201,6 +243,7 @@ public class CallStuffViewModel extends ViewModel {
         error = new MutableLiveData<>();
         recommendationsList = new MutableLiveData<>();
         diagnosesDatabaseList = new MutableLiveData<>();
+        objectively = new MutableLiveData<>();
 
         diagnosisRepository.cancelFutures();
         recommendationRepository.cancelFutures();

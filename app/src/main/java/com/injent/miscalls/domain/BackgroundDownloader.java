@@ -1,6 +1,7 @@
 package com.injent.miscalls.domain;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -9,6 +10,7 @@ import androidx.work.WorkerParameters;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.domain.repositories.HomeRepository;
+import com.injent.miscalls.network.JResponse;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -40,15 +42,12 @@ public class BackgroundDownloader extends Worker {
 
     public void downloadDatabase() {
         HomeRepository repository = new HomeRepository();
-        repository.getPatientList(App.getUser().getQueryToken()).enqueue(new Callback<>() {
+        repository.getPatientList(App.getUser().getToken()).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<CallInfo>> call, @NonNull Response<List<CallInfo>> response) {
-                if (response.isSuccessful()) {
-                    List<CallInfo> list = response.body();
-                    if (list != null) {
-                        repository.insertCallsWithDropTable(throwable -> null, list);
-                        repository.setNewPatientDbDate();
-                    }
+                if (response.isSuccessful() && response.body() != null) {
+                    repository.insertCallsWithDropTable(throwable -> null, response.body());
+                    repository.setNewPatientDbDate();
                 }
             }
 

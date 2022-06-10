@@ -1,0 +1,41 @@
+<body style="padding:5%">
+    <h2 style="text-align: center;">Осмотр терапевта</h2>
+    <table style="width: 100%; border-collapse: collapse; border-spacing: 0; border-style: hidden; background-color: #f2f2f2;" cellspacing="0px" cellpadding="8">
+        <tbody>
+        <tr>
+            <td style="width: 60%; vertical-align: top;">Пациент: $patient_fullname<br />Дата рождения: $date_of_birth ($age лет)<br />Адрес проживания: $address</td>
+            <td style="width: 40%; vertical-align: top;">на приеме/<span style="text-decoration: underline;">на дому</span><br />Дата и время посещения: $visit_date<br />МО: $organization<br />Профиль: терапии</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>&nbsp;</p>
+    <table style="height: 144px; width: 90%; border-collapse: collapse; border-style: hidden;" border="0" cellpadding="4">
+        <tbody>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>Жалобы:</strong> $complaints</td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>Анамнез заболевания:</strong> $anamnesis</td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>Аллергологический анамнез:</strong> $allergic_anamnesis</td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>Объективно:<br /></strong>Общее состояние: $state<br />Телосложение: $bodybuild<br />Кожные покровы: $skin<br />Л/узлы, щ/железа: $nodes_gland<br />Температура тела: $temperature<br />Зев: $pharynx<br />ЧДД: $respiratory_rate Дыхание: $breathing<br />Артериальное давление: $arterial_pressureмм рт. ст. Пульс: $pulse<br />Тоны сердца:<br />Живот: $abdomen Печень: $liver</td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>Диагноз:</strong> $diagnosis</td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>Обследования: </strong>$surveys</td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>Медикаментозная терапия:</strong> $medication_therapy</td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 100%; height: 18px;"><strong>$work_position: $doctor_fullname</strong></td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+

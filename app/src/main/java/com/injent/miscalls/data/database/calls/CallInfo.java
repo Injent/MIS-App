@@ -4,14 +4,19 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
+import com.injent.miscalls.data.database.DateConverter;
 
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-@Entity
+@Entity(tableName = "calls")
+@TypeConverters(DateConverter.class)
 public class CallInfo {
 
     @SerializedName("id")
@@ -19,50 +24,52 @@ public class CallInfo {
     @PrimaryKey
     private int id;
 
-    @SerializedName("edit_card_date")
+    @SerializedName("editCardDate")
     @ColumnInfo(name = "edit_card_date")
-    private String editCardDate;
+    private Date editCardDate;
 
-    @SerializedName("complaints")
+    @SerializedName("callTime")
+    @ColumnInfo(name = "call_time")
+    private Date callTime;
+
+    @SerializedName("reason")
     @ColumnInfo(name = "complaints")
     private String complaints;
 
-    @SerializedName("benefit_category_code")
+    @SerializedName("bcc")
     @ColumnInfo(name = "benefit_category_code")
     private String benefitCategoryCode;
 
-    @SerializedName("inspected")
     @ColumnInfo(name = "inspected")
     private boolean inspected;
 
-    //Personal Info
-    @SerializedName("firstname")
-    @ColumnInfo(name = "firstname")
+    @SerializedName("firstName")
+    @ColumnInfo(name = "first_name")
     private String firstname;
 
-    @SerializedName("middle_name")
+    @SerializedName("middleName")
     @ColumnInfo(name = "middle_name")
     private String middleName;
 
-    @SerializedName("lastname")
-    @ColumnInfo(name = "lastname")
+    @SerializedName("lastName")
+    @ColumnInfo(name = "last_name")
     private String lastname;
 
     @SerializedName("sex")
     @ColumnInfo(name = "sex")
-    private int sex;
+    private boolean sex;
 
     @SerializedName("residence")
     @ColumnInfo(name = "residence")
     private String residence;
 
-    @SerializedName("phone_number")
+    @SerializedName("phoneNumber")
     @ColumnInfo(name = "phone_number")
     private String phoneNumber;
 
-    @SerializedName("born_date")
+    @SerializedName("bornDate")
     @ColumnInfo(name = "born_date")
-    private String bornDate;
+    private Date bornDate;
 
     @SerializedName("snils")
     @ColumnInfo(name = "snils")
@@ -93,6 +100,8 @@ public class CallInfo {
     }
 
     public String getResidence() {
+        if (residence == null)
+            return "";
         return residence;
     }
 
@@ -100,7 +109,7 @@ public class CallInfo {
         this.residence = residence;
     }
 
-    public String getEditCardDate() {
+    public Date getEditCardDate() {
         return editCardDate;
     }
 
@@ -116,11 +125,7 @@ public class CallInfo {
         return lastname;
     }
 
-    public int getSex() {
-        return sex;
-    }
-
-    public void setSex(int sex) {
+    public void setSex(boolean sex) {
         this.sex = sex;
     }
 
@@ -128,7 +133,9 @@ public class CallInfo {
         return phoneNumber;
     }
 
-    public String getBornDate() {
+    public Date getBornDate() {
+        if (bornDate == null)
+            return new Date(0);
         return bornDate;
     }
 
@@ -136,7 +143,7 @@ public class CallInfo {
         this.id = id;
     }
 
-    public void setEditCardDate(String editCardDate) {
+    public void setEditCardDate(Date editCardDate) {
         this.editCardDate = editCardDate;
     }
 
@@ -168,7 +175,7 @@ public class CallInfo {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setBornDate(String bornDate) {
+    public void setBornDate(Date bornDate) {
         this.bornDate = bornDate;
     }
 
@@ -204,13 +211,26 @@ public class CallInfo {
         this.passport = passport;
     }
 
+    public Date getCallTime() {
+        return callTime;
+    }
+
+    public void setCallTime(Date callTime) {
+        this.callTime = callTime;
+    }
+
+    public boolean getSex() {
+        return sex;
+    }
+
     public List<String> getData() {
         List<String> list = new ArrayList<>();
-        list.add(editCardDate);
+        list.add(callTime.toString());
+        list.add(editCardDate.toString());
         list.add(lastname + " " + firstname + " " + getMiddleName());
-        if (sex == 1) list.add("Муж.");
+        if (sex) list.add("Муж.");
         else list.add("Жен.");
-        list.add(bornDate);
+        list.add(bornDate.toString());
         list.add(residence);
         list.add(benefitCategoryCode);
         list.add(snils);
@@ -223,7 +243,7 @@ public class CallInfo {
 
     public static String autoFillString(CallInfo callInfo, String s) {
         return s.replace("@фио", callInfo.getFullName())
-                .replace("@др", callInfo.getBornDate())
+                .replace("@др", callInfo.getBornDate().toString())
                 .replace("@полис", callInfo.getPolis())
                 .replace("@снилс", callInfo.getSnils())
                 .replace("@адрес", callInfo.getResidence())
@@ -240,11 +260,7 @@ public class CallInfo {
     }
 
     public int getAge() {
-        int bornYear = 0;
-        if (bornDate.length() == 10) {
-            bornYear = Integer.parseInt(bornDate.substring(6));
-        }
-        return Calendar.getInstance().get(Calendar.YEAR) - bornYear;
+        return Calendar.getInstance().get(Calendar.YEAR) - bornDate.toInstant().get(ChronoField.YEAR);
     }
 
     public String getFullName() {
@@ -268,7 +284,6 @@ public class CallInfo {
         result = 31 * result + getFirstname().hashCode();
         result = 31 * result + getMiddleName().hashCode();
         result = 31 * result + getLastname().hashCode();
-        result = 31 * result + getSex();
         result = 31 * result + getResidence().hashCode();
         result = 31 * result + getPhoneNumber().hashCode();
         result = 31 * result + getBornDate().hashCode();

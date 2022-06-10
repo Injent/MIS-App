@@ -1,21 +1,16 @@
 package com.injent.miscalls.ui.inspection;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,6 +24,8 @@ import com.injent.miscalls.ui.adapters.Field;
 import com.injent.miscalls.ui.adapters.FieldAdapter;
 import com.injent.miscalls.ui.adapters.ViewType;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +53,6 @@ public class InspectionFragment extends Fragment {
 
         viewModel.getCallLiveData().observe(getViewLifecycleOwner(), this::setInfo);
 
-        binding.presetCard.setOnClickListener(v -> setPresetInfo(viewModel.getCallLiveData().getValue()));
-
         binding.inspectionField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -75,7 +70,7 @@ public class InspectionFragment extends Fragment {
             }
         });
 
-        //setupRecyclerView();
+        setupRecyclerView();
     }
 
     @SuppressLint("SetTextI18n")
@@ -84,25 +79,43 @@ public class InspectionFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new FieldAdapter();
+        adapter = new FieldAdapter(new FieldAdapter.OnEditTextListener() {
+            @Override
+            public void onEdit(int index, String value) {
+                viewModel.setObjectivelyData(index, value);
+            }
+        });
                 binding.fieldsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.fieldsRecyclerView.setItemAnimator(null);
         binding.fieldsRecyclerView.setAdapter(adapter);
 
+        // Adding fields
         List<ViewType> items = new ArrayList<>();
 
-        items.add(new Field(R.string.inspection,R.string.writeResultOfInspection));
+        items.add(new Field(R.string.complaints, R.string.complaints, Field.COMPLAINTS));
+        items.add(new Field(R.string.anamnesis, R.string.anamnesis, Field.ANAMNESIS));
+        items.add(new AdditionalField(R.string.generalState, Field.GENERAL_STATE, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.stateTypes));
+        items.add(new AdditionalField(R.string.bodyBuild, Field.BODY_BUILD, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.bodyBuildTypes));
+        items.add(new AdditionalField(R.string.skin, Field.SKIN, ViewType.FIELD_ADDITIONAL_TEXT));
+        items.add(new AdditionalField(R.string.nodesAndGland, Field.NODES_GLAND, ViewType.FIELD_ADDITIONAL_TEXT));
+        items.add(new AdditionalField(R.string.pharynx, Field.PHARYNX, ViewType.FIELD_ADDITIONAL_TEXT));
+        items.add(new AdditionalField(R.string.breathing, Field.BREATHING, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.breathingTypes));
+        items.add(new AdditionalField(R.string.arterialPressure, Field.ARTERIAL_PRESSURE, ViewType.FIELD_ADDITIONAL_DOUBLE_DECIMAL));
+        items.add(new AdditionalField(R.string.pulse, Field.PULSE, ViewType.FIELD_ADDITIONAL_DECIMAL));
+        items.add(new AdditionalField(R.string.pensioner,Field.PENSIONER,ViewType.FIELD_ADDITIONAL_CHECKBOX));
+        items.add(new AdditionalField(R.string.sick,Field.SICK,ViewType.FIELD_ADDITIONAL_CHECKBOX));
 
         adapter.submitList(items);
-    }
-
-    private void setPresetInfo(CallInfo callInfo) {
-        if (callInfo == null) return;
-        StringBuilder sb = new StringBuilder();
-        sb.append("Значение 1: ").append(callInfo.getBornDate()).append("\n")
-                .append("Значение 2: ").append(callInfo.getPolis());
-        binding.inspectionField.setText(sb.toString());
-        Toast.makeText(requireContext(),R.string.tempUsed,Toast.LENGTH_SHORT).show();
+        KeyboardVisibilityEvent.setEventListener(
+                requireActivity(),
+                getViewLifecycleOwner(),
+                isOpen -> {
+                    if (isOpen) return;
+                    View focusedChild = binding.fieldsRecyclerView.getFocusedChild();
+                    if (focusedChild != null) {
+                        focusedChild.clearFocus();
+                    }
+                });
     }
 
     @Override

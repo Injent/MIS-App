@@ -18,6 +18,9 @@ public class Registry {
     }
 
     @Ignore
+    private Objectively objectively;
+
+    @Ignore
     private CallInfo callInfo;
 
     @Ignore
@@ -26,8 +29,11 @@ public class Registry {
     @PrimaryKey
     private int id;
 
-    @ColumnInfo(name = "inspection")
-    private String inspection;
+    @ColumnInfo(name = "complaints")
+    private String complaints;
+
+    @ColumnInfo(name = "anamnesis")
+    private String anamnesis;
 
     @ColumnInfo(name = "recommendation")
     private String recommendation;
@@ -37,6 +43,12 @@ public class Registry {
 
     @ColumnInfo(name = "create_date")
     private String createDate;
+
+    @ColumnInfo(name = "obj_id")
+    private int objId;
+
+    @ColumnInfo(name = "surveys")
+    private String surveys;
 
     public int getId() {
         return id;
@@ -54,6 +66,14 @@ public class Registry {
         this.callInfo = callInfo;
     }
 
+    public Objectively getObjectively() {
+        return objectively;
+    }
+
+    public void setObjectively(Objectively objectively) {
+        this.objectively = objectively;
+    }
+
     public List<Diagnosis> getDiagnoses() {
         return diagnoses;
     }
@@ -62,15 +82,17 @@ public class Registry {
         this.diagnoses = diagnoses;
     }
 
-    public String getInspection() {
-        return inspection;
+    public String getAnamnesis() {
+        return anamnesis;
     }
 
-    public void setInspection(String inspection) {
-        this.inspection = inspection;
+    public void setAnamnesis(String anamnesis) {
+        this.anamnesis = anamnesis;
     }
 
     public String getRecommendation() {
+        if (recommendation == null)
+            return "";
         return recommendation;
     }
 
@@ -87,10 +109,40 @@ public class Registry {
     }
 
     public String getCreateDate() {
+        if (createDate == null)
+            return "";
         return createDate;
     }
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public int getObjId() {
+        return objId;
+    }
+
+    public void setObjId(int objId) {
+        this.objId = objId;
+    }
+
+    public String getComplaints() {
+        if (complaints == null)
+            return "";
+        return complaints;
+    }
+
+    public void setComplaints(String complaints) {
+        this.complaints = complaints;
+    }
+
+    public String getSurveys() {
+        if (surveys == null)
+            return "";
+        return surveys;
+    }
+
+    public void setSurveys(String surveys) {
+        this.surveys = surveys;
     }
 }

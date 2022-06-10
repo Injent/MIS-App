@@ -77,11 +77,14 @@ public class Diagnosis {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < list.size(); i++) {
-            if (list.size() != 1) {
-                sb.append(i).append(1).append(". ");
+            if (list.size() > 1) {
+                if (i == 0) {
+                    sb.append(s);
+                }
+                sb.append(i + 1).append(". ");
             }
             sb.append(list.get(i).getName());
-            if (i != list.size() - 1) {
+            if (list.size() > 1) {
                 sb.append(s);
             }
         }

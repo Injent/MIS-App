@@ -1,10 +1,12 @@
 package com.injent.miscalls.domain.repositories;
 
 import com.injent.miscalls.App;
+import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
+import com.injent.miscalls.data.database.user.Token;
+import com.injent.miscalls.network.JResponse;
 import com.injent.miscalls.network.NetworkManager;
-import com.injent.miscalls.network.QueryToken;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,15 +36,15 @@ public class HomeRepository {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy / HH:mm", Locale.getDefault());
         String currentDate = sdf.format(new Date());
 
-        App.getUserSettings().setDbDate(currentDate).write();
+        App.getUserDataManager().setData(R.string.keyDbDate, currentDate).write();
         return currentDate;
     }
 
     public String getPatientDbDate() {
-        return App.getUserSettings().getDbDate();
+        return App.getUserDataManager().getString(R.string.keyDbDate);
     }
 
-    public Call<List<CallInfo>> getPatientList(QueryToken token) {
+    public Call<List<CallInfo>> getPatientList(Token token) {
         return NetworkManager.getMisAPI().patients(token);
     }
 

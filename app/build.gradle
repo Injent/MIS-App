@@ -81,9 +81,11 @@ dependencies {
 
     implementation "androidx.work:work-runtime:$work_version"
 
-    implementation 'ru.dgis.sdk:sdk-full:latest.release'
-
     implementation 'androidx.biometric:biometric:1.1.0'
+
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3'
+
+    implementation 'org.osmdroid:osmdroid-android:6.1.13'
 
     //implementation "com.google.android.fhir:workflow:$fhir_version"
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'

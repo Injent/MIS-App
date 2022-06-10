@@ -13,7 +13,12 @@ import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
+import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
+import com.injent.miscalls.data.database.user.Organization;
+import com.injent.miscalls.data.database.user.Token;
+import com.injent.miscalls.data.database.user.User;
+import com.injent.miscalls.data.database.user.UserDao;
 import com.injent.miscalls.data.recommendation.Recommendation;
 import com.injent.miscalls.data.recommendation.RecommendationDao;
 import com.injent.miscalls.data.database.registry.RegistryDao;
@@ -28,7 +33,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Diagnosis.class, Registry.class, CallInfo.class, Recommendation.class}, version = 1, exportSchema = false)
+@Database(entities = {Diagnosis.class, Registry.class, CallInfo.class, Recommendation.class, Objectively.class, User.class, Organization.class, Token.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
 
@@ -46,6 +51,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract RecommendationDao recommendationDao();
 
+    public abstract UserDao userDao();
+
     public static AppDatabase getInstance(Context context, char[] passphrase) {
         if (instance != null || passphrase == null) {
             return instance;
@@ -55,7 +62,7 @@ public abstract class AppDatabase extends RoomDatabase {
         final SupportFactory factory = new SupportFactory(passphraseBytes);
 
         instance = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
-                .openHelperFactory(factory)
+   //             .openHelperFactory(factory)
                 .addCallback(new RoomPreloadCallback(context))
                 .build();
         return instance;

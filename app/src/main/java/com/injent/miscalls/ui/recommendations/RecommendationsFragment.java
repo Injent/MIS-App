@@ -20,6 +20,9 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentRecommendationsBinding;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+
 public class RecommendationsFragment extends Fragment {
 
     private FragmentRecommendationsBinding binding;
@@ -51,6 +54,8 @@ public class RecommendationsFragment extends Fragment {
             binding.recommendationsText.addTextChangedListener(textWatcher);
             setSelectMode(false);
         });
+
+        binding.map.setTileSource(TileSourceFactory.MAPNIK);
     }
 
     private void setupRecyclerView() {
@@ -122,5 +127,15 @@ public class RecommendationsFragment extends Fragment {
             App.hideKeyBoard(requireView());
             Toast.makeText(requireContext(),R.string.recommendationSelected, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

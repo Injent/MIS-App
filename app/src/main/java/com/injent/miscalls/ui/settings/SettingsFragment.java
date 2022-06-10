@@ -65,7 +65,7 @@ public class SettingsFragment extends Fragment {
         binding.settingsRecyclerView.setAdapter(settingAdapter);
         List<ViewType> list = new ArrayList<>();
         list.add(new SectionLayout(R.string.miscellaneous));
-        list.add(new SpinnerLayout(R.drawable.ic_clock, R.color.icClock, R.string.regularUpdates, App.getUserSettings().getMode(), R.array.modes, new SpinnerLayout.OnItemClickListener() {
+        list.add(new SpinnerLayout(R.drawable.ic_clock, R.color.icClock, R.string.regularUpdates, App.getUserDataManager().getInt(R.string.keyMode), R.array.modes, new SpinnerLayout.OnItemClickListener() {
                     @Override
                     public void onOpen() {
                         // Nothing to do
@@ -73,13 +73,13 @@ public class SettingsFragment extends Fragment {
 
                     @Override
                     public void onSelect(int position) {
-                        App.getUserSettings().setMode(position).write();
+                        App.getUserDataManager().setData(R.string.keyMode, position).write();
                     }
                 }));
-        list.add(new SwitchLayout(R.drawable.ic_call, R.color.green, R.string.anonCall, R.string.anonCallDesc, App.getUserSettings().isAnonCall(), R.drawable.switch_thumb_phone, R.drawable.switch_track, new SwitchLayout.OnFlickListener() {
+        list.add(new SwitchLayout(R.drawable.ic_call, R.color.green, R.string.anonCall, R.string.anonCallDesc, App.getUserDataManager().getBoolean(R.string.keyAnonCall), R.drawable.switch_thumb_phone, R.drawable.switch_track, new SwitchLayout.OnFlickListener() {
             @Override
             public void onFlick(boolean state) {
-                App.getUserSettings().setAnonCall(state).write();
+                App.getUserDataManager().setData(R.string.keyAnonCall, state).write();
             }
         }));
         list.add(new SectionLayout(R.string.interfaceName));

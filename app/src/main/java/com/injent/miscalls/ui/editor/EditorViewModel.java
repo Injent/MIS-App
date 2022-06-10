@@ -1,29 +1,26 @@
 package com.injent.miscalls.ui.editor;
 
 import android.content.Context;
-import android.util.Log;
+import android.print.PDFPrint;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.domain.repositories.PdfRepository;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
-import com.injent.miscalls.ui.pdfviewer.PdfBundle;
 
-import java.util.List;
-import java.util.function.Function;
+import java.io.IOException;
 
 public class EditorViewModel extends ViewModel {
 
     private final RegistryRepository registryRepository;
     private final PdfRepository pdfRepository;
 
+    private MutableLiveData<String> html = new MutableLiveData<>();
     private MutableLiveData<Registry> selectedRegistry = new MutableLiveData<>();
     private MutableLiveData<Throwable> error = new MutableLiveData<>();
-    private MutableLiveData<PdfBundle> generatedPdfItems = new MutableLiveData<>();
     private MutableLiveData<String> inspection = new MutableLiveData<>();
     private MutableLiveData<String> recommendation = new MutableLiveData<>();
 
@@ -51,17 +48,13 @@ public class EditorViewModel extends ViewModel {
         recommendation.setValue(s);
     }
 
-    public LiveData<PdfBundle> getGeneratedPdfItemsLiveData() {
-        return generatedPdfItems;
-    }
-
     public void saveChanges() {
         Registry registry = selectedRegistry.getValue();
         if (registry == null) {
             throw new IllegalStateException();
         }
 
-        registry.setInspection(inspection.getValue());
+        registry.setAnamnesis(inspection.getValue());
         registry.setRecommendation(recommendation.getValue());
 
         registryRepository.insertRegistry(throwable -> {
@@ -78,22 +71,50 @@ public class EditorViewModel extends ViewModel {
         }, selectedRegistry.getValue().getId());
     }
 
-    public void generatePdf(Context context) {
-        pdfRepository.generatePdf(context, selectedRegistry.getValue(), throwable -> {
+    public LiveData<String> getHtmlLiveData() {
+        return html;
+    }
+
+    public LiveData<Throwable> getErrorLiveData() {
+        return error;
+    }
+
+    public void loadHtml(Context context) {
+        Registry registry = selectedRegistry.getValue();
+        if (registry == null) {
+            error.setValue(new IllegalStateException());
+            return;
+        }
+        pdfRepository.getFetchedHtml(throwable -> {
             error.postValue(throwable);
             return null;
-        }, pdfBundle -> generatedPdfItems.postValue(pdfBundle));
+        }, s -> html.postValue(s), context, registry);
+    }
+
+    public void generatePdf(Context context, PDFPrint.OnPDFPrintListener pdfListener, PdfRepository.OnFileManageListener fileManageListener) {
+        Registry registry = getRegistryLiveData().getValue();
+        if (registry == null) {
+            error.setValue(new IllegalStateException());
+            return;
+        }
+        String fileName = registry.getCallInfo().getFullName() + "-" + registry.getCreateDate();
+        try {
+            pdfRepository.generatePdf(context, html.getValue(), fileName, pdfListener, fileManageListener);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onCleared() {
         selectedRegistry = new MutableLiveData<>();
         error = new MutableLiveData<>();
-        generatedPdfItems = new MutableLiveData<>();
         recommendation = new MutableLiveData<>();
         inspection = new MutableLiveData<>();
+        html = new MutableLiveData<>();
 
         registryRepository.cancelFutures();
+        pdfRepository.cancelFutures();
         super.onCleared();
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/fieldDoubleDecText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/headerText"
+        app:layout_constraintEnd_toStartOf="@+id/fieldDoubleDecEdit1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/fieldDoubleDecEdit1"
+        android:layout_width="64dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:padding="8dp"
+        android:textAppearance="@style/headerText"
+        app:layout_constraintBottom_toBottomOf="@+id/fieldDoubleDecDiv"
+        app:layout_constraintEnd_toStartOf="@+id/fieldDoubleDecDiv"
+        app:layout_constraintTop_toTopOf="@+id/fieldDoubleDecDiv" />
+
+    <TextView
+        android:id="@+id/fieldDoubleDecDiv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="/"
+        android:textAppearance="@style/headerText"
+        app:layout_constraintBottom_toBottomOf="@+id/fieldDoubleDecEdit2"
+        app:layout_constraintEnd_toStartOf="@+id/fieldDoubleDecEdit2"
+        app:layout_constraintTop_toTopOf="@+id/fieldDoubleDecEdit2" />
+
+    <EditText
+        android:id="@+id/fieldDoubleDecEdit2"
+        android:layout_width="64dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:padding="8dp"
+        android:textAppearance="@style/headerText"
+        app:layout_constraintBottom_toBottomOf="@+id/fieldDoubleDecText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fieldDoubleDecText" />
+</androidx.constraintlayout.widget.ConstraintLayout>

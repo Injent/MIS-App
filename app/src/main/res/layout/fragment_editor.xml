@@ -113,7 +113,7 @@
                             android:drawableTint="@color/green"
                             android:fontFamily="@font/clear_sans_medium"
                             android:padding="10dp"
-                            android:text="@string/saveAsPdf"
+                            android:text="@string/pdfPreview"
                             android:textColor="@color/darkGrayText"
                             android:textSize="@dimen/hintFont"
                             app:drawableStartCompat="@drawable/ic_document" />

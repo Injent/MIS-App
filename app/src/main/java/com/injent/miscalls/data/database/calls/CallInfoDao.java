@@ -12,10 +12,10 @@ import java.util.List;
 @Dao
 public interface CallInfoDao {
 
-    @Query("SELECT * FROM CallInfo")
+    @Query("SELECT * FROM calls")
     List<CallInfo> getAll();
 
-    @Query("SELECT * FROM CallInfo WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM calls WHERE id = :id LIMIT 1")
     CallInfo getById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,6 +30,6 @@ public interface CallInfoDao {
     @Delete
     void delete(CallInfo callInfo);
 
-    @Query("DELETE FROM CallInfo")
+    @Query("DELETE FROM calls")
     void clearAll();
 }

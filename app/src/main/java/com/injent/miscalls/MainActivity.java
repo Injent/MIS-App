@@ -2,9 +2,13 @@ package com.injent.miscalls;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -16,9 +20,35 @@ import com.injent.miscalls.domain.BackgroundDownloader;
 import com.injent.miscalls.domain.ForegroundServiceApp;
 import com.injent.miscalls.ui.auth.AuthFragment;
 
+import org.osmdroid.config.Configuration;
+
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final long EXPIRATION_DELAY = 60000L;
+    private NavController navController;
+
+    private int safeTime;
+    private Timer timer;
+    private final TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            safeTime++;
+            if (safeTime <= 5 || navController.getCurrentDestination() == null) return;
+
+            if (navController.getCurrentDestination().getId() != R.id.authFragment) {
+                App.getEncryptedUserDataManager()
+                        .setData(R.string.keyAuthed, false)
+                        .write();
+
+                runOnUiThread(() -> navController.navigate(R.id.authFragment));
+                safeTime = 0;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +61,27 @@ public class MainActivity extends AppCompatActivity {
         startWork();
 
         if (savedInstanceState != null && savedInstanceState.getBoolean(getString(R.string.keyOffUpdates), false)) {
-            AuthFragment authFragment = new AuthFragment();
             Bundle args = new Bundle();
             args.putBoolean(getString(R.string.keyOffUpdates), true);
-            authFragment.setArguments(args);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.container,authFragment)
-                    .commit();
+            navController.navigate(R.id.authFragment, args);
+        }
+
+        Configuration.getInstance().load(getApplicationContext(), getSharedPreferences(App.PREFERENCES_NAME, MODE_PRIVATE));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (navController == null)
+            navController = Navigation.findNavController(this,R.id.container);
+        if (timer == null) {
+            timer = new Timer();
+            timer.schedule(timerTask, 0L, EXPIRATION_DELAY);
         }
     }
 
     public void startWork() {
-        if (App.getUserSettings().getMode() != 1) {
+        if (App.getUserDataManager().getInt(R.string.keyMode) != 1) {
             cancelWork();
             return;
         }
@@ -65,9 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 .observe(this, workInfo -> {
                     WorkInfo.State state = workInfo.getState();
 
-                    if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                        Log.i("MainActivity","Database downloaded!");
-                    }
                     if (state == WorkInfo.State.RUNNING || state == WorkInfo.State.ENQUEUED || state == WorkInfo.State.BLOCKED) {
                         Intent service = new Intent(getApplicationContext(), ForegroundServiceApp.class);
                         startForegroundService(service);
@@ -81,5 +116,19 @@ public class MainActivity extends AppCompatActivity {
         WorkManager.getInstance(getApplicationContext()).cancelAllWork();
         Intent service = new Intent(getApplicationContext(), ForegroundServiceApp.class);
         stopService(service);
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        safeTime = 0;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+        timer = null;
+        navController = null;
     }
 }

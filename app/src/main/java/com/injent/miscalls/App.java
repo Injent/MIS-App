@@ -7,24 +7,21 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import androidx.annotation.NonNull;
-import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
 
-import com.injent.miscalls.data.User;
-import com.injent.miscalls.data.UserSettings;
+import com.injent.miscalls.data.database.user.User;
+import com.injent.miscalls.data.UserDataManager;
 import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
 import com.injent.miscalls.data.database.registry.RegistryDao;
+import com.injent.miscalls.data.database.user.UserDao;
 import com.injent.miscalls.data.recommendation.RecommendationDao;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.GeneralSecurityException;
-import java.util.concurrent.Executor;
 
 public class App extends Application {
 
@@ -38,8 +35,10 @@ public class App extends Application {
     private RegistryDao registryDao;
     private RecommendationDao recommendationDao;
     private CallInfoDao callInfoDao;
+    private UserDao userDao;
 
-    private static UserSettings userSettings;
+    private static UserDataManager userDataManager;
+    private static UserDataManager encryptedUserDataManager;
     private static User user;
 
     public static App getInstance() {
@@ -55,32 +54,50 @@ public class App extends Application {
         super.onCreate();
 
         setInstance(this);
-        setUserSettings(new UserSettings(getResources(),getSharedPreferences()));
-
+        setUserSettings(new UserDataManager(getResources(), getSharedPreferences()));
+        setEncryptedUserDataManager(new UserDataManager(getResources(), getEncryptedPreferences()));
         initSettings();
-        initEncryptedPreferences();
         connectDatabase();
     }
 
-    private void connectDatabase() {
-        if (userSettings.isAuthed()) {
+    public void connectDatabase() {
+        if (encryptedUserDataManager.getBoolean(R.string.keyAuthed)) {
             SharedPreferences esp = getEncryptedPreferences();
             String key = esp.getString(getString(R.string.keyToken),null);
+
             AppDatabase appDatabase = AppDatabase.getInstance(getApplicationContext(), key.toCharArray());
 
             diagnosisDao = appDatabase.diagnosisDao();
             registryDao = appDatabase.registryDao();
             recommendationDao = appDatabase.recommendationDao();
             callInfoDao = appDatabase.callInfoDao();
+            userDao = appDatabase.userDao();
         }
     }
 
-    public static UserSettings getUserSettings() {
-        return userSettings;
+    public void regUser(User user) {
+        App.setUser(user);
+        encryptedUserDataManager
+                .setData(R.string.keyAuthed,true)
+                .setData(R.string.keyToken, user.getToken().getValue())
+                .write();
+        connectDatabase();
     }
 
-    private static void setUserSettings(UserSettings us) {
-        userSettings = us;
+    public static UserDataManager getUserDataManager() {
+        return userDataManager;
+    }
+
+    private static void setUserSettings(UserDataManager userDataManager) {
+        App.userDataManager = userDataManager;
+    }
+
+    public static UserDataManager getEncryptedUserDataManager() {
+        return encryptedUserDataManager;
+    }
+
+    private static void setEncryptedUserDataManager(UserDataManager encryptedUserDataManager) {
+        App.encryptedUserDataManager = encryptedUserDataManager;
     }
 
     public DiagnosisDao getDiagnosisDao() {
@@ -97,6 +114,10 @@ public class App extends Application {
 
     public CallInfoDao getCallInfoDao() {
         return callInfoDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
     }
 
     public static User getUser() { return user; }
@@ -123,45 +144,10 @@ public class App extends Application {
     }
 
     private void initSettings() {
-        if (!userSettings.isInit()) {
-            userSettings
-                    .setMode(0)
-                    .setAuthed(false)
-                    .setAnonCall(false)
-                    .setInit(true)
-                    .write();
+        if (!userDataManager.isInit()) {
+            userDataManager.init(getApplicationContext());
+            encryptedUserDataManager.setData(R.string.keyAuthed, false).write();
         }
-    }
-
-    private void initEncryptedPreferences() {
-        SharedPreferences esp = getEncryptedPreferences();
-        User newUser = new User(
-                esp.getString(getString(R.string.keyLogin),null),
-                esp.getString(getString(R.string.keyPassword), null),
-                esp.getString(getString(R.string.keyFirstName), null),
-                esp.getString(getString(R.string.keyLastname), null),
-                esp.getString(getString(R.string.keyMiddleName), null),
-                esp.getString(getString(R.string.keyWorkingPosition), null),
-                esp.getString(getString(R.string.keyToken), null)
-        );
-        setUser(newUser);
-    }
-
-    @SuppressLint("CommitPrefEdits")
-    public void writeEncryptedData(User user) {
-        setUser(user);
-        SharedPreferences esp = getEncryptedPreferences();
-        SharedPreferences.Editor editor = esp.edit();
-        editor.putString(getString(R.string.keyLogin), user.getLogin());
-        editor.putString(getString(R.string.keyPassword), user.getPassword());
-        editor.putString(getString(R.string.keyWorkingPosition), user.getWorkingPosition());
-        editor.putString(getString(R.string.keyToken), user.getQueryToken().getToken());
-        editor.putString(getString(R.string.keyFirstName), user.getName());
-        editor.putString(getString(R.string.keyLastname), user.getLastName());
-        editor.putString(getString(R.string.keyMiddleName), user.getMiddleName());
-        editor.apply();
-        userSettings.setAuthed(true).write();
-        connectDatabase();
     }
 
     public static void hideKeyBoard(View view) {

@@ -36,10 +36,14 @@ public class CallStuffFragment extends Fragment {
     private FragmentCallStuffBinding binding;
     private CallStuffViewModel viewModel;
     private ViewPagerAdapter adapter;
+    private int callId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            callId = getArguments().getInt(getString(R.string.keyCallId));
+        }
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_call_stuff,container,false);
         return binding.getRoot();
     }
@@ -50,9 +54,7 @@ public class CallStuffFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
 
-        if (getArguments() != null) {
-            viewModel.loadCall(getArguments().getInt(getString(R.string.keyCallId)));
-        }
+        viewModel.loadCall(callId);
 
         binding.doneButton.setOnClickListener(view0 -> save());
 
@@ -127,7 +129,7 @@ public class CallStuffFragment extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                //
+                // Nothing to do
             }
         });
 

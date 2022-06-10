@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.User;
+import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.data.database.FailedDownloadDb;
 import com.injent.miscalls.data.database.calls.ListEmptyException;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
@@ -43,9 +43,13 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private NavController navController;
     private HomeViewModel viewModel;
+    private boolean downloadDb = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            downloadDb = getArguments().getBoolean(getString(R.string.keyDownloadDb));
+        }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         return binding.getRoot();
     }
@@ -203,7 +207,7 @@ public class HomeFragment extends Fragment {
                 case R.id.handbookMKB: navigateToHandbook();
                     break;
                 case R.id.logoutMenu: {
-                    App.getUserSettings().setAuthed(false).write();
+                    App.getEncryptedUserDataManager().setData(R.string.keyAuthed, false).write();
                     navigateToAuth();
                 }
                 break;
@@ -237,10 +241,9 @@ public class HomeFragment extends Fragment {
         //Display list
         if (getArguments() == null) return;
 
-        if (getArguments().containsKey(getString(R.string.keyUpdateList))) {
-            displayList();
-        } else if (getArguments().containsKey(getString(R.string.keyDownloadDb)))
+        if (downloadDb) {
             downloadNewDb();
+        }
     }
 
     public void confirmExit() {

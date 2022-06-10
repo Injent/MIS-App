@@ -11,6 +11,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorSecondaryPrimary"
             android:orientation="vertical">
 
             <LinearLayout
@@ -18,7 +19,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorSecondaryPrimary"
                 android:orientation="vertical"
-                android:padding="@dimen/displayPadding">
+                android:padding="@dimen/displayPadding"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/fullnameText"
@@ -70,7 +72,7 @@
                             android:drawablePadding="8dp"
                             android:fontFamily="@font/clear_sans_medium"
                             android:padding="4dp"
-                            android:text="@string/usePatientInfos"
+                            android:text="@string/useTempFromInspection"
                             android:textAlignment="textStart"
                             android:textColor="@color/grayText"
                             android:textSize="@dimen/headerFont"
@@ -96,13 +98,21 @@
                 android:text="@string/inspectionPreset"
                 android:textColor="@color/darkGrayText"
                 android:textColorHighlight="@color/highlight"
-                android:textSize="@dimen/headerFont" />
+                android:textSize="@dimen/headerFont"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fieldsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:background="@null"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:scrollbarThumbVertical="@null"
+                android:scrollbarTrackVertical="@null"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <ImageView
                 android:id="@+id/fieldAddButton"

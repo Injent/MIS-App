@@ -46,7 +46,7 @@ public class RegistryRepository {
     public void insertRegistry(Function<Throwable, Void> ex, Registry registry) {
         insertRegistryFuture = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
-                    dao.insert(registry);
+                    dao.insertRegistry(registry);
                     return null;
                 })
                 .exceptionally(ex);

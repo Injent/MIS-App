@@ -69,7 +69,7 @@ public class CallInfoFragment extends Fragment {
     }
 
     private void callToPerson(String number) {
-        if (App.getUserSettings().isAnonCall()) {
+        if (App.getUserDataManager().getBoolean(R.string.keyAnonCall)) {
             number = number.replace("+7","#31#8");
         }
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null));

@@ -50,8 +50,8 @@
         android:label="fragment_editor"
         tools:layout="@layout/fragment_editor" />
     <fragment
-        android:id="@+id/pdfPreviewFragment"
-        android:name="com.injent.miscalls.ui.pdfviewer.PdfPreviewFragment"
-        android:label="fragment_pdf_preview"
-        tools:layout="@layout/fragment_pdf_preview" />
+        android:id="@+id/pdfViewerFragment"
+        android:name="com.injent.miscalls.ui.pdfviewer.PdfViewerFragment"
+        android:label="PdfViewerFragment"
+        tools:layout="@layout/fragment_pdf_viewer"/>
 </navigation>

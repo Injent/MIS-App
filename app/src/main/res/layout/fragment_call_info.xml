@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/clear_sans_medium"
-                android:text="@string/complaints"
+                android:text="@string/reason"
                 android:textColor="@color/darkGrayText"
                 android:textSize="@dimen/mediumFont"
                 app:layout_constraintEnd_toStartOf="@+id/copyComplaints"
