@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "objectively")
 public class Objectively {
 
     @PrimaryKey(autoGenerate = true)
@@ -15,8 +15,8 @@ public class Objectively {
     private String bodyBuild;
     @ColumnInfo(name = "skin")
     private String skin;
-    @ColumnInfo(name = "node_gland")
-    private String nodeAndGland;
+    @ColumnInfo(name = "nodes")
+    private String nodes;
     @ColumnInfo(name = "temp")
     private String temperature;
     @ColumnInfo(name = "pharynx")
@@ -41,6 +41,8 @@ public class Objectively {
     private boolean pensioner;
     @ColumnInfo(name = "sick")
     private boolean sick;
+    @ColumnInfo(name = "glands")
+    private String glands;
 
     public int getId() {
         return id;
@@ -80,14 +82,14 @@ public class Objectively {
         this.skin = skin;
     }
 
-    public String getNodeAndGland() {
-        if (nodeAndGland == null)
+    public String getNodes() {
+        if (nodes == null)
             return "";
-        return nodeAndGland;
+        return nodes;
     }
 
-    public void setNodeAndGland(String nodeAndGland) {
-        this.nodeAndGland = nodeAndGland;
+    public void setNodes(String nodes) {
+        this.nodes = nodes;
     }
 
     public String getTemperature() {
@@ -164,6 +166,20 @@ public class Objectively {
         return abdomen;
     }
 
+    public String isWorking() {
+        if (isPensioner()) {
+            return "Неработающий";
+        }
+        return "Работающий";
+    }
+
+    public String isSick() {
+        if (getSick()) {
+            return "Назначен больничный";
+        }
+        return "";
+    }
+
     public void setAbdomen(String abdomen) {
         this.abdomen = abdomen;
     }
@@ -194,12 +210,23 @@ public class Objectively {
         this.pensioner = pensioner;
     }
 
-    public boolean isSick() {
+    public boolean getSick() {
         return sick;
     }
 
     public void setSick(boolean sick) {
         this.sick = sick;
+    }
+
+    public String getGlands() {
+        if (glands == null) {
+            return "";
+        }
+        return glands;
+    }
+
+    public void setGlands(String glands) {
+        this.glands = glands;
     }
 
     @Override
@@ -217,7 +244,7 @@ public class Objectively {
             return false;
         if (getSkin() != null ? !getSkin().equals(that.getSkin()) : that.getSkin() != null)
             return false;
-        if (getNodeAndGland() != null ? !getNodeAndGland().equals(that.getNodeAndGland()) : that.getNodeAndGland() != null)
+        if (getNodes() != null ? !getNodes().equals(that.getNodes()) : that.getNodes() != null)
             return false;
         if (getTemperature() != null ? !getTemperature().equals(that.getTemperature()) : that.getTemperature() != null)
             return false;
@@ -244,7 +271,7 @@ public class Objectively {
         result = 31 * result + (getGeneralState() != null ? getGeneralState().hashCode() : 0);
         result = 31 * result + (getBodyBuild() != null ? getBodyBuild().hashCode() : 0);
         result = 31 * result + (getSkin() != null ? getSkin().hashCode() : 0);
-        result = 31 * result + (getNodeAndGland() != null ? getNodeAndGland().hashCode() : 0);
+        result = 31 * result + (getNodes() != null ? getNodes().hashCode() : 0);
         result = 31 * result + (getTemperature() != null ? getTemperature().hashCode() : 0);
         result = 31 * result + (getPharynx() != null ? getPharynx().hashCode() : 0);
         result = 31 * result + (getRespiratoryRate() != null ? getRespiratoryRate().hashCode() : 0);

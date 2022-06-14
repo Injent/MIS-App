@@ -1,7 +1,7 @@
 package com.injent.miscalls.network;
 
+import com.injent.miscalls.network.rest.dto.CallDto;
 import com.injent.miscalls.data.database.user.Token;
-import com.injent.miscalls.data.database.calls.CallInfo;
 
 import java.util.List;
 
@@ -14,18 +14,18 @@ import retrofit2.http.POST;
  */
 public interface MisAPI {
 
-    String BASE_URL = "https://mis-calls.herokuapp.com/";
+    String BASE_URL = "http://185.26.121.81:8080/";
 
     /**
      * Receiving call data from the server Requires a network connection
      * @param token a personal token derived from the user's account, required to retrieve data
      * from the server. The token is stored in
      * {@link androidx.security.crypto.EncryptedSharedPreferences}
-     * @return {@link Call}<{@link List}<{@link CallInfo}>> that represents received data of calls
+     * @return {@link Call}<{@link List}<{@link CallDto}>> that represents received data of calls
      * from server
      */
     @POST("calls")
-    Call<List<CallInfo>> patients(@Body Token token);
+    Call<JResponse> patients(@Body Token token);
 
     /**
      * @param authModel contains login and password that will be used to search the server

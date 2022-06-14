@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -80,7 +81,9 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             break;
             case ViewType.FIELD_ADDITIONAL_CHECKBOX: holder.setCheckBoxFieldData(layout);
             break;
-            default: holder.setDecimalFieldData(layout);
+            case ViewType.FIELD_ADDITIONAL_DECIMAL: holder.setDecimalFieldData(layout);
+            break;
+            default: holder.setSpace();
         }
     }
 
@@ -95,6 +98,10 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
         public ViewHolder(@NonNull View view, OnEditTextListener listener) {
             super(view);
             this.listener = listener;
+        }
+
+        public void setSpace() {
+            // Nothing
         }
 
         public void setEditFieldData(ViewType layout) {
@@ -130,6 +137,7 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             ConstraintLayout container = itemView.findViewById(R.id.fieldAddContainer);
             container.setActivated(false);
             editText.setOnFocusChangeListener((view, focused) -> container.setActivated(focused));
+            editText.setHint(field.getExtraResId());
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -139,6 +147,12 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     listener.onEdit(field.getIndex(), editText.getText().toString());
+                    ImageView done = itemView.findViewById(R.id.fieldDone);
+                    if (charSequence.length() != 0) {
+                        done.setVisibility(View.VISIBLE);
+                    } else {
+                        done.setVisibility(View.INVISIBLE);
+                    }
                 }
 
                 @Override

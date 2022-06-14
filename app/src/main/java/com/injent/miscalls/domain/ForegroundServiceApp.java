@@ -8,7 +8,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -31,7 +30,7 @@ public class ForegroundServiceApp extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.putExtra(getString(R.string.keyOffUpdates),true);
+        notificationIntent.putExtra(getString(R.string.keyMoveToSettings),true);
         PendingIntent pendingIntent = new NavDeepLinkBuilder(getApplicationContext())
                 .setComponentName(MainActivity.class)
                 .setGraph(R.navigation.nav_graph)

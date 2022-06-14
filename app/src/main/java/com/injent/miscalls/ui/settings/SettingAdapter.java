@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -67,6 +68,8 @@ public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHol
             break;
             case ViewType.SETTING_SWITCH: holder.setSwitchData(layout);
             break;
+            case ViewType.SETTINGS_BUTTON: holder.setButtonData(layout);
+            break;
             default: holder.setSectionData(layout);
         }
     }
@@ -82,14 +85,30 @@ public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHol
             this.context = itemView.getContext();
         }
 
+        public void setButtonData(ViewType layout) {
+            ButtonLayout buttonLayout = (ButtonLayout) layout;
+            TextView name = itemView.findViewById(R.id.settingButtonText);
+            name.setText(buttonLayout.getNameResId());
+            Button button = itemView.findViewById(R.id.settingButton);
+            button.setOnClickListener(buttonLayout.getListener());
+            button.setText(buttonLayout.getButtonTextResId());
+
+            Drawable icon = ResourcesCompat.getDrawable(context.getResources(), buttonLayout.getDrawableResId(),context.getTheme());
+            if (icon == null) return;
+            icon.mutate();
+            DrawableCompat.setTint(icon, ContextCompat.getColor(context, buttonLayout.getDrawableColorResId()));
+            name.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
+            name.setCompoundDrawablePadding(context.getResources().getDimensionPixelSize(R.dimen.icPadding));
+        }
+
         public void setSpinnerData(ViewType layout) {
             SpinnerLayout spinnerLayout = (SpinnerLayout) layout;
             TextView title = view.findViewById(R.id.settingSpinnerTitle);
             title.setText(spinnerLayout.getStringResId());
-            Drawable icon = ResourcesCompat.getDrawable(context.getResources(),spinnerLayout.getDrawableResId(),context.getTheme());
+            Drawable icon = ResourcesCompat.getDrawable(context.getResources(), spinnerLayout.getDrawableResId(),context.getTheme());
             if (icon == null) return;
             icon.mutate();
-            DrawableCompat.setTint(icon, ContextCompat.getColor(context,R.color.icClock));
+            DrawableCompat.setTint(icon, ContextCompat.getColor(context,spinnerLayout.getDrawableColorResId()));
             title.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
             title.setCompoundDrawablePadding(context.getResources().getDimensionPixelSize(R.dimen.icPadding));
 
@@ -115,10 +134,10 @@ public class SettingAdapter extends ListAdapter<ViewType, SettingAdapter.ViewHol
             SwitchLayout switchLayout = (SwitchLayout) layout;
             TextView title = view.findViewById(R.id.settingsSwitchTitle);
             title.setText(switchLayout.getStringResId());
-            Drawable icon = ContextCompat.getDrawable(context,switchLayout.getDrawableResId());
+            Drawable icon = ContextCompat.getDrawable(context, switchLayout.getDrawableResId());
             if (icon == null) return;
             icon.mutate();
-            DrawableCompat.setTint(icon, ContextCompat.getColor(context,R.color.green));
+            DrawableCompat.setTint(icon, ContextCompat.getColor(context,switchLayout.getDrawableColorResId()));
             title.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
             title.setCompoundDrawablePadding(context.getResources().getDimensionPixelSize(R.dimen.icPadding));
             if (switchLayout.getStringHintResId() != 0) {

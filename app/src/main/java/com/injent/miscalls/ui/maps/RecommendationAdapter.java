@@ -1,4 +1,4 @@
-package com.injent.miscalls.ui.recommendations;
+package com.injent.miscalls.ui.maps;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -13,36 +13,36 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.recommendation.Recommendation;
+import com.injent.miscalls.data.recommendation.Medication;
 import com.injent.miscalls.databinding.ItemRecommendationBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecommendationAdapter extends ListAdapter<Recommendation, RecommendationAdapter.ViewHolder> implements Filterable {
+public class RecommendationAdapter extends ListAdapter<Medication, RecommendationAdapter.ViewHolder> implements Filterable {
 
     private final OnItemClickListener listener;
-    private List<Recommendation> searchList;
+    private List<Medication> searchList;
 
     protected RecommendationAdapter(OnItemClickListener listener) {
         super(diffCallback);
         this.listener = listener;
     }
 
-    public void submitList(@Nullable List<Recommendation> list, boolean searchList) {
+    public void submitList(@Nullable List<Medication> list, boolean searchList) {
         super.submitList(list);
         if (searchList && list != null)
             this.searchList = new ArrayList<>(list);
     }
 
-    static DiffUtil.ItemCallback<Recommendation> diffCallback = new DiffUtil.ItemCallback<>() {
+    static DiffUtil.ItemCallback<Medication> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull Recommendation oldItem, @NonNull Recommendation newItem) {
+        public boolean areItemsTheSame(@NonNull Medication oldItem, @NonNull Medication newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Recommendation oldItem, @NonNull Recommendation newItem) {
+        public boolean areContentsTheSame(@NonNull Medication oldItem, @NonNull Medication newItem) {
             return oldItem.equals(newItem);
         }
     };
@@ -70,11 +70,11 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
             this.listener = listener;
         }
 
-        public void setData(@NonNull Recommendation recommendation) {
-            binding.listProtocolName.setText(recommendation.getName());
-            binding.listProtocolDesc.setText(recommendation.getDescription());
+        public void setData(@NonNull Medication medication) {
+            binding.listProtocolName.setText(medication.getName());
+            binding.listProtocolDesc.setText(medication.getDescription());
 
-            binding.protocolTempCard.setOnClickListener(v -> listener.onClick(recommendation.getId()));
+            binding.protocolTempCard.setOnClickListener(v -> listener.onClick(medication.getId()));
         }
     }
 
@@ -91,13 +91,13 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
         @NonNull
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<Recommendation> filteredList = new ArrayList<>();
+            List<Medication> filteredList = new ArrayList<>();
             if (charSequence == null || charSequence.length() == 0) {
                 filteredList.addAll(searchList);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
-                for (Recommendation item : searchList) {
+                for (Medication item : searchList) {
                     if (item.getName().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
@@ -110,7 +110,7 @@ public class RecommendationAdapter extends ListAdapter<Recommendation, Recommend
 
         @Override
         protected void publishResults(CharSequence charSequence, @NonNull FilterResults filterResults) {
-            submitList((List<Recommendation>) filterResults.values, false);
+            submitList((List<Medication>) filterResults.values, false);
         }
     };
 }

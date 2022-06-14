@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.recommendations.RecommendationTempFragment">
+    tools:context=".ui.maps.RecommendationTempFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recSearchLayout"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/clear_sans_medium"
-            android:text="@string/recommendations"
+            android:text="@string/maps"
             android:textColor="@color/darkGrayText"
             android:textSize="@dimen/mediumFont"
             android:visibility="gone"
@@ -75,7 +75,7 @@
             android:ems="10"
             android:fontFamily="@font/clear_sans_regular"
             android:gravity="start|top"
-            android:hint="@string/recommendations"
+            android:hint="@string/maps"
             android:inputType="textMultiLine"
             android:minHeight="96dp"
             android:padding="8dp"

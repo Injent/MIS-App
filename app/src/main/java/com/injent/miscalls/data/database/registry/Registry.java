@@ -8,9 +8,10 @@ import androidx.room.PrimaryKey;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 
+import java.util.Collections;
 import java.util.List;
 
-@Entity
+@Entity(tableName = "registry")
 public class Registry {
 
     public Registry() {
@@ -19,34 +20,24 @@ public class Registry {
 
     @Ignore
     private Objectively objectively;
-
     @Ignore
     private CallInfo callInfo;
-
     @Ignore
     private List<Diagnosis> diagnoses;
-
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
-
     @ColumnInfo(name = "complaints")
     private String complaints;
-
     @ColumnInfo(name = "anamnesis")
     private String anamnesis;
-
     @ColumnInfo(name = "recommendation")
     private String recommendation;
-
     @ColumnInfo(name = "diagnoses")
     private String diagnosesId;
-
     @ColumnInfo(name = "create_date")
     private String createDate;
-
-    @ColumnInfo(name = "obj_id")
-    private int objId;
-
+    @ColumnInfo(name = "call_id")
+    private int callId;
     @ColumnInfo(name = "surveys")
     private String surveys;
 
@@ -75,6 +66,9 @@ public class Registry {
     }
 
     public List<Diagnosis> getDiagnoses() {
+        if (diagnoses == null) {
+            return Collections.emptyList();
+        }
         return diagnoses;
     }
 
@@ -83,6 +77,9 @@ public class Registry {
     }
 
     public String getAnamnesis() {
+        if (anamnesis == null) {
+            return "";
+        }
         return anamnesis;
     }
 
@@ -118,14 +115,6 @@ public class Registry {
         this.createDate = createDate;
     }
 
-    public int getObjId() {
-        return objId;
-    }
-
-    public void setObjId(int objId) {
-        this.objId = objId;
-    }
-
     public String getComplaints() {
         if (complaints == null)
             return "";
@@ -144,5 +133,13 @@ public class Registry {
 
     public void setSurveys(String surveys) {
         this.surveys = surveys;
+    }
+
+    public int getCallId() {
+        return callId;
+    }
+
+    public void setCallId(int callId) {
+        this.callId = callId;
     }
 }

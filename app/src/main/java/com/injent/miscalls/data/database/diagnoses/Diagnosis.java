@@ -6,6 +6,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -13,34 +14,22 @@ public class Diagnosis {
 
     public Diagnosis(String[] array) {
         this.id = Integer.parseInt(array[0]);
-        if (!array[1].isEmpty())
-            this.recCode = array[1];
-        else
-            this.recCode = "";
         if (!array[2].isEmpty())
             this.code = array[2];
         else
-            this.code = "";
+            this.code = null;
         if (!array[3].isEmpty())
             this.name = array[3];
         else
-            this.name = "";
+            this.name = null;
         if (!array[4].isEmpty())
             this.parentId = Integer.parseInt(array[4]);
         else
             this.parentId = -1;
-        if (!array[5].isEmpty())
-            this.addlCode = Integer.parseInt(array[5]);
+        if (Integer.parseInt(array[8]) == 1)
+            this.notParent = true;
         else
-            this.addlCode = -1;
-        if (!array[6].isEmpty())
-            this.actual = Integer.parseInt(array[6]);
-        else
-            this.actual = -1;
-        if (!array[7].isEmpty())
-            this.date = array[7];
-        else
-            this.date = "";
+            this.notParent = false;
     }
 
     public Diagnosis() {
@@ -74,6 +63,10 @@ public class Diagnosis {
     }
 
     public static String listToStringNames(List<Diagnosis> list, String s) {
+        if (list == null) {
+            return "";
+        }
+
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < list.size(); i++) {
@@ -93,22 +86,14 @@ public class Diagnosis {
 
     @PrimaryKey
     private int id;
-    @ColumnInfo(name = "rec_code")
-    private String recCode;
     @ColumnInfo(name = "code")
     private String code;
     @ColumnInfo(name = "name")
     private String name;
     @ColumnInfo(name = "parent_id")
     private int parentId;
-    @ColumnInfo(name = "addl_code")
-    private int addlCode;
-    @ColumnInfo(name = "actual")
-    private int actual;
-    @ColumnInfo(name = "date")
-    private String date;
-    @ColumnInfo(name = "call_info_id")
-    private int callInfoId;
+    @ColumnInfo(name = "not_parent")
+    private boolean notParent;
 
     @Ignore
     private boolean parent;
@@ -127,14 +112,6 @@ public class Diagnosis {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getRecCode() {
-        return recCode;
-    }
-
-    public void setRecCode(String recCode) {
-        this.recCode = recCode;
     }
 
     public String getCode() {
@@ -161,36 +138,12 @@ public class Diagnosis {
         this.parentId = parentId;
     }
 
-    public int getAddlCode() {
-        return addlCode;
+    public boolean isNotParent() {
+        return notParent;
     }
 
-    public void setAddlCode(int addlCode) {
-        this.addlCode = addlCode;
-    }
-
-    public int getActual() {
-        return actual;
-    }
-
-    public void setActual(int actual) {
-        this.actual = actual;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public int getCallInfoId() {
-        return callInfoId;
-    }
-
-    public void setCallInfoId(int callInfoId) {
-        this.callInfoId = callInfoId;
+    public void setNotParent(boolean notParent) {
+        this.notParent = notParent;
     }
 
     @Override
@@ -198,20 +151,5 @@ public class Diagnosis {
         if (obj instanceof Diagnosis)
             return ((Diagnosis) obj).id == id;
         return false;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getId();
-        result = 31 * result + getRecCode().hashCode();
-        result = 31 * result + getCode().hashCode();
-        result = 31 * result + getName().hashCode();
-        result = 31 * result + getParentId();
-        result = 31 * result + getAddlCode();
-        result = 31 * result + getActual();
-        result = 31 * result + getDate().hashCode();
-        result = 31 * result + getCallInfoId();
-        result = 31 * result + (isParent() ? 1 : 0);
-        return result;
     }
 }

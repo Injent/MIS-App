@@ -1,11 +1,11 @@
 package com.injent.miscalls.ui.registry;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -17,14 +17,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
-import com.injent.miscalls.App;
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentRegistryBinding;
+import com.injent.miscalls.domain.repositories.RegistryRepository;
 import com.injent.miscalls.ui.Section;
 import com.injent.miscalls.ui.SectionAdapter;
-import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +57,7 @@ public class RegistryFragment extends Fragment {
 
         //RecyclerView
         setupSectionRecyclerView();
-        setupDiagnosisRecyclerView();
+        setupRegistryRecyclerView();
 
         //Listeners
         binding.backFromRegistry.setOnClickListener(view0 -> navigateToHome());
@@ -76,16 +74,7 @@ public class RegistryFragment extends Fragment {
         });
     }
 
-    private void undoDeletingSnackbar() {
-        @SuppressLint("ShowToast")
-        Snackbar snackbar = Snackbar.make(requireView(),R.string.protocolDeleted, BaseTransientBottomBar.LENGTH_LONG);
-        snackbar.setAction(R.string.undoDeleting, view0 -> {
-
-        });
-        snackbar.show();
-    }
-
-    private void setupDiagnosisRecyclerView() {
+    private void setupRegistryRecyclerView() {
         adapter = new RegistryAdapter(new RegistryAdapter.OnItemClickListener() {
             @Override
             public void onClick(int id) {
@@ -106,7 +95,10 @@ public class RegistryFragment extends Fragment {
 
     private void setupSectionRecyclerView() {
         SectionAdapter sectionAdapter = new SectionAdapter(type -> {
-
+            if (Section.Type.SUBMIT_ALL == type) {
+                Toast.makeText(requireContext(), R.string.docsSent,Toast.LENGTH_LONG).show();
+                new RegistryRepository().dropTable();
+            }
         });
 
         binding.registrySectionsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false));
@@ -132,14 +124,12 @@ public class RegistryFragment extends Fragment {
         binding.registrySearchLayout.setVisibility(View.GONE);
         binding.registrySearchButton.setVisibility(View.VISIBLE);
         binding.registrySearchText.setText("");
-        App.hideKeyBoard(requireView());
+        MainActivity.hideKeyBoard(requireView());
     }
 
     private void navigateToHome() {
         if (notMatchingDestination()) return;
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(getString(R.string.keyUpdateList), true);
-        navController.navigate(R.id.homeFragment, bundle);
+        navController.navigate(R.id.homeFragment);
     }
 
     private void navigateToEditor(int id) {

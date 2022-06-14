@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -71,7 +72,8 @@ public class EditorFragment extends Fragment {
 
         viewModel.getRegistryLiveData().observe(getViewLifecycleOwner(), this::loadRegistryData);
 
-        viewModel.loadRegistry(registryId);
+        if (!keepData)
+            viewModel.loadRegistry(registryId);
 
         setListeners();
     }
@@ -79,57 +81,15 @@ public class EditorFragment extends Fragment {
     private void setListeners() {
         binding.editorCard.setOnClickListener(view -> navigateToPdfPreview());
         binding.editorBack.setOnClickListener(v -> navigateToRegistry());
-
         binding.editorSaveDoc.setOnClickListener(v -> saveChanges());
-
-        binding.editorInspectionText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Nothing to do
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                changesAreSaved = false;
-                viewModel.setInspection(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // Nothing to do
-            }
-        });
-
-        binding.editorRecText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Nothing to do
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                changesAreSaved = false;
-                viewModel.setRecommendation(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // Nothing to do
-            }
-        });
-
         binding.editorDelete.setOnClickListener(v -> confirmDelete());
     }
 
-    private void loadRegistryData(@NonNull Registry registry) {
-        if (keepData) {
-            registry = viewModel.getRegistryLiveData().getValue();
-        }
+    private void loadRegistryData(Registry registry) {
         if (registry == null) return;
-        binding.editorRecText.setText(registry.getRecommendation());
         binding.editorFullName.setText(registry.getCallInfo().getFullName());
-        binding.editorInspectionText.setText(registry.getAnamnesis());
         binding.createDateText.setText(registry.getCreateDate());
+        binding.editorCard.setEnabled(true);
     }
 
     private void saveChanges() {

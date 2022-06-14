@@ -63,11 +63,9 @@ public class HomeFragment extends Fragment {
         navController = Navigation.findNavController(requireView());
 
         //Listeners
-        binding.patientListSection.setOnClickListener(view0 -> downloadNewDb());
+        binding.patientListSection.setOnClickListener(v -> downloadNewDb());
 
-        binding.moreButton.setOnClickListener(v -> {
-            binding.drawerLayout.openDrawer(GravityCompat.START);
-        });
+        binding.moreButton.setOnClickListener(v -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
         //Observers
         viewModel.getCallListLiveData().observe(getViewLifecycleOwner(), callList -> {
@@ -98,7 +96,7 @@ public class HomeFragment extends Fragment {
     public void displayList() {
         hideLoading();
         hideErrorMessage();
-        viewModel.loadCallList();
+        viewModel.loadCallList(App.getUser().getId());
     }
 
     private void failed(Throwable t) {
@@ -207,7 +205,7 @@ public class HomeFragment extends Fragment {
                 case R.id.handbookMKB: navigateToHandbook();
                     break;
                 case R.id.logoutMenu: {
-                    App.getEncryptedUserDataManager().setData(R.string.keyAuthed, false).write();
+                    viewModel.logout();
                     navigateToAuth();
                 }
                 break;
@@ -216,11 +214,10 @@ public class HomeFragment extends Fragment {
             return false;
         });
 
-        User user = App.getUser();
         TextView fullName = navigationView.getHeaderView(0).findViewById(R.id.fullname);
-        fullName.setText(user.getFullName());
+        fullName.setText(App.getUser().getFullName());
         TextView position = navigationView.getHeaderView(0).findViewById(R.id.proffesion);
-        position.setText(user.getWorkingPosition());
+        position.setText(App.getUser().getWorkingPosition());
     }
 
     private void closeNavigationMenu() {
@@ -239,11 +236,8 @@ public class HomeFragment extends Fragment {
         binding.patientsRecycler.setAdapter(adapter);
 
         //Display list
-        if (getArguments() == null) return;
-
-        if (downloadDb) {
-            downloadNewDb();
-        }
+        if (downloadDb) downloadNewDb();
+        else displayList();
     }
 
     public void confirmExit() {

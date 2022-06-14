@@ -1,64 +1,97 @@
 package com.injent.miscalls.ui.callstuff;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
-import com.injent.miscalls.data.recommendation.Recommendation;
+import com.injent.miscalls.domain.repositories.CallRepository;
 import com.injent.miscalls.domain.repositories.DiagnosisRepository;
-import com.injent.miscalls.domain.repositories.HomeRepository;
-import com.injent.miscalls.domain.repositories.RecommendationRepository;
+import com.injent.miscalls.domain.repositories.PdfRepository;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
 import com.injent.miscalls.ui.adapters.Field;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class CallStuffViewModel extends ViewModel {
 
     private final RegistryRepository registryRepository;
-    private final HomeRepository homeRepository;
+    private final CallRepository homeRepository;
     private final DiagnosisRepository diagnosisRepository;
-    private final RecommendationRepository recommendationRepository;
+    private final PdfRepository pdfRepository;
 
     private MutableLiveData<CallInfo> selectedCall = new MutableLiveData<>();
-    private MutableLiveData<Throwable> callError = new MutableLiveData<>();
-    private MutableLiveData<String> currentInspection = new MutableLiveData<>();
-    private MutableLiveData<String> currentRecommendation = new MutableLiveData<>();
-    private MutableLiveData<List<Diagnosis>> currentDiagnoses = new MutableLiveData<>();
-    private MutableLiveData<Throwable> error = new MutableLiveData<>();
-    private MutableLiveData<List<Diagnosis>> diagnosesDatabaseList = new MutableLiveData<>();
-    private MutableLiveData<List<Recommendation>> recommendationsList = new MutableLiveData<>();
-    private MutableLiveData<Objectively> objectively = new MutableLiveData<>();
+    private MutableLiveData<Registry> currentRegistry = new MutableLiveData<>();
+    private MutableLiveData<Throwable> successOperation = new MutableLiveData<>();
+    private MutableLiveData<String> html = new MutableLiveData<>();
+    private MutableLiveData<List<Diagnosis>> searchDiagnoses = new MutableLiveData<>();
 
     public CallStuffViewModel() {
         registryRepository = new RegistryRepository();
-        homeRepository = new HomeRepository();
+        homeRepository = new CallRepository();
         diagnosisRepository = new DiagnosisRepository();
-        recommendationRepository = new RecommendationRepository();
+        pdfRepository = new PdfRepository();
     }
 
-    public LiveData<List<Diagnosis>> getCurrentDiagnosesLiveData() {
-        return currentDiagnoses;
+    public LiveData<String> getHtmlLiveData() {
+        return html;
+    }
+
+    public LiveData<List<Diagnosis>> getSearchDiagnoses() {
+        return searchDiagnoses;
+    }
+
+    public void loadHtml(Context context) {
+        pdfRepository.getFetchedHtml(throwable -> {
+            throwable.printStackTrace();
+            return null;
+                },
+                s -> html.postValue(s),
+                context,
+                currentRegistry.getValue());
+    }
+
+    public LiveData<Throwable> getErrorLiveData() {
+        return successOperation;
+    }
+
+    public LiveData<Registry> getCurrentRegistryLiveData() {
+        return currentRegistry;
+    }
+
+    public void loadRegistry(Registry registry) {
+        if (registry == null) {
+            String createDate = new SimpleDateFormat("dd-MM-yyyy\nhh:mm",Locale.getDefault()).format(new Date(Instant.now().toEpochMilli()));
+            registry = new Registry();
+            registry.setCallId(selectedCall.getValue().getId());
+            registry.setCallInfo(selectedCall.getValue());
+            registry.setCreateDate(createDate);
+            Objectively objectively = new Objectively();
+            registry.setObjectively(objectively);
+        }
+
+        this.currentRegistry.setValue(registry);
     }
 
     public void setCurrentDiagnoses(List<Diagnosis> list) {
-        currentDiagnoses.setValue(list);
+        if (currentRegistry.getValue() == null) return;
+        currentRegistry.getValue().setDiagnoses(list);
     }
 
     public List<Diagnosis> deleteItemFromList(List<Diagnosis> list, Diagnosis diagnosis) {
+        if (currentRegistry.getValue() == null) return Collections.emptyList();
         List<Diagnosis> diagnosisList = new ArrayList<>(list);
         int idToDelete = 0;
         for (int i = 0; i < diagnosisList.size(); i++) {
@@ -68,145 +101,91 @@ public class CallStuffViewModel extends ViewModel {
             }
         }
         diagnosisList.remove(idToDelete);
-        currentDiagnoses.setValue(diagnosisList);
+        setCurrentDiagnoses(diagnosisList);
         return diagnosisList;
     }
 
-    public List<Diagnosis> addItemToList(Context context, List<Diagnosis> list, Diagnosis diagnosis) {
-        List<Diagnosis> currentList = new ArrayList<>(list);
-        boolean added = false;
-        for (Diagnosis d : currentList) {
+    public void addItemToList(List<Diagnosis> list, Diagnosis diagnosis, Consumer<List<Diagnosis>> consumer) {
+        List<Diagnosis> diagnoses = new ArrayList<>(list);
+        for (Diagnosis d : list) {
             if (d.equals(diagnosis)) {
-                Toast.makeText(context, R.string.diagnosisAlreadyAdded,Toast.LENGTH_SHORT).show();
-                added = true;
-                break;
+                consumer.accept(null);
+                return;
             }
         }
-        if (!added) {
-            currentList.add(diagnosis);
-        }
-        currentDiagnoses.setValue(currentList);
-        return currentList;
+        diagnoses.add(diagnosis);
+        consumer.accept(diagnoses);
+        currentRegistry.getValue().setDiagnoses(diagnoses);
+        currentRegistry.getValue().setDiagnosesId(Diagnosis.listToStringIds(diagnoses, ';'));
     }
 
     public LiveData<CallInfo> getCallLiveData() {
         return selectedCall;
     }
 
-    public LiveData<Throwable> getCallErrorLiveData() {
-        return callError;
-    }
-
     public void loadCall(int callId) {
         homeRepository.loadCallInfoById(throwable -> {
-            callError.postValue(throwable);
+            successOperation.postValue(throwable);
             return null;
         }, callInfo -> {
             if (callInfo != null) {
+                if (callInfo.isInspected()) {
+                    loadExistRegistry(callInfo.getId());
+                }
                 selectedCall.postValue(callInfo);
             } else {
-                callError.postValue(new UnknownError());
+                successOperation.postValue(new UnknownError());
             }
         }, callId);
     }
 
+    public void loadExistRegistry(int callId) {
+        registryRepository.loadRegistryByCallId(throwable -> {
+            successOperation.postValue(throwable);
+            throwable.printStackTrace();
+            return null;
+        }, registry -> currentRegistry.postValue(registry), callId);
+    }
+
     public void saveRegistry() {
-        List<Diagnosis> list = currentDiagnoses.getValue();
-        CallInfo newCallInfo = selectedCall.getValue();
-        if (newCallInfo == null || list == null || currentInspection.getValue() == null) {
-            error.postValue(new IllegalStateException());
+        if (currentRegistry.getValue() == null || selectedCall == null) return;
+        List<Diagnosis> list = currentRegistry.getValue().getDiagnoses();
+        if (list == null || list.isEmpty()) {
+            successOperation.postValue(new NullPointerException());
             return;
         }
-        Registry registry = new Registry();
-        registry.setId(newCallInfo.getId());
-        registry.setRecommendation(currentRecommendation.getValue());
-        String formedInspection = CallInfo.autoFillString(newCallInfo,currentInspection.getValue());
-        registry.setAnamnesis(formedInspection);
 
         String diagnosisString = Diagnosis.listToStringIds(list, ';');
-        registry.setDiagnosesId(diagnosisString);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nhh:mm", Locale.getDefault());
-        String currentDate = sdf.format(new Date());
-
-        registry.setCreateDate(currentDate);
+        currentRegistry.getValue().setDiagnosesId(diagnosisString);
 
         registryRepository.insertRegistry(throwable -> {
-            error.postValue(throwable);
+            successOperation.postValue(throwable);
             return null;
-        }, registry);
+        }, currentRegistry.getValue());
 
-        newCallInfo.setInspected(true);
+        selectedCall.getValue().setInspected(true);
 
-        homeRepository.insertCall(throwable -> {
-            error.postValue(throwable);
+        homeRepository.updateCall(throwable -> {
+            successOperation.postValue(throwable);
             return null;
-        }, newCallInfo);
-    }
+        }, selectedCall.getValue());
 
-    public LiveData<String> getCurrentRecommendationLiveData() {
-        return currentRecommendation;
-    }
-
-    public void setCurrentRecommendation(String s) {
-        currentRecommendation.setValue(s);
-    }
-
-    public void findRecommendation(int id) {
-        recommendationRepository.loadRecommendationById(throwable -> {
-            error.postValue(throwable);
-            return null;
-        }, recommendation -> currentRecommendation.postValue(recommendation.getContent()), id);
-    }
-
-
-    public LiveData<List<Recommendation>> getRecommendationsListLiveData() {
-        return recommendationsList;
-    }
-
-    public void loadRecommendationsList() {
-        recommendationRepository.loadAllRecommendations(throwable -> {
-            error.postValue(throwable);
-            return Collections.emptyList();
-        }, list -> recommendationsList.postValue(list));
-    }
-
-    public LiveData<String> getCurrentInspectionLiveData() {
-        return currentInspection;
-    }
-
-    public void setCurrentInspection(String s) {
-        currentInspection.setValue(s);
-    }
-
-    public LiveData<List<Diagnosis>> getDiagnosesListLiveData() {
-        return diagnosesDatabaseList;
-    }
-
-    public void loadDiagnosisList(int id) {
-        diagnosisRepository.getDiagnosesByParentId(throwable -> {
-            error.postValue(throwable);
-            return Collections.emptyList();
-        }, list -> diagnosesDatabaseList.postValue(list), id);
+        successOperation.setValue(null);
     }
 
     public boolean isInspectionDone() {
-        return currentDiagnoses.getValue() != null
-                && !currentDiagnoses.getValue().isEmpty()
-                && currentInspection.getValue() != null
-                && !currentInspection.getValue().isEmpty()
-                && currentRecommendation.getValue() != null;
+        return false;
     }
 
-    public LiveData<Objectively> getObjectively() {
-        return objectively;
+    public void searchDiagnosis(String s) {
+        diagnosisRepository.searchDiagnoses(s, list -> searchDiagnoses.postValue(list));
     }
 
     public void setObjectivelyData(int index, String s) {
-        Objectively obj = objectively.getValue();
+        if (currentRegistry.getValue() == null) return;
+        Objectively obj = currentRegistry.getValue().getObjectively();
         if (obj == null) {
-            error.setValue(new NullPointerException());
-            return;
+            obj = new Objectively();
         }
         switch (index) {
             case Field.GENERAL_STATE: obj.setGeneralState(s);
@@ -215,7 +194,7 @@ public class CallStuffViewModel extends ViewModel {
             break;
             case Field.SKIN: obj.setSkin(s);
             break;
-            case Field.NODES_GLAND: obj.setNodeAndGland(s);
+            case Field.NODES: obj.setNodes(s);
             break;
             case Field.PHARYNX: obj.setPharynx(s);
             break;
@@ -229,24 +208,33 @@ public class CallStuffViewModel extends ViewModel {
             break;
             case Field.SICK: obj.setSick(Boolean.parseBoolean(s));
             break;
+            case Field.GLANDS: obj.setGlands(s);
+            break;
+            case Field.COMPLAINTS: currentRegistry.getValue().setComplaints(s);
+            break;
+            case Field.ANAMNESIS: currentRegistry.getValue().setAnamnesis(s);
+            break;
+            case Field.TEMPERATURE: currentRegistry.getValue().getObjectively().setTemperature(s);
+            break;
+            case Field.ABDOMEN: currentRegistry.getValue().getObjectively().setAbdomen(s);
+            break;
+            case Field.LIVER: currentRegistry.getValue().getObjectively().setLiver(s);
+            break;
             default: throw new IllegalStateException();
         }
+
+        currentRegistry.getValue().setObjectively(obj);
     }
 
     @Override
     protected void onCleared() {
         selectedCall = new MutableLiveData<>();
-        callError = new MutableLiveData<>();
-        currentInspection = new MutableLiveData<>();
-        currentRecommendation = new MutableLiveData<>();
-        currentDiagnoses = new MutableLiveData<>();
-        error = new MutableLiveData<>();
-        recommendationsList = new MutableLiveData<>();
-        diagnosesDatabaseList = new MutableLiveData<>();
-        objectively = new MutableLiveData<>();
+        successOperation = new MutableLiveData<>();
+        currentRegistry = new MutableLiveData<>();
+        html = new MutableLiveData<>();
+        searchDiagnoses = new MutableLiveData<>();
 
         diagnosisRepository.cancelFutures();
-        recommendationRepository.cancelFutures();
         homeRepository.cancelFutures();
         registryRepository.cancelFutures();
         super.onCleared();

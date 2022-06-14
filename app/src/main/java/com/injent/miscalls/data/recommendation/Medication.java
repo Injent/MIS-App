@@ -6,12 +6,12 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Recommendation {
+public class Medication {
 
-    public Recommendation() {
+    public Medication() {
     }
 
-    public Recommendation(String[] array) {
+    public Medication(String[] array) {
         this.id = Integer.parseInt(array[0]);
         this.name = array[1];
         this.content = array[2];
@@ -65,8 +65,8 @@ public class Recommendation {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (obj instanceof Recommendation)
-            return ((Recommendation) obj).getId() == id;
+        if (obj instanceof Medication)
+            return ((Medication) obj).getId() == id;
         return false;
     }
 

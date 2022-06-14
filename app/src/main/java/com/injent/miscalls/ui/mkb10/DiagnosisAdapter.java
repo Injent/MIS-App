@@ -23,10 +23,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.ViewHolder> implements Filterable {
+public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.ViewHolder> {
 
     private final OnItemClickListener listener;
-    private ArrayList<Diagnosis> fullList;
 
     public DiagnosisAdapter(OnItemClickListener listener) {
         super(diffCallback);
@@ -45,13 +44,6 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
             return oldItem.equals(newItem);
         }
     };
-
-    public void submitList(@Nullable List<Diagnosis> list, boolean updateFullList) {
-        super.submitList(list);
-        if (updateFullList && list != null) {
-            fullList = new ArrayList<>(list);
-        }
-    }
 
     @NonNull
     @Override
@@ -95,36 +87,4 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
             binding.handbookItemLayout.setOnClickListener(view -> listener.onClick(diagnosis));
         }
     }
-
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
-
-    private final Filter filter = new Filter() {
-        @NonNull
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            ArrayList<Diagnosis> filteredList = new ArrayList<>();
-            if (charSequence == null || charSequence.length() == 0 || charSequence.toString().isEmpty()) {
-                filteredList.addAll(fullList);
-            } else {
-                String filterPattern = charSequence.toString().toLowerCase().trim();
-
-                for (Diagnosis item : fullList) {
-                    if (item.getName().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence charSequence, @NonNull FilterResults filterResults) {
-            submitList((List<Diagnosis>) filterResults.values, false);
-        }
-    };
 }

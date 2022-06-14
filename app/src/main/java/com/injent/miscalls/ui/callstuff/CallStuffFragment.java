@@ -3,6 +3,7 @@ package com.injent.miscalls.ui.callstuff;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,12 +26,16 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.databinding.FragmentCallStuffBinding;
 import com.injent.miscalls.ui.callinfo.CallInfoFragment;
 import com.injent.miscalls.ui.diagnosis.DiagnosisFragment;
 import com.injent.miscalls.ui.inspection.InspectionFragment;
-import com.injent.miscalls.ui.recommendations.RecommendationsFragment;
+import com.injent.miscalls.ui.maps.MapsFragment;
+
+import org.w3c.dom.ls.LSOutput;
 
 public class CallStuffFragment extends Fragment {
 
@@ -56,7 +62,22 @@ public class CallStuffFragment extends Fragment {
 
         viewModel.loadCall(callId);
 
-        binding.doneButton.setOnClickListener(view0 -> save());
+        viewModel.getCallLiveData().observe(getViewLifecycleOwner(), callInfo -> viewModel.loadRegistry(null));
+
+        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
+            if (throwable == null) {
+                Toast.makeText(requireContext(),getString(R.string.docMovedTo) + " " + getString(R.string.registry),Toast.LENGTH_LONG).show();
+                navigateToHome();
+                return;
+            }
+            if (throwable instanceof NullPointerException) {
+                Toast.makeText(requireContext(), R.string.diagnosesIsEmpty, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.callInfopdfWebView.setInitialScale(150);
+
+        binding.doneButton.setOnClickListener(v -> save());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
@@ -65,9 +86,19 @@ public class CallStuffFragment extends Fragment {
             }
         });
 
-        binding.closeButton.setOnClickListener(view1 -> confirmExitAction());
+        viewModel.getHtmlLiveData().observe(getViewLifecycleOwner(), this::previewPdf);
+
+        binding.previewPdfButton.setOnClickListener(v -> viewModel.loadHtml(requireContext()));
+
+        binding.closeButton.setOnClickListener(v -> confirmExitAction());
 
         binding.titleCallStuff.setText(R.string.callInfo);
+
+        binding.viewPager.setOnClickListener(v -> {
+            if (binding.darkBgPdf.getVisibility() == View.VISIBLE) {
+                previewPdf("");
+            }
+        });
 
         setupViewPager2();
 
@@ -98,7 +129,7 @@ public class CallStuffFragment extends Fragment {
                     }
                     break;
                     case 3: {
-                        binding.titleCallStuff.setText(R.string.recommendations);
+                        binding.titleCallStuff.setText(R.string.maps);
                     }
                     break;
                     default: throw new IllegalStateException();
@@ -112,7 +143,6 @@ public class CallStuffFragment extends Fragment {
                         .scaleX(1.05f)
                         .scaleY(1.05f)
                         .start();
-
             }
 
             @Override
@@ -133,17 +163,19 @@ public class CallStuffFragment extends Fragment {
             }
         });
 
-        //Observers
-        viewModel.getCurrentRecommendationLiveData().observe(getViewLifecycleOwner(), recommendation -> checkForDoneInspection());
-        viewModel.getCurrentDiagnosesLiveData().observe(getViewLifecycleOwner(), list -> checkForDoneInspection());
-        viewModel.getCurrentInspectionLiveData().observe(getViewLifecycleOwner(), inspection -> checkForDoneInspection());
+        binding.doneButton.setOnClickListener(v -> {
+            viewModel.saveRegistry();
+        });
     }
 
-    private void checkForDoneInspection() {
-        if (viewModel.isInspectionDone()) {
-            binding.doneButton.setVisibility(View.VISIBLE);
+    private void previewPdf(String s) {
+        if (binding.darkBgPdf.getVisibility() == View.VISIBLE) {
+            binding.darkBgPdf.setVisibility(View.INVISIBLE);
+            binding.callInfopdfWebView.setVisibility(View.INVISIBLE);
         } else {
-            binding.doneButton.setVisibility(View.GONE);
+            binding.darkBgPdf.setVisibility(View.VISIBLE);
+            binding.callInfopdfWebView.loadDataWithBaseURL(null,s,"text/html","utf-8",null);
+            binding.callInfopdfWebView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -152,8 +184,8 @@ public class CallStuffFragment extends Fragment {
             AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.exitFromEditing)
                     .setMessage(R.string.dataWontSave)
-                    .setPositiveButton(R.string.cancel, (dialog, button0) -> dialog.dismiss())
-                    .setNegativeButton(R.string.ok, (dialog, button1) -> navigateToHome())
+                    .setPositiveButton(R.string.cancel, (dialog, b) -> dialog.dismiss())
+                    .setNegativeButton(R.string.ok, (dialog, b) -> navigateToHome())
                     .create();
             alertDialog.show();
         } else {
@@ -163,13 +195,12 @@ public class CallStuffFragment extends Fragment {
 
     private void save() {
         viewModel.saveRegistry();
-        Toast.makeText(requireContext(),getString(R.string.docMovedTo) + " " + getString(R.string.registry),Toast.LENGTH_LONG).show();
-        navigateToHome();
     }
 
     private void setupViewPager2() {
         adapter = new ViewPagerAdapter(CallStuffFragment.this);
         binding.viewPager.setAdapter(adapter);
+        binding.viewPager.setUserInputEnabled(false);
         new TabLayoutMediator(binding.tabs, binding.viewPager, (tab, position) -> tab.setCustomView(configureTab(position))).attach();
         binding.viewPager.setVisibility(View.VISIBLE);
     }
@@ -197,8 +228,8 @@ public class CallStuffFragment extends Fragment {
             }
             break;
             case 3: {
-                tabIcon.setImageResource(R.drawable.ic_receipt);
-                tabText.setText(R.string.recommendations);
+                tabIcon.setImageResource(R.drawable.ic_map);
+                tabText.setText(R.string.maps);
             }
             break;
             default: throw new IllegalStateException();
@@ -209,7 +240,7 @@ public class CallStuffFragment extends Fragment {
 
     private void navigateToHome() {
         Bundle args = new Bundle();
-        args.putBoolean(getString(R.string.keyUpdateList), true);
+        args.putBoolean(getString(R.string.keyDownloadDb), false);
         Navigation.findNavController(requireView()).navigate(R.id.homeFragment, args);
     }
 
@@ -230,7 +261,7 @@ public class CallStuffFragment extends Fragment {
                 break;
                 case 2: fragment = new DiagnosisFragment();
                 break;
-                case 3: fragment = new RecommendationsFragment();
+                case 3: fragment = new MapsFragment();
                 break;
                 default: throw new IllegalStateException();
             }

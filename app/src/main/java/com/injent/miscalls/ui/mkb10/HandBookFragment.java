@@ -15,6 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ public class HandBookFragment extends Fragment {
     private HandBookViewModel viewModel;
     private FragmentHandbookBinding binding;
     private DiagnosisAdapter adapter;
+    private NavController navController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,13 +45,11 @@ public class HandBookFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(HandBookViewModel.class);
 
-        viewModel.getDiagnosesLiveData().observe(getViewLifecycleOwner(), list -> adapter.submitList(list));
-        viewModel.getBackDiagnosis().observe(getViewLifecycleOwner(), list -> adapter.submitList(list, true));
         viewModel.getSelectedDiagnosisLiveData().observe(getViewLifecycleOwner(), this::showDiagnosis);
 
         setupHandbookRecyclerView();
 
-        viewModel.loadDiagnosesByParent(-1);
+        navController = Navigation.findNavController(requireView());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
@@ -79,7 +79,7 @@ public class HandBookFragment extends Fragment {
             @Override
             public void onClick(Diagnosis diagnosis) {
                 if (diagnosis.isParent())
-                    viewModel.loadDiagnosesByParent(diagnosis.getId());
+                    nextPage(diagnosis.getId());
             }
 
             @Override
@@ -100,23 +100,6 @@ public class HandBookFragment extends Fragment {
     }
 
     private void setupSearch() {
-        binding.handbookSearchText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Nothing to do
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getFilter().filter(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // Nothing to do
-            }
-        });
-
         binding.handbookSearchCancel.setOnClickListener(v -> {
             binding.handbookSearchText.setText("");
             hideSearch();
@@ -140,8 +123,12 @@ public class HandBookFragment extends Fragment {
     }
 
     private void navigateToHome() {
+        navController.navigate(R.id.homeFragment);
+    }
+
+    private void nextPage(int id) {
         Bundle args = new Bundle();
-        args.putBoolean(getString(R.string.keyUpdateList), true);
-        Navigation.findNavController(requireView()).navigate(R.id.homeFragment, args);
+        args.putInt(getString(R.string.keyFragmentId), id);
+        navController.navigate(R.id.handBookFragment, args);
     }
 }

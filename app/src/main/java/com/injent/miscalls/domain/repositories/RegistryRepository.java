@@ -1,10 +1,13 @@
 package com.injent.miscalls.domain.repositories;
 
-import com.injent.miscalls.App;
+import android.util.Log;
+
+import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
+import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.data.database.registry.RegistryDao;
 
@@ -17,7 +20,7 @@ import java.util.function.Supplier;
 
 public class RegistryRepository {
 
-    private final RegistryDao dao;
+    private final RegistryDao registryDao;
     private final DiagnosisDao diagnosisDao;
     private final CallInfoDao callInfoDao;
 
@@ -25,11 +28,12 @@ public class RegistryRepository {
     private CompletableFuture<Void> insertRegistryFuture;
     private CompletableFuture<List<Registry>> loadRegistriesFuture;
     private CompletableFuture<Void> deleteRegistryFuture;
+    private CompletableFuture<Registry> loadRegistryByCallId;
 
     public RegistryRepository() {
-        this.dao = App.getInstance().getRegistryDao();
-        this.diagnosisDao = App.getInstance().getDiagnosisDao();
-        this.callInfoDao = App.getInstance().getCallInfoDao();
+        this.registryDao = AppDatabase.getRegistryDao();
+        this.diagnosisDao = AppDatabase.getDiagnosisDao();
+        this.callInfoDao = AppDatabase.getCallInfoDao();
     }
 
     public void cancelFutures() {
@@ -46,7 +50,10 @@ public class RegistryRepository {
     public void insertRegistry(Function<Throwable, Void> ex, Registry registry) {
         insertRegistryFuture = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
-                    dao.insertRegistry(registry);
+                    long id = registryDao.insertRegistry(registry);
+                    Objectively obj = registry.getObjectively();
+                    obj.setRegistryId((int) id);
+                    registryDao.insertObjectively(obj);
                     return null;
                 })
                 .exceptionally(ex);
@@ -54,11 +61,16 @@ public class RegistryRepository {
 
     public void getRegistries(Function<Throwable, List<Registry>> ex, Consumer<List<Registry>> consumer) {
         loadRegistriesFuture = CompletableFuture
-                .supplyAsync(() -> {
-                    List<Registry> list = new ArrayList<>();
-
-                    for (Registry registry : dao.getAll()) {
-                        list.add(fletchRegistry(registry));
+                .supplyAsync((Supplier<List<Registry>>) () -> {
+                    List<Registry> list = registryDao.getAllRawRegistries();
+                    for (int i = 0; i < list.size(); i++) {
+                        List<Diagnosis> diagnoses = new ArrayList<>();
+                        String[] diagnosesId = list.get(i).getDiagnosesId().split(";");
+                        for (String s : diagnosesId) {
+                            diagnoses.add(registryDao.getDiagnosis(Integer.parseInt(s)));
+                        }
+                        list.get(i).setDiagnoses(diagnoses);
+                        list.get(i).setCallInfo(registryDao.getCallInfo(list.get(i).getCallId()));
                     }
                     return list;
                 })
@@ -68,18 +80,54 @@ public class RegistryRepository {
 
     public void loadRegistryById(Function<Throwable, Registry> ex, Consumer<Registry> consumer, int id) {
         loadRegistryByIdFuture = CompletableFuture
-                .supplyAsync(() -> fletchRegistry(dao.getById(id)))
+                .supplyAsync(() -> {
+                    Registry registry = registryDao.getRegistry(id);
+                    registry.setObjectively(registryDao.getObjectivelyByRegId(id));
+                    registry.setCallInfo(callInfoDao.getById(registry.getCallId()));
+
+                    List<Diagnosis> diagnoses = new ArrayList<>();
+                    String[] diagnosesId = registry.getDiagnosesId().split(";");
+                    for (String s : diagnosesId) {
+                        diagnoses.add(registryDao.getDiagnosis(Integer.parseInt(s)));
+                    }
+                    registry.setDiagnoses(diagnoses);
+                    return registry;
+                })
                 .exceptionally(ex);
         loadRegistryByIdFuture.thenAcceptAsync(consumer);
+    }
+
+    public void loadRegistryByCallId(Function<Throwable, Registry> ex, Consumer<Registry> consumer, int id) {
+        loadRegistryByCallId = CompletableFuture
+                .supplyAsync(() -> {
+                    Registry registry = registryDao.getRegistryByCallId(id);
+                    registry.setObjectively(registryDao.getObjectivelyByRegId(id));
+                    registry.setCallInfo(callInfoDao.getById(registry.getCallId()));
+
+                    List<Diagnosis> diagnoses = new ArrayList<>();
+                    String[] diagnosesId = registry.getDiagnosesId().split(";");
+                    for (String s : diagnosesId) {
+                        diagnoses.add(registryDao.getDiagnosis(Integer.parseInt(s)));
+                    }
+                    registry.setDiagnoses(diagnoses);
+                    return registry;
+                })
+                .exceptionally(ex);
+        loadRegistryByCallId.thenAcceptAsync(consumer);
     }
 
     public void deleteRegistry(Function<Throwable,Void> ex, int id) {
         deleteRegistryFuture = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
-                    dao.delete(id);
+                    registryDao.deleteRegistry(id);
+                    registryDao.deleteObjectivelyByRegId(id);
                     return null;
                 })
                 .exceptionally(ex);
+    }
+
+    public void dropTable() {
+        //dao.deleteAll();
     }
 
     public Registry fletchRegistry(Registry registry) {

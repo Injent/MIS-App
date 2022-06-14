@@ -7,6 +7,10 @@ public class AdditionalField implements ViewType {
     private int viewType;
     private int extraResId;
 
+    public AdditionalField(int extraResId) {
+        viewType = ViewType.FIELD_ADDITIONAL_SPACE;
+    }
+
     public AdditionalField(int nameResId, int index, int viewType) {
         this.nameResId = nameResId;
         this.index = index;

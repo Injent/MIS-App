@@ -5,14 +5,9 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.registry.Registry;
-import com.injent.miscalls.data.database.registry.RegistryAndObjectively;
 
 import java.io.File;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 public class UserDataManager {
 
@@ -26,9 +21,9 @@ public class UserDataManager {
         this.sp = sharedPreferences;
     }
 
-    public void init(Context context) {
+    public void init() {
         if (isInit()) return;
-        File file = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         this
                 .setData(R.string.keyMode, 0)
                 .setData(R.string.keyAnonCall, false)

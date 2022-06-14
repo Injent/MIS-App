@@ -36,7 +36,7 @@ public class PdfRepository {
     }
 
     public void generatePdf(Context context, String html, String fileName, PDFPrint.OnPDFPrintListener pdfListener, OnFileManageListener fileListener) throws IOException {
-        String filePath = App.getUserDataManager().getString(R.string.keyPdfFilePath);
+        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
         File file = new File(filePath
                 + File.separator
                 + fileName
@@ -58,28 +58,39 @@ public class PdfRepository {
     public void getFetchedHtml(Function<Throwable,String> ex, Consumer<String> consumer, Context context, Registry registry) {
         getFetchedHtmlFuture = CompletableFuture
                 .supplyAsync(() -> {
+                    StringBuilder sb = new StringBuilder();
                     try {
                         AssetManager assetManager = context.getAssets();
                         InputStream inputStream;
                         inputStream = assetManager.open("doc_temp.html");
 
-                        StringBuilder sb = new StringBuilder();
                         Scanner scanner = new Scanner(inputStream);
                         while (scanner.hasNextLine()) {
                             sb.append(scanner.nextLine());
                         }
-                        scanner.close();
+
                         inputStream.close();
+                        scanner.close();
+
+                        if (registry == null) {
+                            return "";
+                        }
 
                         Objectively obj = registry.getObjectively();
 
+                        if (obj == null) {
+                            obj = new Objectively();
+                        }
+
                         return sb.toString()
+                                .replace("$medication_therapy", registry.getRecommendation())
+                                .replace("$anamnesis", registry.getAnamnesis())
                                 .replace("$organization", App.getUser().getOrganization().getName())
                                 .replace("$patient_fullname", registry.getCallInfo().getFullName())
                                 .replace("$doctor_fullname", App.getUser().getFullName())
                                 .replace("$complaints", registry.getComplaints())
                                 .replace("$recommendations", registry.getRecommendation())
-                                .replace("$date_of_birth", registry.getCallInfo().getBornDate().toString())
+                                .replace("$date_of_birth", registry.getCallInfo().getBornDateString())
                                 .replace("$age", String.valueOf(registry.getCallInfo().getAge()))
                                 .replace("$work_position", App.getUser().getWorkingPosition())
                                 .replace("$address", registry.getCallInfo().getResidence())
@@ -87,17 +98,19 @@ public class PdfRepository {
                                 .replace("$state", obj.getGeneralState())
                                 .replace("$bodybuild", obj.getBodyBuild())
                                 .replace("$skin", obj.getSkin())
-                                .replace("$nodes_gland", obj.getNodeAndGland())
+                                .replace("$nodes_gland", obj.getNodes())
                                 .replace("$temperature", obj.getTemperature())
                                 .replace("$pharynx", obj.getPharynx())
-                                .replace("$respriratory_rate", obj.getRespiratoryRate())
+                                .replace("$respiratory_rate", obj.getRespiratoryRate())
                                 .replace("$breathing", obj.getBreathing())
                                 .replace("$arterial_pressure", obj.getArterialPressure())
                                 .replace("$pulse", obj.getPulse())
                                 .replace("$abdomen", obj.getAbdomen())
                                 .replace("$liver", obj.getLiver())
                                 .replace("$diagnosis", Diagnosis.listToStringNames(registry.getDiagnoses(), "<br>"))
-                                .replace("$surveys", registry.getSurveys());
+                                .replace("$surveys", registry.getSurveys())
+                                .replace("$working", obj.isWorking())
+                                .replace("$sick", obj.isSick());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

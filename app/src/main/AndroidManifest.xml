@@ -21,7 +21,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MISLight">
+        android:theme="@style/Theme.MISLight"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:theme="@style/Theme.MISLight"
@@ -29,6 +30,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
 
             <intent-filter>

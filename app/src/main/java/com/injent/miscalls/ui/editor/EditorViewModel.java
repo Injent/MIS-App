@@ -36,6 +36,7 @@ public class EditorViewModel extends ViewModel {
     public void loadRegistry(int id) {
         registryRepository.loadRegistryById(throwable -> {
             error.postValue(throwable);
+            throwable.printStackTrace();
             return null;
         }, registry -> selectedRegistry.postValue(registry), id);
     }
@@ -80,15 +81,15 @@ public class EditorViewModel extends ViewModel {
     }
 
     public void loadHtml(Context context) {
-        Registry registry = selectedRegistry.getValue();
-        if (registry == null) {
+        if (selectedRegistry.getValue() == null) {
             error.setValue(new IllegalStateException());
             return;
         }
         pdfRepository.getFetchedHtml(throwable -> {
             error.postValue(throwable);
-            return null;
-        }, s -> html.postValue(s), context, registry);
+            throwable.printStackTrace();
+            return "";
+        }, s -> html.postValue(s), context, selectedRegistry.getValue());
     }
 
     public void generatePdf(Context context, PDFPrint.OnPDFPrintListener pdfListener, PdfRepository.OnFileManageListener fileManageListener) {

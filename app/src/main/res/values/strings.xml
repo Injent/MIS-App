@@ -1,15 +1,16 @@
 <resources>
-    <string name="app_name">МИС Вызовов</string>
+    <string name="app_name">Мобильный терапевт</string>
 
     <!-- Titles -->
     <string name="callList">Список вызовов</string>
     <string name="callInfo">Вызов</string>
     <string name="auth">Авторизация</string>
     <string name="settings">Настройки</string>
-    <string name="editor">Редактор</string>
+    <string name="editor">Обзор</string>
     <string name="pdfViewer">Документ</string>
 
     <!-- Sections -->
+    <string name="openDocFolder">Папка с документами</string>
     <string name="reason">Повод обращения</string>
     <string name="complaints">Жалобы</string>
     <string name="anamnesis">Анамнез</string>
@@ -37,7 +38,18 @@
         <item>гиперстенический</item>
     </string-array>
     <string name="skin">Кожные покровы</string>
-    <string name="nodesAndGland">Л/узлы, щ/железа</string>
+    <string name="nodes">Л/узлы</string>
+    <string-array name="nodesTypes">
+        <item>не выбрано</item>
+        <item>не увеличены</item>
+        <item>увеличены</item>
+    </string-array>
+    <string name="glands">Щ/железа</string>
+    <string-array name="glandsTypes">
+        <item>не выбрано</item>
+        <item>не увеличена</item>
+        <item>увеличена</item>
+    </string-array>
     <string name="temperature">Температура</string>
     <string name="pharynx">Зев</string>
     <string name="respiratoryRate">ЧДД</string>
@@ -64,7 +76,7 @@
     </string-array>
     <string name="arterialPressure">Артериальное давление</string>
     <string name="arterialPressureMeasurement">мм рт. ст.</string>
-    <string name="pulse">PS</string>
+    <string name="pulse">Пульс</string>
     <string name="pulseMeasurement">уд в мин</string>
     <string name="abdomen">Живот</string>
     <string-array name="abdomenTypes">
@@ -77,7 +89,7 @@
     <string name="liver">Печень</string>
     <string-array name="liverTypes">
         <item>не выбрано</item>
-        <item>неувеличена</item>
+        <item>не увеличена</item>
         <item>увеличена</item>
     </string-array>
     <string name="edema">Отеки</string>
@@ -86,14 +98,14 @@
         <item>есть</item>
         <item>нет</item>
     </string-array>
-    <string name="pensioner">Пенсионер</string>
+    <string name="pensioner">Неработающий</string>
     <string name="sick">Больничный</string>
     <string name="surveys">Обследования</string>
     <string name="medicationTherapy">Медикаментозная терапия</string>
     <string name="regularUpdates">Регулярные\nобновления</string>
     <string name="infoAboutPatient">Информация о пациенте</string>
     <string name="diagnosis">Диагноз</string>
-    <string name="recommendations">Рекомендации</string>
+    <string name="maps">Карты</string>
     <string name="treatmentPlan">План лечения</string>
     <string name="sortByNearest">Сортировать по\nместоположению</string>
     <string name="listOfPatients">@string/callList</string>
@@ -102,6 +114,7 @@
     <string name="sendAll">Отправить все</string>
     <string name="miscellaneous">Разное</string>
     <string name="interfaceName">Интерфейс</string>
+    <string name="biometricAuth">Биометрическая авторизация</string>
 
     <!-- Menu -->
     <string name="registry">Журнал</string>
@@ -116,6 +129,8 @@
     <string name="anonCall">Анонимность звонков</string>
 
     <!-- Hints -->
+    <string name="patientsComplaints">Жалобы со слов пациента</string>
+    <string name="stateOfSkin">Состояние кожи</string>
     <string name="anonCallDesc">Оператор может взимать дополнительную плату за услугу</string>
     <string name="writeResultOfInspection">Напишите результаты осмотра…</string>
     <string name="writeConclusion">Напишите заключение…</string>
@@ -131,8 +146,9 @@
     <string name="commentary">Комментарий…</string>
 
     <!-- Actions -->
+    <string name="open">Открыть</string>
     <string name="actionAuth">Авторизоваться</string>
-    <string name="saveChanges">Сохранить изменения</string>
+    <string name="saveChanges">Отправить</string>
     <string name="changesAreSaved">Изменения сохранены</string>
     <string name="pdfPreview">Предосмотр\nдокумента</string>
     <string name="useTempFromInspection">Использовать\nшаблон осмотра</string>
@@ -169,7 +185,6 @@
     <string name="moveToSettings">Нажмите, чтобы отключить обновления</string>
     <string name="protocolTempsCleared">Все протоколы сброшены</string>
     <string name="tempUsed">Шаблон использован</string>
-    <string name="protocolDeleted">Протокол %s удален</string>
     <string name="textCopied">Текст скопирован</string>
     <string name="undoDeleting">Отменить</string>
     <string name="exitFromEditing">Прекратить редактирование?</string>
@@ -178,15 +193,16 @@
     <string name="diagnoseDeleted">Диагноз удален</string>
     <string name="diagnosisAlreadyAdded">Этот диагноз уже записан</string>
     <string name="docMovedTo">Документ перемещен в раздел</string>
+    <string name="docMovedToJournal">Документ перемещен в раздел «Журнал»</string>
+    <string name="docsSent">Документы отправлены на сервер</string>
     <string name="documentSaved">Документ сохранен в папке «Документы»</string>
-    <string name="recommendationSelected">Рекомендация выбрана</string>
     <string name="fileSaveByPath">Файл сохранен по пути: </string>
     <string name="errorOfDocumentGeneration">Ошибка генерации документа</string>
     <string name="replaceFile">Заменить файл?</string>
     <string name="fileAlreadyExists">Файл уже существует</string>
 
     <!-- Field types -->
-    <string name="email">Эл. почта</string>
+    <string name="login">Логин</string>
     <string name="password">Пароль</string>
     <string name="diagnose">Диагноз: МКБ (Международная классификация болезней)</string>
     <string name="search">Поиск…</string>
@@ -195,16 +211,19 @@
     <string name="noInternetConnection">Отсутствует интернет соединение</string>
     <string name="userNotFound">Пользователь не найден</string>
     <string name="unknownError">Возникла неизвестная ошибка</string>
+    <string name="serverDoesNotRespond">Сервер не отвечает</string>
     <string name="emptyDbError">База данных пациентов не загружена!</string>
     <string name="emptyServerProtocols">На сервере отсутсвтуют протоколы</string>
     <string name="serverError">Ошибка сервера</string>
     <string name="socketTimeOut">Превышено время ожидания</string>
+    <string name="diagnosesIsEmpty">Не заполнен диагноз</string>
 
     <!-- Links -->
     <string name="aboutLink">https://exitoso.ru/injent/about/</string>
     <string name="helpLink">https://exitoso.ru/injent/help/</string>
 
     <string-array name="infoType">
+        <item>Время вызова</item>
         <item>Дата заполнения мед. карты</item>
         <item>Ф.И.О.</item>
         <item>Пол</item>
@@ -243,34 +262,31 @@
     </string-array>
 
     <!-- Arguments Keys -->
-    <string name="keyCallId">callId</string>
-    <string name="keyFragmentId">fragmentId</string>
-    <string name="keyKeepData">keepData</string>
-    <string name="keyCallParcelable">callParcelable</string>
-    <string name="keyRecommendationId">recommendationId</string>
-    <string name="keyEditMode">editMode</string>
-    <string name="keyUpdateList">updateList</string>
-    <string name="keyFileName">fileName</string>
-    <string name="keyDownloadDb">downloadDb</string>
-    <string name="keyDbDate">dbDate</string>
-    <string name="keyPath">keyPath</string>
-    <string name="keyRegistryId">registryId</string>
+    <string name="keyCallId">CALL_ID</string>
+    <string name="keyFragmentId">FRAGMENT_ID</string>
+    <string name="keyKeepData">KEEP_DATA</string>
+    <string name="keyFileName">FILE_NAME</string>
+    <string name="keyDownloadDb">DOWNLOAD_DB</string>
+    <string name="keyDbDate">DB_DATE</string>
+    <string name="keyPath">KEY_PATH</string>
+    <string name="keyRegistryId">REGISTRY_ID</string>
 
     <!-- Shared Preferences Keys -->
-    <string name="keyPdfFilePath">pdfFilePath</string>
-    <string name="keyInit">init</string>
-    <string name="keyMode">mode</string>
-    <string name="keyAuthed">authed</string>
-    <string name="keyAnonCall">anonCall</string>
-    <string name="keyWorkingPosition">workingPosition</string>
-    <string name="keyFirstName">firstName</string>
-    <string name="keyLastname">lastname</string>
-    <string name="keyMiddleName">middleName</string>
-    <string name="keyToken">token</string>
-    <string name="keyLogin">login</string>
-    <string name="keyPassword">password</string>
-    <string name="keyOffUpdates">offUpdates</string>
-    <string name="keyTokenValue">tokenValue</string>
-    <string name="keyTokenId">tokenId</string>
-    <string name="keyTokenExpirationDate">tokenExpDate</string>
+    <string name="keyPdfFilePath">PDF_FILE_PATH</string>
+    <string name="keyInit">INIT</string>
+    <string name="keyMode">MODE</string>
+    <string name="keyAuthed">AUTHED</string>
+    <string name="keyAnonCall">ANON_CALL</string>
+    <string name="keyWorkingPosition">WORKING_POSITION</string>
+    <string name="keyFirstName">FIRST_NAME</string>
+    <string name="keyLastname">LAST_NAME</string>
+    <string name="keyMiddleName">MIDDLE_NAME</string>
+    <string name="keyToken">TOKEN</string>
+    <string name="keyLogin">LOGIN</string>
+    <string name="keyPassword">PASSWORD</string>
+    <string name="keyMoveToSettings">MOVE_TO_SETTINGS</string>
+    <string name="keyTokenValue">TOKEN_VALUE</string>
+    <string name="keyTokenId">TOKEN_ID</string>
+    <string name="keyTokenExpirationDate">TOKEN_EXPIRATION_DATE</string>
+    <string name="keyDb">DB_KEY</string>
 </resources>

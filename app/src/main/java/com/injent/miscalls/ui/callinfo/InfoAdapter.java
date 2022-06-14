@@ -21,7 +21,7 @@ public class InfoAdapter extends ListAdapter<String, InfoAdapter.ViewHolder> {
         this.fieldName = fieldName;
     }
 
-    static DiffUtil.ItemCallback<String> diffCallback = new DiffUtil.ItemCallback<String>() {
+    static DiffUtil.ItemCallback<String> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
             return false;

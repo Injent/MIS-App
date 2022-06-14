@@ -10,22 +10,48 @@
     <color name="black">#FF000000</color>
 
     <!-- Interface elements -->
-    <color name="colorPrimary">#36393f</color>
-    <color name="colorPrimaryDark">#2f3136</color>
-    <color name="line">#42464d</color>
+    <color name="colorPrimary">#FFFFFFFF</color>
+    <color name="colorPrimaryDark">#f8f9fa</color>
+    <color name="colorSecondaryPrimary">#f5f5f5</color>
+    <color name="colorSecondaryPrimaryDark">#e2e2e2</color>
+    <color name="line">#EAEAEA</color>
     <color name="green">#3ba55d</color>
+    <color name="greenTransparent">#B33BA55D</color>
+    <color name="gray">#e8e8e8</color>
     <color name="lightBlue">#0a95ff</color>
-    <color name="statusBar">#4D000000</color>
+    <color name="statusBar">#21201e</color>
+    <color name="sectionColor">#3f3f3f</color>
+    <color name="transparentDarkGlass">#34000000</color>
+    <color name="transparentLightGlass">#34FFFFFF</color>
+
+    <color name="gradientDarkGreen">#17a366</color>
+    <color name="gradientLightGreen">#11bc9c</color>
+
+    <color name="icClock">#0091FF</color>
+    <color name="icFolder">#FF6F00</color>
+    <color name="uiGray">#f2f2f2</color>
+    <color name="uiLightGray">#ecedf0</color>
+
+    <color name="sectionButtonGradientStart">#89daff</color>
+    <color name="sectionButtonGradientEnd">#449cfc</color>
 
     <!-- Text -->
-    <color name="focused">#3c3f45</color>
-    <color name="highlight">#AD95CAFF</color>
+    <color name="focused">#EDFDFF</color>
+    <color name="highlight">#CC3494FC</color>
     <color name="error">#FD2C4B</color>
 
     <!-- Font colors -->
-    <color name="darkGrayText">#fdfdfd</color>
-    <color name="grayText">#aaacb0</color>
-    <color name="lowGray">#8c9896</color>
-    <color name="lightGrayText">#484a4f</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="hintWhite">#E6FFFFFF</color>
+    <color name="darkGrayText">#3e495b</color>
+    <color name="grayText">#6C7C8A</color>
+    <color name="lowGray">#8398AA</color>
+    <color name="lightGrayText">#c7cbd8</color>
+    <color name="black_overlay">#66000000</color>
+
+    <!-- Gradients -->
+    <color name="startColor">#bbe1fe</color>
+    <color name="centerColor">#67c0ff</color>
+    <color name="endColor">#0999f9</color>
 
 </resources>

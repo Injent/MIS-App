@@ -1,6 +1,5 @@
 package com.injent.miscalls.data.recommendation;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -12,24 +11,24 @@ import java.util.List;
 @Dao
 public interface RecommendationDao {
 
-    @Query("SELECT * FROM Recommendation")
-    List<Recommendation> getAll();
+    @Query("SELECT * FROM Medication")
+    List<Medication> getAll();
 
-    @Query("SELECT * FROM Recommendation WHERE id = :id LIMIT 1")
-    Recommendation getById(int id);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Recommendation... protocol);
+    @Query("SELECT * FROM Medication WHERE id = :id LIMIT 1")
+    Medication getById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Recommendation> list);
+    void insert(Medication... protocol);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Medication> list);
 
     @Update
-    void update(Recommendation protocol);
+    void update(Medication protocol);
 
-    @Query("DELETE FROM Recommendation WHERE id = :id")
+    @Query("DELETE FROM Medication WHERE id = :id")
     void delete(int id);
 
-    @Query("DELETE FROM Recommendation")
+    @Query("DELETE FROM Medication")
     void clear();
 }

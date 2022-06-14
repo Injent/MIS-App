@@ -12,20 +12,20 @@ import java.util.List;
 @Dao
 public interface CallInfoDao {
 
-    @Query("SELECT * FROM calls")
-    List<CallInfo> getAll();
+    @Query("SELECT * FROM calls WHERE user_id =:id")
+    List<CallInfo> getCallByUserId(int id);
 
     @Query("SELECT * FROM calls WHERE id = :id LIMIT 1")
     CallInfo getById(int id);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CallInfo callInfo);
+    @Insert
+    long insertCall(CallInfo callInfo);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<CallInfo> list);
 
     @Update
-    void update(CallInfo callInfo);
+    void updateCall(CallInfo callInfo);
 
     @Delete
     void delete(CallInfo callInfo);

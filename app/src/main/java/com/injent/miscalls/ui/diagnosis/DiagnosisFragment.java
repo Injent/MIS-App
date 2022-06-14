@@ -1,11 +1,17 @@
 package com.injent.miscalls.ui.diagnosis;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,13 +33,27 @@ import com.injent.miscalls.ui.mkb10.DiagnosisAdapter;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class DiagnosisFragment extends Fragment {
+
+    public static final long SEARCH_DELAY = 500;
 
     private FragmentDiagnosisBinding binding;
     private DiagnosisUsedAdapter diagnosisUsedAdapter;
     private DiagnosisAdapter diagnosesSearchAdapter;
     private CallStuffViewModel viewModel;
+    private int searchDelay;
+    private Timer timer;
+    private final TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            if (searchDelay < 100)
+                searchDelay++;
+        }
+    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -47,23 +68,25 @@ public class DiagnosisFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
 
+        timer = new Timer();
+        timer.schedule(timerTask, 0L, 10L);
+
         binding.cancelSearch.setOnClickListener(view0 -> {
             binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
             binding.searchDiagnosisText.setText("");
             binding.searchDiagnosisLayout.setVisibility(View.GONE);
         });
 
-        setupSearchRecyclerView();
-
-        //Observer
-        viewModel.getDiagnosesListLiveData().observe(getViewLifecycleOwner(), list -> {
-            diagnosesSearchAdapter.submitList(list, true);
+        viewModel.getSearchDiagnoses().observe(getViewLifecycleOwner(), list -> {
+            diagnosesSearchAdapter.submitList(list);
         });
+
+        setupSearchRecyclerView();
 
         binding.diagnosisRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         diagnosisUsedAdapter = new DiagnosisUsedAdapter(new DiagnosisUsedAdapter.OnItemClickListener() {
             @Override
-            public void onLongClick(Diagnosis diagnosis) {
+            public void onDelete(Diagnosis diagnosis) {
                 List<Diagnosis> newList = viewModel.deleteItemFromList(diagnosisUsedAdapter.getCurrentList(), diagnosis);
                 diagnosisUsedAdapter.submitList(newList);
                 Toast.makeText(requireContext(),R.string.diagnoseDeleted,Toast.LENGTH_SHORT).show();
@@ -76,6 +99,10 @@ public class DiagnosisFragment extends Fragment {
         });
         binding.diagnosisRecyclerView.setAdapter(diagnosisUsedAdapter);
         binding.diagnosisRecyclerView.setItemAnimator(null);
+
+        if (viewModel.getCallLiveData().getValue().isInspected()) {
+            diagnosisUsedAdapter.submitList(viewModel.getCurrentRegistryLiveData().getValue().getDiagnoses());
+        }
     }
 
     private void setupSearchRecyclerView() {
@@ -89,11 +116,16 @@ public class DiagnosisFragment extends Fragment {
 
             @Override
             public void onClick(Diagnosis diagnosis) {
-                if (!diagnosis.isParent()) {
-                    addDiagnosis(diagnosis);
-                } else {
-                    viewModel.loadDiagnosisList(diagnosis.getId());
-                }
+                viewModel.addItemToList(diagnosisUsedAdapter.getCurrentList(), diagnosis, list -> {
+                    if (list != null) {
+                        binding.searchDiagnosisLayout.setVisibility(View.GONE);
+                        binding.searchDiagnosisText.setText("");
+                        binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
+                        diagnosisUsedAdapter.submitList(list);
+                        return;
+                    }
+                    Toast.makeText(requireContext(), R.string.diagnosisAlreadyAdded,Toast.LENGTH_SHORT).show();
+                });
             }
 
             @Override
@@ -111,43 +143,37 @@ public class DiagnosisFragment extends Fragment {
         binding.diagnosisSelectRecyclerView.addItemDecoration(divider);
         binding.diagnosisSelectRecyclerView.setAdapter(diagnosesSearchAdapter);
 
-        binding.searchDiagnosisText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Nothing to do
+        final TextWatcher textWatcherSearchListener = new TextWatcher() {
+            final android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
+            Runnable runnable;
+
+            public void onTextChanged(final CharSequence s, int start, final int before, int count) {
+                handler.removeCallbacks(runnable);
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                diagnosesSearchAdapter.getFilter().filter(charSequence);
+            public void afterTextChanged(final Editable s) {
+                // Show some progress, because you can access UI here
+                runnable = () -> viewModel.searchDiagnosis(s.toString());
+                handler.postDelayed(runnable, SEARCH_DELAY);
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-                // Nothing to do
-            }
-        });
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        };
+
+        binding.searchDiagnosisText.addTextChangedListener(textWatcherSearchListener);
     }
 
     private void showDiagnosisSearch() {
         binding.searchDiagnosisLayout.setVisibility(View.VISIBLE);
         binding.diagnosisRecyclerView.setVisibility(View.GONE);
-        viewModel.loadDiagnosisList(-1);
-    }
-
-    private void addDiagnosis(Diagnosis diagnosis) {
-        List<Diagnosis> newList = viewModel.addItemToList(requireContext(), diagnosisUsedAdapter.getCurrentList(), diagnosis);
-        App.hideKeyBoard(requireView());
-        diagnosisUsedAdapter.submitList(newList);
-
-        binding.diagnosisRecyclerView.setVisibility(View.VISIBLE);
-        binding.searchDiagnosisText.setText("");
-        binding.searchDiagnosisLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        timer = null;
         binding = null;
     }
 }

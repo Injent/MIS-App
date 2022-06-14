@@ -63,7 +63,7 @@ public class User {
     private boolean authed;
 
     @ColumnInfo(name = "org_id")
-    private String organizationId;
+    private int organizationId;
 
     @Ignore
     @SerializedName("organization")
@@ -131,11 +131,11 @@ public class User {
         this.authed = authed;
     }
 
-    public String getOrganizationId() {
+    public int getOrganizationId() {
         return organizationId;
     }
 
-    public void setOrganizationId(String organizationId) {
+    public void setOrganizationId(int organizationId) {
         this.organizationId = organizationId;
     }
 

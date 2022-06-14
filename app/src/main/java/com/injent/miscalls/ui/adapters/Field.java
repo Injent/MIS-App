@@ -7,13 +7,17 @@ public class Field implements ViewType {
     public static final int GENERAL_STATE = 2;
     public static final int BODY_BUILD = 3;
     public static final int SKIN = 4;
-    public static final int NODES_GLAND = 5;
+    public static final int NODES = 5;
     public static final int PHARYNX = 6;
     public static final int BREATHING = 7;
     public static final int ARTERIAL_PRESSURE = 8;
     public static final int PULSE = 9;
     public static final int PENSIONER = 10;
     public static final int SICK = 11;
+    public static final int GLANDS = 12;
+    public static final int TEMPERATURE = 13;
+    public static final int ABDOMEN = 14;
+    public static final int LIVER = 15;
 
     private int nameStringResId;
     private int hintStringResId;

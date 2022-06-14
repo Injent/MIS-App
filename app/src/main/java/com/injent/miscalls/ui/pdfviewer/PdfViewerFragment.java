@@ -58,6 +58,11 @@ public class PdfViewerFragment extends Fragment {
             binding.pdfViewerSave.setEnabled(true);
         });
 
+        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
+            binding.pdfPreviewLoad.setVisibility(View.INVISIBLE);
+            Toast.makeText(requireContext(), R.string.unknownError, Toast.LENGTH_LONG).show();
+        });
+
         viewModel.loadHtml(requireContext());
 
         binding.pdfViewerSave.setOnClickListener(v -> viewModel.generatePdf(requireContext(), new PDFPrint.OnPDFPrintListener() {

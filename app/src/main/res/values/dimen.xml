@@ -21,6 +21,7 @@
     <dimen name="editTextPadding">6dp</dimen>
     <dimen name="defaultDp">16dp</dimen>
     <dimen name="icPadding">8dp</dimen>
+    <dimen name="space">64dp</dimen>
 
     <!-- Font Size -->
     <dimen name="titleFont">24sp</dimen>

@@ -1,6 +1,6 @@
 package com.injent.miscalls.domain.repositories;
 
-import com.injent.miscalls.App;
+import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
 
@@ -9,17 +9,18 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class DiagnosisRepository {
 
     private final DiagnosisDao dao;
 
     public DiagnosisRepository() {
-        this.dao = App.getInstance().getDiagnosisDao();
+        this.dao = AppDatabase.getDiagnosisDao();
     }
 
     private CompletableFuture<List<Diagnosis>> diagnosesByParent;
+    private CompletableFuture<Diagnosis> diagnosisFuture;
+    private CompletableFuture<List<Diagnosis>> searchDiagnosis;
 
     public void cancelFutures() {
         if (diagnosesByParent != null) {
@@ -28,6 +29,19 @@ public class DiagnosisRepository {
         if (diagnosisFuture != null) {
             diagnosisFuture.cancel(true);
         }
+        if (searchDiagnosis != null) {
+            searchDiagnosis.cancel(true);
+        }
+    }
+
+    public void searchDiagnoses(String s, Consumer<List<Diagnosis>> consumer) {
+        searchDiagnosis = CompletableFuture
+                .supplyAsync(() -> dao.searchLike("%" + s + "%"))
+        .exceptionally(throwable -> {
+            throwable.printStackTrace();
+            return null;
+        });
+        searchDiagnosis.thenAcceptAsync(consumer);
     }
 
     public void getDiagnosesByParentId(Function<Throwable, List<Diagnosis>> ex, Consumer<List<Diagnosis>> consumer, int parentId) {
@@ -48,8 +62,6 @@ public class DiagnosisRepository {
                 .exceptionally(ex);
         diagnosesByParent.thenAcceptAsync(consumer);
     }
-
-    private CompletableFuture<Diagnosis> diagnosisFuture;
 
     public void loadDiagnosisById(Function<Throwable, Diagnosis> ex, Consumer<Diagnosis> consumer, int id) {
         diagnosisFuture = CompletableFuture

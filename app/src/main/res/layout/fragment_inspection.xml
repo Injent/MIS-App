@@ -83,24 +83,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/inspectionField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/displayPadding"
-                android:background="@drawable/edit_text"
-                android:ems="10"
-                android:fontFamily="@font/clear_sans_regular"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:minHeight="96dp"
-                android:padding="6dp"
-                android:text="@string/inspectionPreset"
-                android:textColor="@color/darkGrayText"
-                android:textColorHighlight="@color/highlight"
-                android:textSize="@dimen/headerFont"
-                android:visibility="gone" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fieldsRecyclerView"
                 android:layout_width="match_parent"

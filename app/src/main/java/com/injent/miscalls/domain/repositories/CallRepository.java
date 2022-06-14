@@ -2,8 +2,11 @@ package com.injent.miscalls.domain.repositories;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
+import com.injent.miscalls.data.database.calls.Geo;
+import com.injent.miscalls.data.database.calls.GeoDao;
 import com.injent.miscalls.data.database.user.Token;
 import com.injent.miscalls.network.JResponse;
 import com.injent.miscalls.network.NetworkManager;
@@ -19,17 +22,19 @@ import java.util.function.Supplier;
 
 import retrofit2.Call;
 
-public class HomeRepository {
+public class CallRepository {
 
-    private final CallInfoDao dao;
+    private final CallInfoDao callDao;
+    private final GeoDao geoDao;
 
     private CompletableFuture<CallInfo> callById;
     private CompletableFuture<List<CallInfo>> allCallsInfo;
     private CompletableFuture<Void> insertCallsWithDropTable;
     private CompletableFuture<CallInfo> insertCallInfo;
 
-    public HomeRepository() {
-        dao = App.getInstance().getCallInfoDao();
+    public CallRepository() {
+        callDao = AppDatabase.getCallInfoDao();
+        geoDao = AppDatabase.getGeoDao();
     }
 
     public String setNewPatientDbDate() {
@@ -44,13 +49,17 @@ public class HomeRepository {
         return App.getUserDataManager().getString(R.string.keyDbDate);
     }
 
-    public Call<List<CallInfo>> getPatientList(Token token) {
+    public Call<JResponse> getPatientList(Token token) {
         return NetworkManager.getMisAPI().patients(token);
     }
 
     public void loadCallInfoById(Function<Throwable, CallInfo> ex, Consumer<CallInfo> consumer, int id) {
         callById = CompletableFuture
-                .supplyAsync(() -> dao.getById(id))
+                .supplyAsync(() -> {
+                    CallInfo call = callDao.getById(id);
+                    call.setGeo(geoDao.getGeoByCallId(id));
+                    return call;
+                })
                 .exceptionally(ex);
         callById.thenAcceptAsync(consumer);
     }
@@ -70,9 +79,15 @@ public class HomeRepository {
         }
     }
 
-    public void loadAllCallsInfo(Function<Throwable, List<CallInfo>> ex, Consumer<List<CallInfo>> consumer) {
+    public void loadAllCallsInfo(Function<Throwable, List<CallInfo>> ex, Consumer<List<CallInfo>> consumer, int userId) {
         allCallsInfo = CompletableFuture
-                .supplyAsync(dao::getAll)
+                .supplyAsync(() -> {
+                    List<CallInfo> list = callDao.getCallByUserId(userId);
+                    for (int i = 0; i < list.size(); i++) {
+                        list.get(i).setGeo(geoDao.getGeoByCallId(userId));
+                    }
+                    return list;
+                })
                 .exceptionally(ex);
         allCallsInfo.thenAcceptAsync(consumer);
     }
@@ -80,17 +95,22 @@ public class HomeRepository {
     public void insertCallsWithDropTable(Function<Throwable,Void> ex, List<CallInfo> list) {
         insertCallsWithDropTable = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
-                    dao.clearAll();
-                    dao.insertAll(list);
+                    callDao.clearAll();
+                    for (CallInfo item : list) {
+                        long callId = callDao.insertCall(item);
+                        Geo geo = item.getGeo();
+                        geo.setCallId((int) callId);
+                        geoDao.insertGeo(geo);
+                    }
                     return null;
                 })
                 .exceptionally(ex);
     }
 
-    public void insertCall(Function<Throwable, CallInfo> ex, CallInfo callInfo) {
+    public void updateCall(Function<Throwable, CallInfo> ex, CallInfo callInfo) {
         insertCallInfo = CompletableFuture
                 .supplyAsync((Supplier<CallInfo>) () -> {
-                    dao.insert(callInfo);
+                    callDao.updateCall(callInfo);
                     return null;
                 })
                 .exceptionally(ex);

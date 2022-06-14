@@ -1,14 +1,10 @@
 package com.injent.miscalls.network;
 
 import com.google.gson.annotations.SerializedName;
-import com.injent.miscalls.data.database.calls.CallInfo;
-import com.injent.miscalls.data.database.calls.Calls;
+import com.injent.miscalls.network.rest.dto.CallDto;
 import com.injent.miscalls.data.database.user.User;
 
-import java.util.Collections;
 import java.util.List;
-
-import retrofit2.http.FormUrlEncoded;
 
 public class JResponse {
 
@@ -22,7 +18,7 @@ public class JResponse {
     private User user;
 
     @SerializedName("calls")
-    private Calls calls;
+    private List<CallDto> calls;
 
     public String getMessage() {
         return message;
@@ -36,8 +32,8 @@ public class JResponse {
         return user;
     }
 
-    public List<CallInfo> getCalls() {
-        return calls.calls();
+    public List<CallDto> getCalls() {
+        return calls;
     }
 
     public boolean isSuccessful() {

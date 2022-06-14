@@ -1,27 +1,26 @@
 package com.injent.miscalls;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
 
-import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.data.UserDataManager;
 import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.database.calls.CallInfoDao;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
 import com.injent.miscalls.data.database.registry.RegistryDao;
+import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.data.database.user.UserDao;
 import com.injent.miscalls.data.recommendation.RecommendationDao;
+
+import org.osmdroid.config.Configuration;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 
 public class App extends Application {
 
@@ -31,15 +30,10 @@ public class App extends Application {
     public static final String ENCRYPTED_PREFERENCES_NAME = "security-data";
     public static final String CHANNEL_ID = "service-v1";
 
-    private DiagnosisDao diagnosisDao;
-    private RegistryDao registryDao;
-    private RecommendationDao recommendationDao;
-    private CallInfoDao callInfoDao;
-    private UserDao userDao;
-
     private static UserDataManager userDataManager;
     private static UserDataManager encryptedUserDataManager;
     private static User user;
+    private AppDatabase database;
 
     public static App getInstance() {
         return instance.get();
@@ -49,46 +43,29 @@ public class App extends Application {
         instance = new WeakReference<>(referent);
     }
 
+    public AppDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(AppDatabase database) {
+        this.database = database;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-
         setInstance(this);
-        setUserSettings(new UserDataManager(getResources(), getSharedPreferences()));
-        setEncryptedUserDataManager(new UserDataManager(getResources(), getEncryptedPreferences()));
-        initSettings();
-        connectDatabase();
     }
 
-    public void connectDatabase() {
-        if (encryptedUserDataManager.getBoolean(R.string.keyAuthed)) {
-            SharedPreferences esp = getEncryptedPreferences();
-            String key = esp.getString(getString(R.string.keyToken),null);
+    public static User getUser() { return user; }
 
-            AppDatabase appDatabase = AppDatabase.getInstance(getApplicationContext(), key.toCharArray());
-
-            diagnosisDao = appDatabase.diagnosisDao();
-            registryDao = appDatabase.registryDao();
-            recommendationDao = appDatabase.recommendationDao();
-            callInfoDao = appDatabase.callInfoDao();
-            userDao = appDatabase.userDao();
-        }
-    }
-
-    public void regUser(User user) {
-        App.setUser(user);
-        encryptedUserDataManager
-                .setData(R.string.keyAuthed,true)
-                .setData(R.string.keyToken, user.getToken().getValue())
-                .write();
-        connectDatabase();
-    }
+    public static void setUser(User user) { App.user = user; }
 
     public static UserDataManager getUserDataManager() {
         return userDataManager;
     }
 
-    private static void setUserSettings(UserDataManager userDataManager) {
+    static void setUserSettings(UserDataManager userDataManager) {
         App.userDataManager = userDataManager;
     }
 
@@ -96,44 +73,18 @@ public class App extends Application {
         return encryptedUserDataManager;
     }
 
-    private static void setEncryptedUserDataManager(UserDataManager encryptedUserDataManager) {
+    static void setEncryptedUserDataManager(UserDataManager encryptedUserDataManager) {
         App.encryptedUserDataManager = encryptedUserDataManager;
     }
-
-    public DiagnosisDao getDiagnosisDao() {
-        return diagnosisDao;
-    }
-
-    public RegistryDao getRegistryDao() {
-        return registryDao;
-    }
-
-    public RecommendationDao getRecommendationDao() {
-        return recommendationDao;
-    }
-
-    public CallInfoDao getCallInfoDao() {
-        return callInfoDao;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public static User getUser() { return user; }
-
-    public static void setUser(User user) { App.user = user; }
-
-    public SharedPreferences getSharedPreferences() { return getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE); }
     
-    public SharedPreferences getEncryptedPreferences() {
+    public static SharedPreferences getEncryptedPreferences() {
         SharedPreferences esp = null;
         try {
             String masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC);
             esp = EncryptedSharedPreferences.create(
                     ENCRYPTED_PREFERENCES_NAME,
                     masterKeyAlias,
-                    getApplicationContext(),
+                    App.getInstance().getApplicationContext(),
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );
@@ -143,15 +94,28 @@ public class App extends Application {
         return esp;
     }
 
-    private void initSettings() {
-        if (!userDataManager.isInit()) {
-            userDataManager.init(getApplicationContext());
-            encryptedUserDataManager.setData(R.string.keyAuthed, false).write();
-        }
+    public SharedPreferences getSharedPreferences() {
+        return getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
     }
 
-    public static void hideKeyBoard(View view) {
-        InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    public void initSettings() {
+        Configuration.getInstance().load(getApplicationContext(), getSharedPreferences());
+        setEncryptedUserDataManager(new UserDataManager(getResources(), getEncryptedPreferences()));
+        setUserSettings(new UserDataManager(getResources(), getSharedPreferences()));
+
+        if (!getSharedPreferences().contains(getString(R.string.keyInit))) {
+            getUserDataManager().init();
+
+            SecureRandom random = new SecureRandom();
+            getEncryptedUserDataManager()
+                    .setData(R.string.keyAuthed, false)
+                    .setData(R.string.keyDb, random.nextInt())
+                    .write();
+        }
+
+        AppDatabase.getInstance(
+                getApplicationContext(),
+                String.valueOf(getEncryptedUserDataManager().getInt(R.string.keyDb)).toCharArray()
+        );
     }
 }

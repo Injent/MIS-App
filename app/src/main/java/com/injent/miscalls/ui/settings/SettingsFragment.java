@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.settings;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.App;
+import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
 import com.injent.miscalls.ui.adapters.ViewType;
@@ -27,6 +30,7 @@ import java.util.Objects;
 public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
+    private NavController navController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -41,7 +45,9 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.backFromSettings.setOnClickListener(view0 -> back());
+        navController = Navigation.findNavController(requireView());
+
+        binding.backFromSettings.setOnClickListener(v -> back());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this,
                 new OnBackPressedCallback(true) {
@@ -83,15 +89,13 @@ public class SettingsFragment extends Fragment {
             }
         }));
         list.add(new SectionLayout(R.string.interfaceName));
+        list.add(new ButtonLayout(R.drawable.ic_folder, R.color.icFolder, R.string.openDocFolder, R.string.open, view -> ((MainActivity) requireContext()).openExplorer(App.getUserDataManager().getString(R.string.keyPdfFilePath))));
         settingAdapter.submitList(list);
     }
 
 
     private void back() {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(getString(R.string.keyUpdateList), true);
-        Navigation.findNavController(requireView())
-                .navigate(R.id.homeFragment, bundle);
+        navController.navigate(R.id.homeFragment);
     }
 
     @Override

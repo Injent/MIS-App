@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -62,7 +63,7 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
     }
 
     public interface OnItemClickListener {
-        void onLongClick(Diagnosis diagnosis);
+        void onDelete(Diagnosis diagnosis);
         void onAddClick();
     }
 
@@ -79,9 +80,8 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
 
         public void setData(Diagnosis diagnosis) {
             binding.usedDiagnosisText.setText(diagnosis.getName());
-            binding.usedDiagnosisText.setOnLongClickListener(view -> {
-                listener.onLongClick(diagnosis);
-                return false;
+            binding.deleteDiagnosis.setOnClickListener(view -> {
+                listener.onDelete(diagnosis);
             });
         }
 
@@ -94,7 +94,8 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
                 @SuppressLint("ResourceType")
                 XmlResourceParser xpp = context.getResources().getXml(R.color.button_text_color);
                 cl = ColorStateList.createFromXml(context.getResources(), xpp,context.getTheme());
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             binding.usedDiagnosisText.setTextColor(cl);
             binding.usedDiagnosisText.setCompoundDrawables(ResourcesCompat.getDrawable(
                     binding.getRoot().getResources(),
@@ -104,6 +105,8 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
                     null
             );
             binding.usedDiagnosisText.setBackgroundResource(R.drawable.add_diagnosis_bg);
+            binding.deleteDiagnosis.setEnabled(false);
+            binding.deleteDiagnosis.setVisibility(View.GONE);
         }
     }
 }

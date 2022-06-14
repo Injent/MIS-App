@@ -53,6 +53,7 @@
                     android:drawablePadding="4dp"
                     android:fontFamily="@font/clear_sans_medium"
                     android:hint="@string/search"
+                    android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:lines="1"
                     android:maxLines="1"

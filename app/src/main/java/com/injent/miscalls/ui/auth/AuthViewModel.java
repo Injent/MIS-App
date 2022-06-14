@@ -1,20 +1,21 @@
 package com.injent.miscalls.ui.auth;
 
 import android.accounts.NetworkErrorException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.R;
-import com.injent.miscalls.network.JResponse;
-import com.injent.miscalls.network.AuthorizationException;
-import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.domain.repositories.AuthRepository;
+import com.injent.miscalls.network.AuthorizationException;
+import com.injent.miscalls.network.JResponse;
+import com.injent.miscalls.network.NetworkManager;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,11 +25,29 @@ public class AuthViewModel extends ViewModel {
 
     private AuthRepository repository;
     private MutableLiveData<Boolean> authorized = new MutableLiveData<>();
+    private MutableLiveData<Boolean> activeUser = new MutableLiveData<>();
     private MutableLiveData<Throwable> errorUser = new MutableLiveData<>();
+    private MutableLiveData<Boolean> authOffline = new MutableLiveData<>();
 
     public AuthViewModel() {
-        super();
         repository = new AuthRepository();
+    }
+
+    public void findActiveUser() {
+        if (App.getUser() != null) return;
+        repository.findActiveSession(throwable -> {
+            errorUser.postValue(throwable);
+            return null;
+        }, user -> {
+            if (user != null) {
+                user.setAuthed(true);
+                App.setUser(user);
+                repository.updateUser(user);
+                activeUser.postValue(true);
+                return;
+            }
+            activeUser.postValue(false);
+        });
     }
 
     public void auth(String login, String password) {
@@ -50,12 +69,12 @@ public class AuthViewModel extends ViewModel {
                     User user = response.body().getUser();
                     user.setLogin(login);
                     user.setPassword(password);
-                    user.setOrganizationId(user.getOrganizationId());
-                    user.setTokenId(user.getTokenId());
                     user.setAuthed(true);
-                    App.getInstance().regUser(user);
-                    repository.insertUser(user);
-                    authorized.postValue(true);
+                    App.setUser(user);
+                    repository.insertUser(throwable -> {
+                        errorUser.postValue(throwable);
+                        return false;
+                    }, aBoolean -> authorized.postValue(aBoolean), user);
                 }
                 if (!resp.isSuccessful())
                     errorUser.postValue(new AuthorizationException(resp.getMessage()));
@@ -72,8 +91,32 @@ public class AuthViewModel extends ViewModel {
         return authorized;
     }
 
+    public LiveData<Boolean> getActiveUser() {
+        return activeUser;
+    }
+
+    public LiveData<Boolean> getAuthOfflineLiveData() {
+        return authOffline;
+    }
+
     public LiveData<Throwable> getErrorUser() {
         return errorUser;
+    }
+
+    public void authFromDb(String login, String password) {
+        repository.authFromDb(throwable -> {
+            errorUser.postValue(throwable);
+            return null;
+        }, user -> {
+            if (user != null) {
+                user.setAuthed(true);
+                App.setUser(user);
+                authOffline.postValue(true);
+                repository.updateUser(user);
+                return;
+            }
+            authOffline.postValue(false);
+        }, login, password);
     }
 
     @Override
@@ -81,7 +124,7 @@ public class AuthViewModel extends ViewModel {
         super.onCleared();
         errorUser = new MutableLiveData<>();
         authorized = new MutableLiveData<>();
-
-        repository = null;
+        activeUser = new MutableLiveData<>();
+        authOffline = new MutableLiveData<>();
     }
 }

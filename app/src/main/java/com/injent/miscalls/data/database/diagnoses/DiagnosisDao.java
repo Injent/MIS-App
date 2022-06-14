@@ -19,8 +19,8 @@ public interface DiagnosisDao {
     @Query("SELECT * FROM Diagnosis WHERE parent_id =:id LIMIT 1")
     Diagnosis getByParentId(int id);
 
-    @Query("SELECT * FROM Diagnosis WHERE code LIKE :s OR name LIKE :s")
-    List<Diagnosis> searchByString(String s);
+    @Query("SELECT * FROM Diagnosis WHERE not_parent = 1 AND (name LIKE :s OR code LIKE :s)")
+    List<Diagnosis> searchLike(String s);
 
     @Query("DELETE FROM Diagnosis WHERE id =:id")
     void delete(int id);

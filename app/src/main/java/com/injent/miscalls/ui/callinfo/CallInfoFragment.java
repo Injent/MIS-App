@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,8 +82,8 @@ public class CallInfoFragment extends Fragment {
         binding.complaintField.setText(callInfo.getComplaints());
 
         //Listeners
-        binding.copyComplaints.setOnClickListener(view -> copyText(callInfo.getComplaints()));
-        binding.callButton.setOnClickListener(view -> callToPerson(callInfo.getPhoneNumber()));
+        binding.copyComplaints.setOnClickListener(v -> copyText(callInfo.getComplaints()));
+        binding.callButton.setOnClickListener(v -> callToPerson(callInfo.getPhoneNumber()));
 
         if (callInfo.isInspected())
             binding.statusText.setVisibility(View.VISIBLE);

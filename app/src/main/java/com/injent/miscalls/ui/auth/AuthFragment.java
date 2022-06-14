@@ -20,12 +20,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.BuildConfig;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentAuthBinding;
 import com.injent.miscalls.network.AuthorizationException;
 
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.Executor;
 
@@ -36,14 +36,20 @@ public class AuthFragment extends Fragment {
     private NavController navController;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+    private boolean downloadDb = false;
+    private boolean moveToSettings;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            moveToSettings = getArguments().getBoolean(getString(R.string.keyMoveToSettings));
+        }
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_auth,
                 container, false);
+
         return binding.getRoot();
     }
 
@@ -51,10 +57,121 @@ public class AuthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         viewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         navController = Navigation.findNavController(requireView());
+        setListeners();
 
+        binding.authFingerprint.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
+        binding.copyrightText.setText(getString(R.string.app_name));
+        binding.version.setText(BuildConfig.VERSION_NAME);
+    }
+
+    private void setListeners() {
+        // Live Data observers
+        viewModel.getActiveUser().observe(getViewLifecycleOwner(), hasActiveUser -> {
+            downloadDb = !hasActiveUser;
+            if (hasActiveUser)
+                successfulAuth();
+            else
+                setupBiometricAuthorization();
+        });
+
+        viewModel.getAuthOfflineLiveData().observe(getViewLifecycleOwner(), authed -> {
+            if (authed) {
+
+                successfulAuth();
+            } else {
+                actionAuth(true);
+            }
+        });
+
+        viewModel.getAuthorized().observe(this, authed -> {
+            hideLoading();
+            if (authed) {
+                successfulAuth();
+            }
+        });
+
+        viewModel.getErrorUser().observe(this, throwable -> {
+            hideLoading();
+            displayError(throwable);
+        });
+
+        // UI Listeners
+        binding.signInButton.setOnClickListener(v -> {
+            showLoading();
+            actionAuth(false);
+        });
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                confirmExit();
+            }
+        });
+
+        viewModel.findActiveUser();
+    }
+
+    private void actionAuth(boolean fromServer) {
+        binding.error.setVisibility(View.INVISIBLE);
+        String login = binding.emailField.getText().toString().trim();
+        String password = binding.passwordField.getText().toString().trim();
+
+        if (fromServer)
+            viewModel.auth(login, password);
+        else
+            viewModel.authFromDb(login, password);
+    }
+
+    private void displayError(Throwable throwable) {
+        binding.error.setVisibility(View.VISIBLE);
+        if (throwable instanceof AuthorizationException) {
+            binding.error.setText(throwable.getMessage());
+        } else if (throwable instanceof NetworkErrorException) {
+            binding.error.setText(R.string.noInternetConnection);
+        } else if (throwable instanceof SocketTimeoutException) {
+            binding.error.setText(R.string.socketTimeOut);
+        } else if (throwable instanceof ConnectException) {
+            binding.error.setText(R.string.serverDoesNotRespond);
+        } else {
+            binding.error.setText(R.string.unknownError);
+            throwable.printStackTrace();
+        }
+    }
+
+    private void successfulAuth() {
+        Toast.makeText(requireContext(), R.string.successfulAuth, Toast.LENGTH_SHORT).show();
+        navigateToHome();
+    }
+
+    private void hideLoading() {
+        binding.authLoading.setVisibility(View.INVISIBLE);
+    }
+    private void showLoading() {
+        binding.authLoading.setVisibility(View.VISIBLE);
+    }
+
+    private void navigateToHome() {
+        Bundle args = new Bundle();
+        args.putBoolean(getString(R.string.keyDownloadDb), downloadDb);
+        navController.navigate(R.id.homeFragment, args);
+    }
+
+    private void navigateToSettings() {
+        navController.navigate(R.id.settingsFragment);
+    }
+
+    public void confirmExit() {
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.exit)
+                .setPositiveButton(R.string.yes, (dialog, b) -> closeApp())
+                .setNegativeButton(R.string.no, (dialog, b) -> dialog.dismiss())
+                .create();
+        alertDialog.show();
+    }
+
+    private void setupBiometricAuthorization() {
         Executor executor = ContextCompat.getMainExecutor(requireContext());
 
         biometricPrompt = new BiometricPrompt(AuthFragment.this, executor, new BiometricPrompt.AuthenticationCallback() {
@@ -78,104 +195,9 @@ public class AuthFragment extends Fragment {
         });
 
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Биометрическая авторизация")
-                .setSubtitle("Приложите палец")
-                .setNegativeButtonText("Отмена")
+                .setTitle(getString(R.string.biometricAuth))
+                .setNegativeButtonText(getString(R.string.cancel))
                 .build();
-
-//        if (App.getEncryptedUserDataManager().getBoolean(R.string.keyAuthed)) {
-//            if (getArguments() != null && getArguments().getBoolean(getString(R.string.keyOffUpdates), false)) {
-//                navigateToSettings();
-//                return;
-//            }
-//            navigateToHome(false);
-//            return;
-//        }
-
-        //Listeners
-        binding.signInButton.setOnClickListener(v -> {
-            showLoading();
-            actionAuth();
-        });
-
-        binding.authFingerprint.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
-
-        //Observers
-        viewModel.getAuthorized().observe(this, authed -> {
-            hideLoading();
-            successfulAuth();
-        });
-
-        viewModel.getErrorUser().observe(this, throwable -> {
-            hideLoading();
-            displayError(throwable);
-        });
-
-        //On back pressed action
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                        confirmExit();
-                }
-        });
-
-        binding.copyrightText.setText(getString(R.string.app_name));
-        binding.version.setText(BuildConfig.VERSION_NAME);
-    }
-
-    private void actionAuth() {
-        binding.error.setVisibility(View.INVISIBLE);
-        String email = binding.emailField.getText().toString().trim();
-        String password = binding.passwordField.getText().toString().trim();
-        viewModel.auth(email, password);
-    }
-
-    private void displayError(Throwable throwable) {
-        binding.error.setVisibility(View.VISIBLE);
-        if (throwable instanceof AuthorizationException) {
-            binding.error.setText(throwable.getMessage());
-        } else if (throwable instanceof NetworkErrorException) {
-            binding.error.setText(R.string.noInternetConnection);
-        } else if (throwable instanceof SocketTimeoutException) {
-            binding.error.setText(R.string.socketTimeOut);
-        } else {
-            binding.error.setText(R.string.unknownError);
-            throwable.printStackTrace();
-        }
-    }
-
-    private void successfulAuth() {
-        Toast.makeText(requireContext(), R.string.successfulAuth, Toast.LENGTH_SHORT).show();
-        navigateToHome(true);
-    }
-
-    private void hideLoading() {
-        binding.authLoading.setVisibility(View.INVISIBLE);
-    }
-    private void showLoading() {
-        binding.authLoading.setVisibility(View.VISIBLE);
-    }
-
-    private void navigateToHome(boolean downloadDb) {
-        Bundle args = new Bundle();
-        if (downloadDb)
-            args.putBoolean(getString(R.string.keyDownloadDb), true);
-        else
-            args.putBoolean(getString(R.string.keyUpdateList), true);
-        navController.navigate(R.id.homeFragment, args);
-    }
-
-    private void navigateToSettings() {
-        navController.navigate(R.id.settingsFragment);
-    }
-
-    public void confirmExit() {
-        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.exit)
-                .setPositiveButton(R.string.yes, (dialog, button0) -> closeApp())
-                .setNegativeButton(R.string.no, (dialog, button1) -> dialog.dismiss())
-                .create();
-        alertDialog.show();
     }
 
     public void closeApp() {
@@ -187,6 +209,8 @@ public class AuthFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.onCleared();
+        biometricPrompt = null;
+        promptInfo = null;
         binding = null;
     }
 }
