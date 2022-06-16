@@ -74,7 +74,7 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
             binding.registryPatient.setText(registry.getCallInfo().getFullName());
             binding.registryDiagnosis.setText(Diagnosis.listToStringCodes(registry.getDiagnoses(),','));
 
-            binding.editRegistry.setOnClickListener(view -> listener.onClick(registry.getId()));
+            binding.registryCard.setOnClickListener(view -> listener.onClick(registry.getId()));
 
             if (registry.isDelete()) {
                 binding.registryCard.setForeground(
