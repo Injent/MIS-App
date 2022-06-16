@@ -149,7 +149,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void navigateToSettings() {
-        if (notMatchingDestination()) return;
         closeNavigationMenu();
         navController.navigate(R.id.settingsFragment);
     }
@@ -161,17 +160,14 @@ public class HomeFragment extends Fragment {
 
     private void navigateToAuth() {
         closeNavigationMenu();
-        if (notMatchingDestination()) return;
         navController.navigate(R.id.authFragment);
     }
 
     private void navigateToRegistry() {
-        if (notMatchingDestination()) return;
         navController.navigate(R.id.registryFragment);
     }
 
     private void navigateToHandbook() {
-        if (notMatchingDestination()) return;
         Bundle args = new Bundle();
         args.putInt(getString(R.string.keyDiagnosisId), -1);
         navController.navigate(R.id.handBookFragment, args);

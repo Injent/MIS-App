@@ -68,7 +68,7 @@ public class DiagnosisFragment extends Fragment {
         setupSearchRecyclerView();
         setupSearch();
 
-        if (inspected) {
+        if (inspected && viewModel.getCurrentRegistryLiveData().getValue() != null) {
             diagnosisUsedAdapter.submitList(viewModel.getCurrentRegistryLiveData().getValue().getDiagnoses());
         }
     }
