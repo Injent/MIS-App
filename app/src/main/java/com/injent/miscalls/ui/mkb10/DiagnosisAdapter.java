@@ -38,10 +38,9 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
             return oldItem.equals(newItem);
         }
 
-        @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull Diagnosis oldItem, @NonNull Diagnosis newItem) {
-            return oldItem.equals(newItem);
+            return oldItem.hashCode() == newItem.hashCode();
         }
     };
 
@@ -59,10 +58,7 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
     }
 
     public interface OnItemClickListener {
-        void onClickStar(int diagnosisId);
         void onClick(Diagnosis diagnosis);
-        void nextPage(int id);
-        void previousPage(int id);
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {
@@ -79,10 +75,10 @@ public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.Vi
         public void setData(@NonNull Diagnosis diagnosis) {
             binding.diagnosisCode.setText(diagnosis.getCode());
             binding.diagnosisCategory.setText(diagnosis.getName());
-            if (diagnosis.isParent()) {
-                binding.handbookArrow.setVisibility(View.VISIBLE);
-            } else {
+            if (diagnosis.isNotParent()) {
                 binding.handbookArrow.setVisibility(View.GONE);
+            } else {
+                binding.handbookArrow.setVisibility(View.VISIBLE);
             }
             binding.handbookItemLayout.setOnClickListener(view -> listener.onClick(diagnosis));
         }

@@ -54,40 +54,27 @@
                 android:id="@+id/registrySearchButton"
                 android:layout_width="@dimen/minDp"
                 android:layout_height="@dimen/minDp"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="8dp"
-                android:background="?android:attr/actionBarItemBackground"
-                android:src="@drawable/ic_search"
-                app:layout_constraintBottom_toBottomOf="@+id/registryMore"
-                app:layout_constraintEnd_toStartOf="@+id/registryMore"
-                app:layout_constraintTop_toTopOf="@+id/registryMore"
-                app:tint="@color/darkGrayText" />
-
-            <ImageView
-                android:id="@+id/registryMore"
-                android:layout_width="@dimen/minDp"
-                android:layout_height="@dimen/minDp"
                 android:layout_marginEnd="8dp"
                 android:background="?android:attr/actionBarItemBackground"
-                android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:src="@drawable/ic_more"
-                app:tint="@color/darkGrayText"
+                android:padding="8dp"
+                android:src="@drawable/ic_search"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/darkGrayText" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/registrySearchLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="56dp"
                 android:background="@drawable/search"
                 android:padding="8dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/registryTitle"
-                app:layout_constraintEnd_toEndOf="@+id/registrySearchButton"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/backFromRegistry"
                 app:layout_constraintTop_toTopOf="@+id/registryTitle">
 
@@ -124,7 +111,8 @@
                     android:src="@drawable/ic_cancel"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/grayText" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

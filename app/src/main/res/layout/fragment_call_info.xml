@@ -90,8 +90,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/list"
             android:elevation="2dp"
-            android:orientation="vertical"
-            android:visibility="invisible">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/patientInfoHeader"

@@ -6,22 +6,25 @@ public class AdditionalField implements ViewType {
     private int index;
     private int viewType;
     private int extraResId;
+    private String data;
 
     public AdditionalField(int extraResId) {
         viewType = ViewType.FIELD_ADDITIONAL_SPACE;
     }
 
-    public AdditionalField(int nameResId, int index, int viewType) {
+    public AdditionalField(int nameResId, int index, int viewType, String data) {
         this.nameResId = nameResId;
         this.index = index;
         this.viewType = viewType;
+        this.data = data;
     }
 
-    public AdditionalField(int nameResId, int index, int viewType, int extraResId) {
+    public AdditionalField(int nameResId, int index, int viewType, int extraResId, String data) {
         this.nameResId = nameResId;
         this.index = index;
         this.viewType = viewType;
         this.extraResId = extraResId;
+        this.data = data;
     }
 
     public int getNameResId() {
@@ -50,6 +53,17 @@ public class AdditionalField implements ViewType {
 
     public void setExtraResId(int extraResId) {
         this.extraResId = extraResId;
+    }
+
+    public String getData() {
+        if (data == null) {
+            return "";
+        }
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     @Override

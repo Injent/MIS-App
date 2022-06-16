@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
@@ -16,11 +17,11 @@ public interface RegistryDao {
     @Query("SELECT * FROM calls WHERE id =:id LIMIT 1")
     CallInfo getCallInfo(int id);
 
-    @Query("SELECT * FROM registry")
-    List<Registry> getAllRawRegistries();
+    @Query("SELECT * FROM registry WHERE user_id =:userId")
+    List<Registry> getAllRawRegistries(int userId);
 
-    @Query("SELECT * FROM registry WHERE id =:id LIMIT 1")
-    Registry getRegistry(int id);
+    @Query("SELECT * FROM registry WHERE id =:id AND user_id =:userId LIMIT 1")
+    Registry getRegistry(int id, int userId);
 
     @Query("SELECT * FROM registry WHERE call_id =:id LIMIT 1")
     Registry getRegistryByCallId(int id);
@@ -44,8 +45,14 @@ public interface RegistryDao {
     Objectively getObjectivelyByRegId(int id);
 
     @Query("DELETE FROM registry")
-    void _deleteAllRegistries();
+    void deleteAllRegistries();
 
     @Query("DELETE FROM objectively")
-    void _deleteAllObj();
+    void deleteAllObj();
+
+    @Update
+    void updateRegistry(Registry registry);
+
+    @Update
+    void updateObjectively(Objectively objectively);
 }

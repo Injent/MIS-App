@@ -3,10 +3,7 @@ package com.injent.miscalls.ui.home;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.data.database.FailedDownloadDb;
 import com.injent.miscalls.data.database.calls.ListEmptyException;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
@@ -158,12 +154,6 @@ public class HomeFragment extends Fragment {
         navController.navigate(R.id.settingsFragment);
     }
 
-    private void moveToSite(String link) {
-        closeNavigationMenu();
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-        requireActivity().startActivity(intent);
-    }
-
     private void downloadNewDb() {
         showLoading();
         viewModel.downloadCallsDb();
@@ -182,7 +172,9 @@ public class HomeFragment extends Fragment {
 
     private void navigateToHandbook() {
         if (notMatchingDestination()) return;
-        navController.navigate(R.id.handBookFragment);
+        Bundle args = new Bundle();
+        args.putInt(getString(R.string.keyDiagnosisId), -1);
+        navController.navigate(R.id.handBookFragment, args);
     }
 
     private boolean notMatchingDestination() {
@@ -195,15 +187,11 @@ public class HomeFragment extends Fragment {
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.settingsMenu: navigateToSettings();
-                    break;
-                case R.id.about: moveToSite(getString(R.string.aboutLink));
-                    break;
-                case R.id.help: moveToSite(getString(R.string.helpLink));
-                    break;
+                break;
                 case R.id.registry: navigateToRegistry();
-                    break;
+                break;
                 case R.id.handbookMKB: navigateToHandbook();
-                    break;
+                break;
                 case R.id.logoutMenu: {
                     viewModel.logout();
                     navigateToAuth();

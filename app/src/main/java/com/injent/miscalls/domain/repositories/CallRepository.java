@@ -95,12 +95,13 @@ public class CallRepository {
     public void insertCallsWithDropTable(Function<Throwable,Void> ex, List<CallInfo> list) {
         insertCallsWithDropTable = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
-                    callDao.clearAll();
                     for (CallInfo item : list) {
-                        long callId = callDao.insertCall(item);
-                        Geo geo = item.getGeo();
-                        geo.setCallId((int) callId);
-                        geoDao.insertGeo(geo);
+                        if (callDao.getBySnils(item.getSnils()) == null) {
+                            long callId = callDao.insertCall(item);
+                            Geo geo = item.getGeo();
+                            geo.setCallId((int) callId);
+                            geoDao.insertGeo(geo);
+                        }
                     }
                     return null;
                 })

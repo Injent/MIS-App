@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/mute" />
     <corners android:radius="@dimen/cardCorners" />
-    <solid android:color="@color/spinnerItem" />
-    <stroke android:color="@color/lightBlue" android:width="@dimen/thickLine" />
 </shape>

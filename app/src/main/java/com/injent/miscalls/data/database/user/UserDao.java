@@ -7,6 +7,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.injent.miscalls.data.database.calls.UserActiveUpdate;
+
 @Dao
 public interface UserDao {
 
@@ -15,6 +17,9 @@ public interface UserDao {
 
     @Query("SELECT * FROM user WHERE login =:login AND password =:password LIMIT 1")
     User getByLoginAndPassword(String login, String password);
+
+    @Query("SELECT * FROM user WHERE last_active = 1 LIMIT 1")
+    User getByLastActive();
 
     @Query("SELECT * FROM token WHERE user_id =:id LIMIT 1")
     Token getTokenById(int id);

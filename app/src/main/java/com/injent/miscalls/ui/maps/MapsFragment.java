@@ -62,7 +62,7 @@ public class MapsFragment extends Fragment {
         Marker startMarker = new Marker(binding.map);
         startMarker.setPosition(geoPoint);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        startMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, requireContext().getTheme()));
+        startMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker, requireContext().getTheme()));
         binding.map.getOverlays().add(startMarker);
     }
 

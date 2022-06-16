@@ -6,8 +6,8 @@
     <string name="callInfo">Вызов</string>
     <string name="auth">Авторизация</string>
     <string name="settings">Настройки</string>
-    <string name="editor">Обзор</string>
-    <string name="pdfViewer">Документ</string>
+    <string name="overview">Обзор</string>
+    <string name="document">Документ</string>
 
     <!-- Sections -->
     <string name="openDocFolder">Папка с документами</string>
@@ -149,7 +149,7 @@
     <string name="open">Открыть</string>
     <string name="actionAuth">Авторизоваться</string>
     <string name="saveChanges">Отправить</string>
-    <string name="changesAreSaved">Изменения сохранены</string>
+    <string name="documentSending">Документ отправляется</string>
     <string name="pdfPreview">Предосмотр\nдокумента</string>
     <string name="useTempFromInspection">Использовать\nшаблон осмотра</string>
     <string name="exit">Выйти</string>
@@ -158,7 +158,7 @@
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="downloadRecommendations">Скачать рекомендации по лечению</string>
-    <string name="deleteProtocol">Удалить протокол %s?</string>
+    <string name="deleteRegistry">Удалить запись?</string>
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
     <string name="moveToEditProtocol">Перейти к редактированию протокола</string>
@@ -179,6 +179,7 @@
     <string name="loading">Текст</string>
 
     <!-- Toasts -->
+    <string name="registryDeleted">Осмотр будет удален</string>
     <string name="successfulAuth">Успешная авторизация</string>
     <string name="updated">Обновлен %s</string>
     <string name="receivingDataOn">Обновление данных включено</string>
@@ -199,6 +200,7 @@
     <string name="fileSaveByPath">Файл сохранен по пути: </string>
     <string name="errorOfDocumentGeneration">Ошибка генерации документа</string>
     <string name="replaceFile">Заменить файл?</string>
+    <string name="listEmpty">Список пуст</string>
     <string name="fileAlreadyExists">Файл уже существует</string>
 
     <!-- Field types -->
@@ -263,8 +265,8 @@
 
     <!-- Arguments Keys -->
     <string name="keyCallId">CALL_ID</string>
-    <string name="keyFragmentId">FRAGMENT_ID</string>
-    <string name="keyKeepData">KEEP_DATA</string>
+    <string name="keyDiagnosisId">DIAGNOSIS_ID</string>
+    <string name="keyDeleteRegistry">DELETE_REGISTRY</string>
     <string name="keyFileName">FILE_NAME</string>
     <string name="keyDownloadDb">DOWNLOAD_DB</string>
     <string name="keyDbDate">DB_DATE</string>
@@ -289,4 +291,6 @@
     <string name="keyTokenId">TOKEN_ID</string>
     <string name="keyTokenExpirationDate">TOKEN_EXPIRATION_DATE</string>
     <string name="keyDb">DB_KEY</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

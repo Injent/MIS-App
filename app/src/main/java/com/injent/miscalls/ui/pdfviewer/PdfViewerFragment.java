@@ -1,45 +1,33 @@
 package com.injent.miscalls.ui.pdfviewer;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.print.PDFPrint;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-
-import android.print.PDFPrint;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.Toast;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentPdfViewerBinding;
-import com.injent.miscalls.domain.repositories.PdfRepository;
-import com.injent.miscalls.ui.editor.EditorViewModel;
+import com.injent.miscalls.ui.overview.OverviewViewModel;
 
 import java.io.File;
 
 public class PdfViewerFragment extends Fragment {
 
-    private EditorViewModel viewModel;
+    private OverviewViewModel viewModel;
     private FragmentPdfViewerBinding binding;
-    private int previousFragmentId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            previousFragmentId = getArguments().getInt(getString(R.string.keyFragmentId));
-        }
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_pdf_viewer, container, false);
         return binding.getRoot();
     }
@@ -48,7 +36,7 @@ public class PdfViewerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(EditorViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
 
         binding.pdfWebView.setInitialScale(150);
 
@@ -92,7 +80,5 @@ public class PdfViewerFragment extends Fragment {
                     .show();
             return replace[0];
         }));
-
-        binding.pdfViewerBack.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(previousFragmentId));
     }
 }

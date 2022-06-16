@@ -18,6 +18,9 @@ public interface CallInfoDao {
     @Query("SELECT * FROM calls WHERE id = :id LIMIT 1")
     CallInfo getById(int id);
 
+    @Query("SELECT * FROM calls WHERE snils =:snils LIMIT 1")
+    CallInfo getBySnils(long snils);
+
     @Insert
     long insertCall(CallInfo callInfo);
 

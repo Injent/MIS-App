@@ -59,9 +59,12 @@ public class AuthFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         navController = Navigation.findNavController(requireView());
-        setListeners();
 
-        binding.authFingerprint.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
+        binding.loading.setVisibility(View.GONE);
+        binding.authLayout.setVisibility(View.VISIBLE);
+        setListeners();
+        setupBiometricAuthorization();
+
         binding.copyrightText.setText(getString(R.string.app_name));
         binding.version.setText(BuildConfig.VERSION_NAME);
     }
@@ -78,7 +81,6 @@ public class AuthFragment extends Fragment {
 
         viewModel.getAuthOfflineLiveData().observe(getViewLifecycleOwner(), authed -> {
             if (authed) {
-
                 successfulAuth();
             } else {
                 actionAuth(true);
@@ -102,6 +104,8 @@ public class AuthFragment extends Fragment {
             showLoading();
             actionAuth(false);
         });
+
+        binding.authFingerprint.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -184,7 +188,7 @@ public class AuthFragment extends Fragment {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                successfulAuth();
+                viewModel.authWithBiometric();
             }
 
             @Override

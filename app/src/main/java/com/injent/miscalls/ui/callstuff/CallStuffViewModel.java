@@ -178,11 +178,14 @@ public class CallStuffViewModel extends ViewModel {
     }
 
     public void searchDiagnosis(String s) {
-        diagnosisRepository.searchDiagnoses(s, list -> searchDiagnoses.postValue(list));
+        diagnosisRepository.searchNotParentDiagnoses(s, list -> searchDiagnoses.postValue(list));
     }
 
     public void setObjectivelyData(int index, String s) {
-        if (currentRegistry.getValue() == null) return;
+        if (currentRegistry.getValue() == null) {
+            successOperation.postValue(new NullPointerException());
+            return;
+        }
         Objectively obj = currentRegistry.getValue().getObjectively();
         if (obj == null) {
             obj = new Objectively();

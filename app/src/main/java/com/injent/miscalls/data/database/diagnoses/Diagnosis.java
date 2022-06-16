@@ -152,4 +152,9 @@ public class Diagnosis {
             return ((Diagnosis) obj).id == id;
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return getCode().hashCode();
+    }
 }

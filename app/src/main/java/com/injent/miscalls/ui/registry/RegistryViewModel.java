@@ -9,6 +9,7 @@ import com.injent.miscalls.domain.repositories.RegistryRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class RegistryViewModel extends ViewModel {
 
@@ -24,17 +25,38 @@ public class RegistryViewModel extends ViewModel {
         return registryItems;
     }
 
-    public void loadRegistryItems() {
+    public void loadRegistryItems(int idToDelete) {
         repository.getRegistries(throwable -> {
             error.postValue(throwable);
+            throwable.printStackTrace();
             return Collections.emptyList();
         }, list -> {
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i).setDelete(list.get(i).getId() == idToDelete);
+            }
             registryItems.postValue(list);
         });
     }
 
     public LiveData<Throwable> getErrorLiveData() {
         return error;
+    }
+
+    public void deleteSelectedRegistry(int id) {
+        repository.deleteRegistry(throwable -> {
+            error.postValue(throwable);
+            throwable.printStackTrace();
+            return null;
+        }, unused -> loadRegistryItems(-1), id);
+    }
+
+    public void sendRegistries() {
+        repository.dropTable(throwable -> {
+            error.postValue(throwable);
+            throwable.printStackTrace();
+            return null;
+        }, unused -> loadRegistryItems(-1));
+
     }
 
     @Override

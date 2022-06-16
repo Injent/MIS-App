@@ -69,6 +69,9 @@ public class User {
     @SerializedName("organization")
     private Organization organization;
 
+    @ColumnInfo(name = "last_active")
+    private boolean lastActive;
+
     public int getId() {
         return id;
     }
@@ -165,6 +168,14 @@ public class User {
 
     public void setToken(Token token) {
         this.token = token;
+    }
+
+    public boolean isLastActive() {
+        return lastActive;
+    }
+
+    public void setLastActive(boolean lastActive) {
+        this.lastActive = lastActive;
     }
 
     public String getFullName() {

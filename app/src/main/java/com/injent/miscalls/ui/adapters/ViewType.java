@@ -17,6 +17,9 @@ public interface ViewType {
     int SETTINGS_SECTION = R.layout.item_setting_section;
     int SETTINGS_BUTTON = R.layout.item_settings_button;
 
+    int VIEW_PAGER_CALL = 0;
+    int VIEW_PAGER_OVERVIEW = 1;
+
     /**
      * To compare the value obtained from class that extends {@link ViewType}, use the statics of
      * the {@link ViewType} class

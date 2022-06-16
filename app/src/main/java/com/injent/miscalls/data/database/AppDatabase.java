@@ -87,7 +87,7 @@ public abstract class AppDatabase extends RoomDatabase {
         final SupportFactory factory = new SupportFactory(passphraseBytes);
 
         instance = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
-   //             .openHelperFactory(factory)
+                .openHelperFactory(factory)
                 .addCallback(new RoomPreloadCallback(context))
                 .build();
 

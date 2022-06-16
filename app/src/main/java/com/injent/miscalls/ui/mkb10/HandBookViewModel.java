@@ -18,10 +18,9 @@ public class HandBookViewModel extends ViewModel {
     private final DiagnosisRepository repository;
 
     private MutableLiveData<Diagnosis> previousDiagnosis = new MutableLiveData<>();
-    private MutableLiveData<List<Diagnosis>> backDiagnosis = new MutableLiveData<>();
     private MutableLiveData<List<Diagnosis>> diagnoses = new MutableLiveData<>();
     private final MutableLiveData<Throwable> error = new MutableLiveData<>();
-    private MutableLiveData<Diagnosis> selectedDiagnosis = new MutableLiveData<>();
+    private final MutableLiveData<Diagnosis> selectedDiagnosis = new MutableLiveData<>();
 
     public HandBookViewModel() {
         repository = new DiagnosisRepository();
@@ -44,23 +43,6 @@ public class HandBookViewModel extends ViewModel {
         return selectedDiagnosis;
     }
 
-    public LiveData<List<Diagnosis>> getBackDiagnosis() {
-        return backDiagnosis;
-    }
-
-    public void loadDiagnosesByParentWithBackAction(int id) {
-        repository.getDiagnosesByParentId(throwable -> {
-            error.postValue(throwable);
-            return Collections.emptyList();
-        }, list -> {
-            if (!list.isEmpty()) {
-                backDiagnosis.postValue(list);
-            } else {
-                error.postValue(new ListEmptyException());
-            }
-        }, id);
-    }
-
     public LiveData<Diagnosis> getPreviousDiagnosis() {
         return previousDiagnosis;
     }
@@ -73,6 +55,14 @@ public class HandBookViewModel extends ViewModel {
             if (previousDiagnosis != null)
                 previousDiagnosis.postValue(diagnosis);
         }, id);
+    }
+
+    public void searchDiagnoses(String s) {
+        repository.searchDiagnoses(throwable -> {
+            error.postValue(throwable);
+            throwable.printStackTrace();
+            return null;
+        }, list -> diagnoses.postValue(list), s);
     }
 
     @Override

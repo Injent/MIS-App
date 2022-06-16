@@ -30,6 +30,7 @@ import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.calls.CallInfo;
 import com.injent.miscalls.databinding.FragmentCallStuffBinding;
+import com.injent.miscalls.ui.adapters.ViewPagerAdapter;
 import com.injent.miscalls.ui.callinfo.CallInfoFragment;
 import com.injent.miscalls.ui.diagnosis.DiagnosisFragment;
 import com.injent.miscalls.ui.inspection.InspectionFragment;
@@ -62,20 +63,25 @@ public class CallStuffFragment extends Fragment {
 
         viewModel.loadCall(callId);
 
-        viewModel.getCallLiveData().observe(getViewLifecycleOwner(), callInfo -> viewModel.loadRegistry(null));
+        binding.callInfopdfWebView.setInitialScale(150);
+        binding.titleCallStuff.setText(R.string.callInfo);
+        setListeners();
+        setupViewPager2();
+    }
 
-        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
-            if (throwable == null) {
-                Toast.makeText(requireContext(),getString(R.string.docMovedTo) + " " + getString(R.string.registry),Toast.LENGTH_LONG).show();
-                navigateToHome();
-                return;
-            }
-            if (throwable instanceof NullPointerException) {
-                Toast.makeText(requireContext(), R.string.diagnosesIsEmpty, Toast.LENGTH_SHORT).show();
+    private void setListeners() {
+        // Listeners
+        binding.darkBgPdf.setOnClickListener(v -> {
+            if (binding.darkBgPdf.getVisibility() == View.VISIBLE) {
+                previewPdf("");
             }
         });
 
-        binding.callInfopdfWebView.setInitialScale(150);
+        binding.doneButton.setOnClickListener(v -> viewModel.saveRegistry());
+
+        binding.previewPdfButton.setOnClickListener(v -> viewModel.loadHtml(requireContext()));
+
+        binding.closeButton.setOnClickListener(v -> confirmExitAction());
 
         binding.doneButton.setOnClickListener(v -> save());
 
@@ -85,22 +91,6 @@ public class CallStuffFragment extends Fragment {
                 confirmExitAction();
             }
         });
-
-        viewModel.getHtmlLiveData().observe(getViewLifecycleOwner(), this::previewPdf);
-
-        binding.previewPdfButton.setOnClickListener(v -> viewModel.loadHtml(requireContext()));
-
-        binding.closeButton.setOnClickListener(v -> confirmExitAction());
-
-        binding.titleCallStuff.setText(R.string.callInfo);
-
-        binding.viewPager.setOnClickListener(v -> {
-            if (binding.darkBgPdf.getVisibility() == View.VISIBLE) {
-                previewPdf("");
-            }
-        });
-
-        setupViewPager2();
 
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -163,8 +153,20 @@ public class CallStuffFragment extends Fragment {
             }
         });
 
-        binding.doneButton.setOnClickListener(v -> {
-            viewModel.saveRegistry();
+        // Observers
+        viewModel.getHtmlLiveData().observe(getViewLifecycleOwner(), this::previewPdf);
+
+        viewModel.getCallLiveData().observe(getViewLifecycleOwner(), callInfo -> viewModel.loadRegistry(null));
+
+        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
+            if (throwable == null) {
+                Toast.makeText(requireContext(),getString(R.string.docMovedTo) + " " + getString(R.string.registry),Toast.LENGTH_LONG).show();
+                navigateToHome();
+                return;
+            }
+            if (throwable instanceof NullPointerException) {
+                Toast.makeText(requireContext(), R.string.diagnosesIsEmpty, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -198,7 +200,7 @@ public class CallStuffFragment extends Fragment {
     }
 
     private void setupViewPager2() {
-        adapter = new ViewPagerAdapter(CallStuffFragment.this);
+        adapter = new ViewPagerAdapter(CallStuffFragment.this, 4);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.setUserInputEnabled(false);
         new TabLayoutMediator(binding.tabs, binding.viewPager, (tab, position) -> tab.setCustomView(configureTab(position))).attach();
@@ -242,36 +244,6 @@ public class CallStuffFragment extends Fragment {
         Bundle args = new Bundle();
         args.putBoolean(getString(R.string.keyDownloadDb), false);
         Navigation.findNavController(requireView()).navigate(R.id.homeFragment, args);
-    }
-
-    private static class ViewPagerAdapter extends FragmentStateAdapter {
-
-        public ViewPagerAdapter(@NonNull Fragment fragment) {
-            super(fragment);
-        }
-
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            Fragment fragment;
-            switch (position) {
-                case 0: fragment = new CallInfoFragment();
-                break;
-                case 1: fragment = new InspectionFragment();
-                break;
-                case 2: fragment = new DiagnosisFragment();
-                break;
-                case 3: fragment = new MapsFragment();
-                break;
-                default: throw new IllegalStateException();
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getItemCount() {
-            return 4;
-        }
     }
 
     @Override

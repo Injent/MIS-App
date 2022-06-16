@@ -1,7 +1,8 @@
 package com.injent.miscalls.network;
 
-import com.injent.miscalls.network.rest.dto.CallDto;
 import com.injent.miscalls.data.database.user.Token;
+import com.injent.miscalls.network.rest.dto.CallDto;
+import com.injent.miscalls.network.rest.dto.RegistryDto;
 
 import java.util.List;
 
@@ -42,4 +43,7 @@ public interface MisAPI {
      */
     @POST("token/expiration")
     Call<JResponse> checkTokenExpiration(Token token);
+
+    @POST("registry/upload")
+    Call<JResponse> uploadDocument(@Body RegistryDto registry);
 }

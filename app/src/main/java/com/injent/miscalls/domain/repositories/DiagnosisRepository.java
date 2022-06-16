@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class DiagnosisRepository {
 
@@ -20,7 +21,8 @@ public class DiagnosisRepository {
 
     private CompletableFuture<List<Diagnosis>> diagnosesByParent;
     private CompletableFuture<Diagnosis> diagnosisFuture;
-    private CompletableFuture<List<Diagnosis>> searchDiagnosis;
+    private CompletableFuture<List<Diagnosis>> searchNotParentDiagnoses;
+    private CompletableFuture<List<Diagnosis>> searchDiagnoses;
 
     public void cancelFutures() {
         if (diagnosesByParent != null) {
@@ -29,36 +31,34 @@ public class DiagnosisRepository {
         if (diagnosisFuture != null) {
             diagnosisFuture.cancel(true);
         }
-        if (searchDiagnosis != null) {
-            searchDiagnosis.cancel(true);
+        if (searchNotParentDiagnoses != null) {
+            searchNotParentDiagnoses.cancel(true);
+        }
+        if (searchDiagnoses != null) {
+            searchDiagnoses.cancel(true);
         }
     }
 
-    public void searchDiagnoses(String s, Consumer<List<Diagnosis>> consumer) {
-        searchDiagnosis = CompletableFuture
-                .supplyAsync(() -> dao.searchLike("%" + s + "%"))
+    public void searchNotParentDiagnoses(String s, Consumer<List<Diagnosis>> consumer) {
+        searchNotParentDiagnoses = CompletableFuture
+                .supplyAsync(() -> dao.searchNotParentLike("%" + s + "%"))
         .exceptionally(throwable -> {
             throwable.printStackTrace();
             return null;
         });
-        searchDiagnosis.thenAcceptAsync(consumer);
+        searchNotParentDiagnoses.thenAcceptAsync(consumer);
+    }
+
+    public void searchDiagnoses(Function<Throwable, List<Diagnosis>> ex, Consumer<List<Diagnosis>> consumer, String s) {
+        searchDiagnoses = CompletableFuture
+                .supplyAsync(() -> dao.searchLike("%" + s + "%"))
+                .exceptionally(ex);
+        searchDiagnoses.thenAcceptAsync(consumer);
     }
 
     public void getDiagnosesByParentId(Function<Throwable, List<Diagnosis>> ex, Consumer<List<Diagnosis>> consumer, int parentId) {
         diagnosesByParent = CompletableFuture
-                .supplyAsync(() -> {
-                    List<Diagnosis> list = new ArrayList<>();
-                    for (Diagnosis d : dao.getAll()) {
-                        if (d.getParentId() == parentId) {
-                            Diagnosis child = dao.getByParentId(d.getId());
-                            if (child != null) {
-                                d.setParent(true);
-                            }
-                            list.add(d);
-                        }
-                    }
-                    return list;
-                })
+                .supplyAsync(() -> dao.getByParentId(parentId))
                 .exceptionally(ex);
         diagnosesByParent.thenAcceptAsync(consumer);
     }
@@ -68,9 +68,5 @@ public class DiagnosisRepository {
                 .supplyAsync(() -> dao.getById(id))
                 .exceptionally(ex);
         diagnosisFuture.thenAcceptAsync(consumer);
-    }
-
-    public Diagnosis getDiagnosisById(int id) {
-        return dao.getById(id);
     }
 }

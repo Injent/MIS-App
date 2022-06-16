@@ -2,6 +2,7 @@ package com.injent.miscalls.domain.repositories;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.database.AppDatabase;
+import com.injent.miscalls.data.database.calls.UserActiveUpdate;
 import com.injent.miscalls.data.database.user.Organization;
 import com.injent.miscalls.data.database.user.Token;
 import com.injent.miscalls.data.database.user.UserDao;
@@ -26,24 +27,34 @@ public class AuthRepository {
     private CompletableFuture<User> findActiveSession;
     private CompletableFuture<Void> updateUser;
     private CompletableFuture<User> authFromDb;
+    private CompletableFuture<User> authWithBiometric;
+    private CompletableFuture<Void> resetLastActive;
 
     public AuthRepository() {
         dao = AppDatabase.getUserDao();
     }
 
     public void cancelFutures() {
-        if (insertUserFuture != null) {
+        if (insertUserFuture != null)
             insertUserFuture.cancel(true);
-        }
-        if (findActiveSession != null) {
+        if (findActiveSession != null)
             findActiveSession.cancel(true);
-        }
-        if (updateUser != null) {
+        if (updateUser != null)
             updateUser.cancel(true);
-        }
-        if (authFromDb != null) {
+        if (authFromDb != null)
             authFromDb.cancel(true);
+        if (authWithBiometric != null)
+            authWithBiometric.cancel(true);
+        if (resetLastActive != null) {
+            resetLastActive.cancel(true);
         }
+    }
+
+    public void authWithBiometric(Function<Throwable, User> ex, Consumer<User> consumer) {
+        authWithBiometric = CompletableFuture
+                .supplyAsync(dao::getByLastActive)
+                .exceptionally(ex);
+        authWithBiometric.thenAcceptAsync(consumer);
     }
 
     public Call<JResponse> auth(String login, String password){
@@ -53,11 +64,16 @@ public class AuthRepository {
     public void insertUser(Function<Throwable, Boolean> ex, Consumer<Boolean> consumer, User user) {
         insertUserFuture = CompletableFuture
                 .supplyAsync(() -> {
+                    User lastUser = dao.getByLastActive();
+                    if (lastUser != null) {
+                        lastUser.setLastActive(false);
+                        dao.updateUser(lastUser);
+                    }
                     int orgId = (int) dao.insertOrganization(user.getOrganization());
                     int tokenId = (int) dao.insertToken(user.getToken());
                     user.setTokenId(tokenId);
                     user.setOrganizationId(orgId);
-                    user.setAuthed(true);
+
                     dao.insertUser(user);
                     return true;
                 })
@@ -66,7 +82,7 @@ public class AuthRepository {
     }
 
     public void updateUser(User user) {
-        updateUser = new CompletableFuture<>()
+        updateUser = CompletableFuture
                 .supplyAsync(() -> {
                     dao.updateUser(user);
                     return null;
@@ -90,7 +106,20 @@ public class AuthRepository {
 
     public void authFromDb(Function<Throwable, User> ex, Consumer<User> consumer, String login, String password) {
         authFromDb = CompletableFuture
-                .supplyAsync(() -> dao.getByLoginAndPassword(login, password))
+                .supplyAsync(() -> {
+                    User lastUser = dao.getByLastActive();
+                    if (lastUser != null) {
+                        lastUser.setLastActive(false);
+                        dao.updateUser(lastUser);
+                    }
+                    User user = dao.getByLoginAndPassword(login, password);
+                    if (user == null) return null;
+                    user.setAuthed(true);
+                    user.setLastActive(true);
+                    user.setOrganization(dao.getOrganizationById(user.getOrganizationId()));
+                    user.setToken(dao.getTokenById(user.getTokenId()));
+                    return user;
+                })
                 .exceptionally(ex);
         authFromDb.thenAcceptAsync(consumer);
     }

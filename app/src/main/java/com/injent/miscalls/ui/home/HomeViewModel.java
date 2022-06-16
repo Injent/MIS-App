@@ -91,10 +91,11 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull Call<JResponse> call, @NonNull Response<JResponse> response) {
                 if (response.isSuccessful()) {
-                    List<CallInfo> list = response.body().getCalls().stream().map(CallDto::toDomainObject).collect(Collectors.toList());
                     if (response.body() == null) {
                         return;
                     }
+                    List<CallInfo> list = response.body().getCalls().stream().map(CallDto::toDomainObject).collect(Collectors.toList());
+
                     homeRepository.insertCallsWithDropTable(throwable -> {
                         callListError.postValue(throwable);
                         throwable.printStackTrace();
@@ -102,7 +103,6 @@ public class HomeViewModel extends ViewModel {
                     }, list);
                     callList.postValue(list);
                     setNewDbDate();
-
                 } else {
                     callListError.postValue(new FailedDownloadDb(AppDatabase.DB_NAME));
                 }

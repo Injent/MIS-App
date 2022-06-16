@@ -138,6 +138,7 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             container.setActivated(false);
             editText.setOnFocusChangeListener((view, focused) -> container.setActivated(focused));
             editText.setHint(field.getExtraResId());
+            editText.setText(field.getData());
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -177,6 +178,11 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             newFilters[editFilters.length] = new InputFilter.LengthFilter(maxTextLength);
             editText1.setFilters(newFilters);
             editText2.setFilters(newFilters);
+            if (!field.getData().equals("")) {
+                String[] format = field.getData().split("/");
+                editText1.setText(format[0]);
+                editText2.setText(format[1]);
+            }
 
             TextWatcher textWatcher = new TextWatcher() {
                 @Override
@@ -204,6 +210,9 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             TextView name = itemView.findViewById(R.id.fieldDecName);
             name.setText(field.getNameResId());
             EditText editText = itemView.findViewById(R.id.fieldDecVal);
+            if (!field.getData().equals(""))
+                editText.setText(field.getData());
+
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -231,6 +240,11 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             String[] items = itemView.getResources().getStringArray(field.getExtraResId());
             SpinnerAdapter adapter = new SpinnerAdapter(itemView.getContext(), items);
             spinner.setAdapter(adapter);
+            for (int i = 0; i < items.length; i++) {
+                if (items[i].equals(field.getData())) {
+                    spinner.setSelection(i);
+                }
+            }
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
@@ -254,6 +268,11 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             TextView name = itemView.findViewById(R.id.fieldCheckBoxText);
             CheckBox checkBox = itemView.findViewById(R.id.fieldCheckBox);
             name.setText(field.getNameResId());
+
+            if (field.getIndex() == Field.PENSIONER) {
+                checkBox.setChecked(Boolean.parseBoolean(field.getData()));
+            }
+
             checkBox.setOnCheckedChangeListener((compoundButton, checked) -> {
                 listener.onEdit(field.getIndex(), String.valueOf(checked));
             });

@@ -2,14 +2,14 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="false">
         <shape android:shape="rectangle">
-            <solid android:color="@color/uiLightGray" />
+            <solid android:color="@color/search" />
             <corners android:radius="@dimen/buttonCorners" />
         </shape>
     </item>
 
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/uiLightGray" />
+            <solid android:color="@color/search" />
             <corners android:radius="@dimen/buttonCorners" />
         </shape>
     </item>

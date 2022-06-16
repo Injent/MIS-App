@@ -43,7 +43,11 @@
         android:id="@+id/handBookFragment"
         android:name="com.injent.miscalls.ui.mkb10.HandBookFragment"
         android:label="hand_book_fragment"
-        tools:layout="@layout/fragment_handbook" />
+        tools:layout="@layout/fragment_handbook" >
+        <action
+            android:id="@+id/action_handBookFragment_self"
+            app:popUpTo="@id/handBookFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editorFragment"
         android:name="com.injent.miscalls.ui.editor.EditorFragment"
@@ -54,4 +58,9 @@
         android:name="com.injent.miscalls.ui.pdfviewer.PdfViewerFragment"
         android:label="PdfViewerFragment"
         tools:layout="@layout/fragment_pdf_viewer"/>
+    <fragment
+        android:id="@+id/overviewFragment"
+        android:name="com.injent.miscalls.ui.overview.OverviewFragment"
+        android:label="fragment_overview"
+        tools:layout="@layout/fragment_overview" />
 </navigation>

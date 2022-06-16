@@ -35,7 +35,7 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
 
         @Override
         public boolean areContentsTheSame(@NonNull CallInfo oldItem, @NonNull CallInfo newItem) {
-            return oldItem.equals(newItem);
+            return oldItem.sameContent(newItem);
         }
     };
 

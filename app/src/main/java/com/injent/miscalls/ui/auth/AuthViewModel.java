@@ -33,6 +33,17 @@ public class AuthViewModel extends ViewModel {
         repository = new AuthRepository();
     }
 
+    public void authWithBiometric() {
+        repository.authWithBiometric(throwable -> {
+            errorUser.postValue(throwable);
+            throwable.printStackTrace();
+            return null;
+        }, user -> {
+            if (user != null)
+                authFromDb(user.getLogin(), user.getPassword());
+        });
+    }
+
     public void findActiveUser() {
         if (App.getUser() != null) return;
         repository.findActiveSession(throwable -> {
@@ -70,6 +81,7 @@ public class AuthViewModel extends ViewModel {
                     user.setLogin(login);
                     user.setPassword(password);
                     user.setAuthed(true);
+                    user.setLastActive(true);
                     App.setUser(user);
                     repository.insertUser(throwable -> {
                         errorUser.postValue(throwable);

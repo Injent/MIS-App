@@ -19,6 +19,8 @@ public class Registry {
     }
 
     @Ignore
+    private boolean delete;
+    @Ignore
     private Objectively objectively;
     @Ignore
     private CallInfo callInfo;
@@ -40,6 +42,16 @@ public class Registry {
     private int callId;
     @ColumnInfo(name = "surveys")
     private String surveys;
+    @ColumnInfo(name = "user_id")
+    private int userId;
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
 
     public int getId() {
         return id;
@@ -141,5 +153,40 @@ public class Registry {
 
     public void setCallId(int callId) {
         this.callId = callId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Registry)) return false;
+
+        Registry registry = (Registry) o;
+
+        return getId() == registry.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (isDelete() ? 1 : 0);
+        result = 31 * result + (getObjectively() != null ? getObjectively().hashCode() : 0);
+        result = 31 * result + (getCallInfo() != null ? getCallInfo().hashCode() : 0);
+        result = 31 * result + (getDiagnoses() != null ? getDiagnoses().hashCode() : 0);
+        result = 31 * result + getId();
+        result = 31 * result + (getComplaints() != null ? getComplaints().hashCode() : 0);
+        result = 31 * result + (getAnamnesis() != null ? getAnamnesis().hashCode() : 0);
+        result = 31 * result + (getRecommendation() != null ? getRecommendation().hashCode() : 0);
+        result = 31 * result + (getDiagnosesId() != null ? getDiagnosesId().hashCode() : 0);
+        result = 31 * result + (getCreateDate() != null ? getCreateDate().hashCode() : 0);
+        result = 31 * result + getCallId();
+        result = 31 * result + (getSurveys() != null ? getSurveys().hashCode() : 0);
+        return result;
     }
 }

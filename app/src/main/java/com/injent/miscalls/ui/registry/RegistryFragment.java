@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,8 +18,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.databinding.FragmentRegistryBinding;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
 import com.injent.miscalls.ui.Section;
@@ -27,6 +31,8 @@ import com.injent.miscalls.ui.SectionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RegistryFragment extends Fragment {
 
@@ -34,10 +40,31 @@ public class RegistryFragment extends Fragment {
     private RegistryViewModel viewModel;
     private FragmentRegistryBinding binding;
     private NavController navController;
+    private int deleteRegistryId;
+    private Snackbar snackbar;
+    public static final long DELETE_DELAY = 5000L;
+    private Timer timer;
+    private final TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                viewModel.deleteSelectedRegistry(deleteRegistryId);
+                if (snackbar != null)
+                    snackbar.dismiss();
+            }
+    };
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            if (getArguments().containsKey(getString(R.string.keyDeleteRegistry))) {
+                deleteRegistryId = getArguments().getInt(getString(R.string.keyDeleteRegistry));
+            } else {
+                deleteRegistryId = -1;
+            }
+        } else {
+            deleteRegistryId = -1;
+        }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_registry, container, false);
         return binding.getRoot();
     }
@@ -48,23 +75,32 @@ public class RegistryFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(RegistryViewModel.class);
         navController = Navigation.findNavController(requireView());
 
-        //Observers
-        viewModel.getRegistryItemsLiveData().observe(getViewLifecycleOwner(), registryItems -> adapter.submitList(registryItems));
+        setListeners();
 
-        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
-
-        });
-
-        //RecyclerView
         setupSectionRecyclerView();
         setupRegistryRecyclerView();
 
+        if (deleteRegistryId != -1) {
+            deleteRegistry();
+        }
+    }
+
+    private void setupRegistryRecyclerView() {
+        adapter = new RegistryAdapter(this::navigateToEditor);
+        binding.registryItemRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.registryItemRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        binding.registryItemRecyclerView.setAdapter(adapter);
+
+        viewModel.loadRegistryItems(deleteRegistryId);
+    }
+
+    private void setListeners() {
         //Listeners
-        binding.backFromRegistry.setOnClickListener(view0 -> navigateToHome());
+        binding.backFromRegistry.setOnClickListener(v -> navigateToHome());
 
-        binding.registrySearchButton.setOnClickListener(view0 -> showSearch());
+        binding.registrySearchButton.setOnClickListener(v -> showSearch());
 
-        binding.registrySearchCancel.setOnClickListener(view0 -> hideSearch());
+        binding.registrySearchCancel.setOnClickListener(v -> hideSearch());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
@@ -72,32 +108,44 @@ public class RegistryFragment extends Fragment {
                 navigateToHome();
             }
         });
+
+        //Observers
+        viewModel.getRegistryItemsLiveData().observe(getViewLifecycleOwner(), registryItems -> {
+            adapter.submitList(registryItems);
+        });
+
+        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
+
+        });
     }
 
-    private void setupRegistryRecyclerView() {
-        adapter = new RegistryAdapter(new RegistryAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int id) {
-                navigateToEditor(id);
-            }
-
-            @Override
-            public void onLongClick(int position) {
-                //
-            }
-        });
-        binding.registryItemRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.registryItemRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        binding.registryItemRecyclerView.setAdapter(adapter);
-
-        viewModel.loadRegistryItems();
+    private void deleteRegistry() {
+        timer = new Timer();
+        timer.schedule(timerTask, DELETE_DELAY);
+        snackbar = Snackbar.make(requireView(), R.string.registryDeleted, BaseTransientBottomBar.LENGTH_INDEFINITE)
+                .setAction(R.string.cancel, view -> {
+                    timer.cancel();
+                    List<Registry> list = new ArrayList<>(adapter.getCurrentList());
+                    for (int i = 0; i < list.size(); i++) {
+                        list.get(i).setDelete(false);
+                    }
+                    adapter.submitList(list);
+                })
+                .setBackgroundTint(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, requireContext().getTheme()))
+                .setTextColor(ResourcesCompat.getColor(getResources(), R.color.darkGrayText, requireContext().getTheme()))
+                .setActionTextColor(ResourcesCompat.getColor(getResources(), R.color.red, requireContext().getTheme()));
+        snackbar.show();
     }
 
     private void setupSectionRecyclerView() {
         SectionAdapter sectionAdapter = new SectionAdapter(type -> {
             if (Section.Type.SUBMIT_ALL == type) {
-                Toast.makeText(requireContext(), R.string.docsSent,Toast.LENGTH_LONG).show();
-                new RegistryRepository().dropTable();
+                if (viewModel.getRegistryItemsLiveData().getValue() != null && !viewModel.getRegistryItemsLiveData().getValue().isEmpty()) {
+                    Toast.makeText(requireContext(), R.string.docsSent,Toast.LENGTH_LONG).show();
+                    viewModel.sendRegistries();
+                } else {
+                    Toast.makeText(requireContext(), R.string.listEmpty,Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -135,7 +183,7 @@ public class RegistryFragment extends Fragment {
     private void navigateToEditor(int id) {
         Bundle args = new Bundle();
         args.putInt(getString(R.string.keyRegistryId), id);
-        navController.navigate(R.id.editorFragment, args);
+        navController.navigate(R.id.overviewFragment, args);
     }
 
     private boolean notMatchingDestination() {
@@ -145,6 +193,10 @@ public class RegistryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        timer = null;
+        if (snackbar != null)
+            snackbar.dismiss();
+        snackbar = null;
         viewModel.onCleared();
         binding = null;
     }

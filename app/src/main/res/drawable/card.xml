@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <corners android:radius="@dimen/cardCorners"/>
     <stroke android:color="@color/line" android:width="@dimen/thickLine" />
-    <solid android:color="@android:color/white" />
+    <solid android:color="@color/spinnerItem" />
 </shape>

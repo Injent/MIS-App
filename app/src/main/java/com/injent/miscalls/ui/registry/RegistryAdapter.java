@@ -1,10 +1,13 @@
 package com.injent.miscalls.ui.registry;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
@@ -14,6 +17,8 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.databinding.ItemRegistryBinding;
+
+import java.util.List;
 
 public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewHolder> {
 
@@ -33,7 +38,7 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
         @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull Registry oldItem, @NonNull Registry newItem) {
-            return oldItem.equals(newItem);
+            return oldItem.hashCode() == newItem.hashCode();
         }
     };
 
@@ -52,7 +57,6 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
 
     public interface OnItemClickListener {
         void onClick(int id);
-        void onLongClick(int id);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -71,10 +75,24 @@ public class RegistryAdapter extends ListAdapter<Registry, RegistryAdapter.ViewH
             binding.registryDiagnosis.setText(Diagnosis.listToStringCodes(registry.getDiagnoses(),','));
 
             binding.editRegistry.setOnClickListener(view -> listener.onClick(registry.getId()));
-            binding.protocolCard.setOnLongClickListener(view -> {
-                listener.onLongClick(registry.getId());
-                return false;
-            });
+
+            if (registry.isDelete()) {
+                binding.registryCard.setForeground(
+                        ResourcesCompat.getDrawable(
+                                binding.getRoot().getResources(),
+                                R.drawable.mute,
+                                binding.getRoot().getContext().getTheme()
+                        )
+                );
+            } else {
+                binding.registryCard.setForeground(
+                        ResourcesCompat.getDrawable(
+                                binding.getRoot().getResources(),
+                                R.drawable.diagnosis_focused_effect,
+                                binding.getRoot().getContext().getTheme()
+                        )
+                );
+            }
         }
     }
 }

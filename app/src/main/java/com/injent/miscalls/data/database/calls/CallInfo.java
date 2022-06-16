@@ -40,8 +40,8 @@ public class CallInfo {
             String residence,
             String phoneNumber,
             Date bornDate,
-            String snils,
-            String polis,
+            long snils,
+            long polis,
             String organization,
             String passport,
             int age,
@@ -102,9 +102,9 @@ public class CallInfo {
     @ColumnInfo(name = "born_date")
     private Date bornDate;
     @ColumnInfo(name = "snils")
-    private String snils;
+    private long snils;
     @ColumnInfo(name = "polis")
-    private String polis;
+    private long polis;
     @ColumnInfo(name = "organization")
     private String organization;
     @ColumnInfo(name = "passport")
@@ -214,19 +214,19 @@ public class CallInfo {
         this.bornDate = bornDate;
     }
 
-    public String getSnils() {
+    public long getSnils() {
         return snils;
     }
 
-    public void setSnils(String snils) {
+    public void setSnils(long snils) {
         this.snils = snils;
     }
 
-    public String getPolis() {
+    public long getPolis() {
         return polis;
     }
 
-    public void setPolis(String polis) {
+    public void setPolis(long polis) {
         this.polis = polis;
     }
 
@@ -280,8 +280,8 @@ public class CallInfo {
         list.add(new SimpleDateFormat(pattern, Locale.getDefault()).format(bornDate));
         list.add(residence);
         list.add(benefitCategoryCode);
-        list.add(snils);
-        list.add(polis);
+        list.add(String.valueOf(snils));
+        list.add(String.valueOf(polis));
         list.add(organization);
         list.add(passport);
         list.add(phoneNumber);
@@ -310,27 +310,7 @@ public class CallInfo {
         return false;
     }
 
-    @Override
-    public int hashCode() {
-        int result = getId();
-        result = 31 * result + getUserId();
-        result = 31 * result + (getEditCardDate() != null ? getEditCardDate().hashCode() : 0);
-        result = 31 * result + (getCallTime() != null ? getCallTime().hashCode() : 0);
-        result = 31 * result + (getComplaints() != null ? getComplaints().hashCode() : 0);
-        result = 31 * result + (getBenefitCategoryCode() != null ? getBenefitCategoryCode().hashCode() : 0);
-        result = 31 * result + (isInspected() ? 1 : 0);
-        result = 31 * result + (getFirstname() != null ? getFirstname().hashCode() : 0);
-        result = 31 * result + (getMiddleName() != null ? getMiddleName().hashCode() : 0);
-        result = 31 * result + (getLastname() != null ? getLastname().hashCode() : 0);
-        result = 31 * result + (getSex() ? 1 : 0);
-        result = 31 * result + (getResidence() != null ? getResidence().hashCode() : 0);
-        result = 31 * result + (getPhoneNumber() != null ? getPhoneNumber().hashCode() : 0);
-        result = 31 * result + (getBornDate() != null ? getBornDate().hashCode() : 0);
-        result = 31 * result + (getSnils() != null ? getSnils().hashCode() : 0);
-        result = 31 * result + (getPolis() != null ? getPolis().hashCode() : 0);
-        result = 31 * result + (getOrganization() != null ? getOrganization().hashCode() : 0);
-        result = 31 * result + (getPassport() != null ? getPassport().hashCode() : 0);
-        result = 31 * result + getAge();
-        return result;
+    public boolean sameContent(CallInfo callInfo) {
+        return callInfo.getSnils() == snils;
     }
 }
