@@ -5,7 +5,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/cardPadding">
+        android:paddingTop="@dimen/cardPadding"
+        android:paddingBottom="@dimen/cardPadding">
 
 
         <TextView
@@ -14,8 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/clear_sans_medium"
-            android:textIsSelectable="true"
             android:textColor="@color/lightGrayText"
+            android:textIsSelectable="true"
             android:textSize="@dimen/hintFont" />
 
         <TextView

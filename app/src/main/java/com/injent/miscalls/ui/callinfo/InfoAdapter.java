@@ -11,24 +11,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.ItemCallInfoBinding;
+import com.injent.miscalls.ui.adapters.Field;
 
-public class InfoAdapter extends ListAdapter<String, InfoAdapter.ViewHolder> {
+public class InfoAdapter extends ListAdapter<Field, InfoAdapter.ViewHolder> {
 
-    private final String[] fieldName;
-
-    protected InfoAdapter(String... fieldName) {
+    public InfoAdapter() {
         super(diffCallback);
-        this.fieldName = fieldName;
     }
 
-    static DiffUtil.ItemCallback<String> diffCallback = new DiffUtil.ItemCallback<>() {
+    static DiffUtil.ItemCallback<Field> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+        public boolean areItemsTheSame(@NonNull Field oldItem, @NonNull Field newItem) {
             return false;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+        public boolean areContentsTheSame(@NonNull Field oldItem, @NonNull Field newItem) {
             return false;
         }
     };
@@ -43,7 +41,7 @@ public class InfoAdapter extends ListAdapter<String, InfoAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setData(getItem(position), fieldName[position]);
+        holder.setData(getItem(position));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -55,9 +53,9 @@ public class InfoAdapter extends ListAdapter<String, InfoAdapter.ViewHolder> {
             this.binding = binding;
         }
 
-        public void setData(String infoField, String fieldName) {
-            binding.fieldType.setText(fieldName);
-            binding.fieldValue.setText(infoField);
+        public void setData(Field field) {
+            binding.fieldType.setText(field.getNameStringResId());
+            binding.fieldValue.setText(field.getValue());
         }
     }
 }

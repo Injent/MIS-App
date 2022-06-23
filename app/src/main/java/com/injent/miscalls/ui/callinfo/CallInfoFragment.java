@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.data.database.calls.MedCall;
 import com.injent.miscalls.databinding.FragmentCallInfoBinding;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
@@ -32,8 +31,8 @@ public class CallInfoFragment extends Fragment {
     private InfoAdapter adapter;
     private CallStuffViewModel viewModel;
 
-    public CallInfoFragment() {
-        //Nothing to do
+    public CallInfoFragment(ViewModel viewModel) {
+        this.viewModel = (CallStuffViewModel) viewModel;
     }
 
     @Nullable
@@ -48,15 +47,20 @@ public class CallInfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
-
         setupRecyclerViewInfo();
+        setListeners();
+    }
 
+    private void setListeners() {
+        // Observers
         viewModel.getCallLiveData().observe(getViewLifecycleOwner(), this::setInfo);
+
+        // Listeners
+        binding.mapButton.setOnClickListener(view -> viewModel.openMap());
     }
 
     private void setupRecyclerViewInfo() {
-        adapter = new InfoAdapter(getResources().getStringArray(R.array.infoType));
+        adapter = new InfoAdapter();
         binding.infoList.setAdapter(adapter);
         binding.infoList.setItemAnimator(null);
         binding.complaintField.setMovementMethod(new ScrollingMovementMethod());
@@ -78,22 +82,21 @@ public class CallInfoFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void setInfo(CallInfo callInfo) {
-        binding.complaintField.setText(callInfo.getComplaints());
+    private void setInfo(MedCall medCall) {
+        binding.complaintField.setText(medCall.getComplaints());
 
         //Listeners
-        binding.copyComplaints.setOnClickListener(v -> copyText(callInfo.getComplaints()));
-        binding.callButton.setOnClickListener(v -> callToPerson(callInfo.getPhoneNumber()));
+        binding.copyComplaints.setOnClickListener(v -> copyText(medCall.getComplaints()));
+        binding.callButton.setOnClickListener(v -> callToPerson(medCall.getPhoneNumber()));
 
-        if (callInfo.isInspected())
+        if (medCall.isInspected())
             binding.statusText.setVisibility(View.VISIBLE);
 
-        adapter.submitList(callInfo.getData());
-
-        playSetupAnimation();
+        adapter.submitList(medCall.getData());
+        playAnimations();
     }
 
-    private void playSetupAnimation() {
+    private void playAnimations() {
         binding.complaintField.animate()
                 .translationXBy(-binding.complaintField.getWidth())
                 .setDuration(0L)
@@ -129,6 +132,7 @@ public class CallInfoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        adapter = null;
         binding = null;
     }
 }

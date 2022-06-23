@@ -1,6 +1,5 @@
 package com.injent.miscalls.data;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;

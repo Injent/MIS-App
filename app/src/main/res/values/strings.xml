@@ -3,11 +3,12 @@
 
     <!-- Titles -->
     <string name="callList">Список вызовов</string>
-    <string name="callInfo">Вызов</string>
+    <string name="medCall">Вызов</string>
     <string name="auth">Авторизация</string>
     <string name="settings">Настройки</string>
     <string name="overview">Обзор</string>
     <string name="document">Документ</string>
+    <string name="patientInspected">Пациент осмотрен</string>
 
     <!-- Sections -->
     <string name="openDocFolder">Папка с документами</string>
@@ -115,6 +116,11 @@
     <string name="miscellaneous">Разное</string>
     <string name="interfaceName">Интерфейс</string>
     <string name="biometricAuth">Биометрическая авторизация</string>
+    <string name="extraInfo">Подробности</string>
+    <string-array name="extraInfoFieldNames">
+        <item>Дата создания</item>
+        <item></item>
+    </string-array>
 
     <!-- Menu -->
     <string name="registry">Журнал</string>
@@ -150,10 +156,10 @@
     <string name="actionAuth">Авторизоваться</string>
     <string name="saveChanges">Отправить</string>
     <string name="documentSending">Документ отправляется</string>
-    <string name="pdfPreview">Предосмотр\nдокумента</string>
+    <string name="pdfPreview">Сохранить\nдокумент</string>
     <string name="useTempFromInspection">Использовать\nшаблон осмотра</string>
-    <string name="exit">Выйти</string>
-    <string name="allow">Разрешите доступ для сохранения файла</string>
+    <string name="exit">Нажмите еще раз для выхода</string>
+    <string name="allow">Разрешите доступ для сохранения файла и работы карт</string>
     <string name="ok">Ок</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
@@ -176,7 +182,7 @@
     <string name="inspected">Осмотрен</string>
     <string name="inspectionPreset">Значение 1:\nЗначение 2:</string>
 
-    <string name="loading">Текст</string>
+    <string name="text">Текст</string>
 
     <!-- Toasts -->
     <string name="registryDeleted">Осмотр будет удален</string>
@@ -220,24 +226,20 @@
     <string name="socketTimeOut">Превышено время ожидания</string>
     <string name="diagnosesIsEmpty">Не заполнен диагноз</string>
 
-    <!-- Links -->
-    <string name="aboutLink">https://exitoso.ru/injent/about/</string>
-    <string name="helpLink">https://exitoso.ru/injent/help/</string>
+    <string name="callTime">Время вызова</string>
+    <string name="dateOfMedCardEdit">Дата заполнения мед. карты</string>
+    <string name="fullName">ФИО</string>
+    <string name="sex">Пол</string>
+    <string name="dateOfBirth">Дата рождения</string>
+    <string name="residence">Место вызова</string>
+    <string name="bcc">Код категории льготы</string>
+    <string name="snils">СНИЛС</string>
+    <string name="polis">ПОЛИС</string>
+    <string name="medOrg">Медицинская страховая организация</string>
+    <string name="call">Звонок</string>
 
-    <string-array name="infoType">
-        <item>Время вызова</item>
-        <item>Дата заполнения мед. карты</item>
-        <item>Ф.И.О.</item>
-        <item>Пол</item>
-        <item>Дата рождения</item>
-        <item>Место жительства</item>
-        <item>Код категории льготы</item>
-        <item>СНИЛС</item>
-        <item>ПОЛИС</item>
-        <item>Медицинская организация</item>
-        <item>Документ</item>
-        <item>Звонок</item>
-    </string-array>
+    <string name="createDate">Дата посещения</string>
+    <string name="patientFullName">ФИО пациента</string>
 
     <string-array name="fieldType">
         <item>Общий осмотр</item>
@@ -272,6 +274,8 @@
     <string name="keyDbDate">DB_DATE</string>
     <string name="keyPath">KEY_PATH</string>
     <string name="keyRegistryId">REGISTRY_ID</string>
+    <string name="keyLatitude">LATITUDE</string>
+    <string name="keyLongitude">LONGITUDE</string>
 
     <!-- Shared Preferences Keys -->
     <string name="keyPdfFilePath">PDF_FILE_PATH</string>

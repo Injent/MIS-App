@@ -2,7 +2,6 @@ package com.injent.miscalls.ui.home;
 
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
@@ -30,6 +28,9 @@ import com.injent.miscalls.data.database.FailedDownloadDb;
 import com.injent.miscalls.data.database.calls.ListEmptyException;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
@@ -56,8 +57,15 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        viewModel.init(requireContext());
         navController = Navigation.findNavController(requireView());
 
+        menuSetup();
+        setupRecyclerView();
+        setListeners();
+    }
+
+    private void setListeners() {
         //Listeners
         binding.patientListSection.setOnClickListener(v -> downloadNewDb());
 
@@ -67,29 +75,16 @@ public class HomeFragment extends Fragment {
         viewModel.getCallListLiveData().observe(getViewLifecycleOwner(), callList -> {
             hideLoading();
             adapter.submitList(callList);
+            displayDbDate();
         });
 
         viewModel.getCallListError().observe(getViewLifecycleOwner(), throwable -> {
             hideLoading();
             failed(throwable);
         });
-
-        viewModel.getDbDateLiveData().observe(getViewLifecycleOwner(), this::displayDbDate);
-        viewModel.loadDbDate();
-
-        //On back pressed action
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                confirmExit();
-            }
-        });
-
-        menuSetup();
-        recyclerViewSetup();
     }
 
-    public void displayList() {
+    private void displayList() {
         hideLoading();
         hideErrorMessage();
         viewModel.loadCallList(App.getUser().getId());
@@ -107,8 +102,10 @@ public class HomeFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    public void displayDbDate(String date) {
-        binding.dbDateUpdateText.setText(String.format(getString(R.string.updated),date));
+    public void displayDbDate() {
+        Date date = App.getUser().getDbUpdateTime();
+        String dateString = new SimpleDateFormat("dd.MM.yyyy / hh:mm", Locale.getDefault()).format(date);
+        binding.dbDateUpdateText.setText(String.format(getString(R.string.updated), dateString));
     }
 
     private void showLoading() {
@@ -134,13 +131,6 @@ public class HomeFragment extends Fragment {
         binding.loadingBar.setVisibility(View.GONE);
     }
 
-    public DividerItemDecoration getDivider() {
-        DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.divider_layer, requireContext().getTheme())));
-
-        return divider;
-    }
-
     private void navigateToCallStuff(int callId) {
         if (notMatchingDestination()) return;
         Bundle args = new Bundle();
@@ -155,7 +145,7 @@ public class HomeFragment extends Fragment {
 
     private void downloadNewDb() {
         showLoading();
-        viewModel.downloadCallsDb();
+        viewModel.downloadCallsDb(requireContext(), App.getUser().getToken());
     }
 
     private void navigateToAuth() {
@@ -208,10 +198,13 @@ public class HomeFragment extends Fragment {
         binding.drawerLayout.closeDrawer(GravityCompat.START,false);
     }
 
-    private void recyclerViewSetup() {
+    private void setupRecyclerView() {
         //Divider
-        if (binding.patientsRecycler.getItemDecorationCount() == 0)
-            binding.patientsRecycler.addItemDecoration(getDivider());
+        if (binding.patientsRecycler.getItemDecorationCount() == 0) {
+            DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+            divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.divider_layer, requireContext().getTheme())));
+            binding.patientsRecycler.addItemDecoration(divider);
+        }
 
         //RecyclerView
         binding.patientsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -224,24 +217,12 @@ public class HomeFragment extends Fragment {
         else displayList();
     }
 
-    public void confirmExit() {
-        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.exit)
-                .setPositiveButton(R.string.yes, (dialog, button0) -> closeApp())
-                .setNegativeButton(R.string.no, (dialog, button1) -> dialog.dismiss())
-                .create();
-        alertDialog.show();
-    }
-
-    public void closeApp() {
-        requireActivity().finish();
-        System.exit(0);
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.onCleared();
+        navController = null;
+        adapter = null;
         binding = null;
     }
 }

@@ -19,6 +19,7 @@
     <color name="line">#EAEAEA</color>
     <color name="spinnerItem">@color/colorPrimaryDark</color>
     <color name="green">#3ba55d</color>
+    <color name="invisible">#00000000</color>
     <color name="greenTransparent">#B33BA55D</color>
     <color name="gray">#e8e8e8</color>
     <color name="lightBlue">#0a95ff</color>

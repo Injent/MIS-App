@@ -8,12 +8,7 @@ import androidx.security.crypto.MasterKeys;
 
 import com.injent.miscalls.data.UserDataManager;
 import com.injent.miscalls.data.database.AppDatabase;
-import com.injent.miscalls.data.database.calls.CallInfoDao;
-import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
-import com.injent.miscalls.data.database.registry.RegistryDao;
 import com.injent.miscalls.data.database.user.User;
-import com.injent.miscalls.data.database.user.UserDao;
-import com.injent.miscalls.data.recommendation.RecommendationDao;
 
 import org.osmdroid.config.Configuration;
 

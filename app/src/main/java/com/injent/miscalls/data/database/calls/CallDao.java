@@ -10,28 +10,28 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface CallInfoDao {
+public interface CallDao {
 
     @Query("SELECT * FROM calls WHERE user_id =:id")
-    List<CallInfo> getCallByUserId(int id);
+    List<MedCall> getCallByUserId(int id);
 
     @Query("SELECT * FROM calls WHERE id = :id LIMIT 1")
-    CallInfo getById(int id);
+    MedCall getById(int id);
 
     @Query("SELECT * FROM calls WHERE snils =:snils LIMIT 1")
-    CallInfo getBySnils(long snils);
+    MedCall getBySnils(long snils);
 
     @Insert
-    long insertCall(CallInfo callInfo);
+    long insertCall(MedCall medCall);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<CallInfo> list);
+    void insertAll(List<MedCall> list);
 
     @Update
-    void updateCall(CallInfo callInfo);
+    void updateCall(MedCall medCall);
 
     @Delete
-    void delete(CallInfo callInfo);
+    void delete(MedCall medCall);
 
     @Query("DELETE FROM calls")
     void clearAll();

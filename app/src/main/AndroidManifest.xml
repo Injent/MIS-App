@@ -25,13 +25,14 @@
         android:theme="@style/Theme.MISLight"
         android:usesCleartextTraffic="true">
 
+        <!--            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"-->
+
         <activity
             android:theme="@style/Theme.MISLight"
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
 
             <intent-filter>

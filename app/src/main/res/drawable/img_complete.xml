@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:height="29dp" android:width="29dp" android:gravity="center">
+        <shape android:shape="oval" android:tint="#3321DA5E" />
+    </item>
+    <item android:height="19dp" android:width="19dp" android:gravity="center">
+        <shape android:shape="oval" android:tint="@color/white" />
+    </item>
+    <item android:drawable="@drawable/ic_complete">
+    </item>
+</layer-list>

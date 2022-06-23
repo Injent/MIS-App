@@ -4,7 +4,11 @@ import static com.injent.miscalls.network.MisAPI.BASE_URL;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.LinkProperties;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -32,12 +36,19 @@ public class NetworkManager {
         return misAPI;
     }
 
-    public static boolean isInternetAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) App.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo == null || !networkInfo.isConnectedOrConnecting())
-            return false;
-        return true;
+    public static boolean isInternetAvailable(Context context) {
+        ConnectivityManager connectivityManager = context.getSystemService(ConnectivityManager.class);
+        Network network = connectivityManager.getActiveNetwork();
+
+        NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(network);
+        return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET);
+//        ConnectivityManager connectivityManager = (ConnectivityManager) App.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+//        if (networkInfo == null || !networkInfo.isConnectedOrConnecting())
+//            return false;
+//        return true;
     }
 
     /**

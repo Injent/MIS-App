@@ -6,8 +6,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:layout_height="match_parent">
 
 
         <ScrollView
@@ -15,6 +14,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
+            android:background="@drawable/list"
             app:layout_constraintBottom_toTopOf="@+id/editorSaveDoc"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -22,9 +22,25 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/extraInfoHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/extraInfo"
+                    android:textAppearance="@style/headerText" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/extraInfoRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp" />
             </LinearLayout>
         </ScrollView>
 
@@ -54,7 +70,6 @@
             android:id="@+id/constraintLayout5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
             android:clipChildren="false"
             android:clipToPadding="false"
             app:layout_constraintTop_toTopOf="parent"
@@ -70,48 +85,36 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/colorPrimary"
                 app:cardCornerRadius="@dimen/cardCorners"
                 app:cardElevation="@dimen/cardElevation"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editorFullName">
+                app:layout_constraintTop_toBottomOf="@+id/imageView3">
 
                 <TextView
                     android:id="@+id/editorCardText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/green"
                     android:enabled="false"
                     android:fontFamily="@font/clear_sans_medium"
                     android:padding="10dp"
                     android:text="@string/pdfPreview"
                     android:textColor="@color/darkGrayText"
                     android:textSize="@dimen/hintFont"
-                    app:drawableStartCompat="@drawable/ic_document" />
+                    app:drawableStartCompat="@drawable/ic_document"
+                    app:drawableTint="@color/green" />
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/createDateText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="@font/clear_sans_medium"
-                android:textColor="@color/lowGray"
-                android:textSize="@dimen/hintFont"
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="32dp"
+                android:src="@drawable/img_complete"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/editorFullName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/clear_sans_medium"
-                android:textColor="@color/lowGray"
-                android:textSize="@dimen/hintFont"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

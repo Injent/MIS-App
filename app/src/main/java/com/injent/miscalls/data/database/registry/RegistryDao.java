@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.data.database.calls.MedCall;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public interface RegistryDao {
 
     @Query("SELECT * FROM calls WHERE id =:id LIMIT 1")
-    CallInfo getCallInfo(int id);
+    MedCall getCallInfo(int id);
 
     @Query("SELECT * FROM registry WHERE user_id =:userId")
     List<Registry> getAllRawRegistries(int userId);

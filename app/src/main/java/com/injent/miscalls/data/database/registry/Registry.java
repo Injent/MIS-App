@@ -5,9 +5,12 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.R;
+import com.injent.miscalls.data.database.calls.MedCall;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
+import com.injent.miscalls.ui.adapters.Field;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +26,7 @@ public class Registry {
     @Ignore
     private Objectively objectively;
     @Ignore
-    private CallInfo callInfo;
+    private MedCall medCall;
     @Ignore
     private List<Diagnosis> diagnoses;
     @PrimaryKey(autoGenerate = true)
@@ -42,6 +45,8 @@ public class Registry {
     private int callId;
     @ColumnInfo(name = "surveys")
     private String surveys;
+    @ColumnInfo(name = "medical_therapy")
+    private String medicalTherapy;
     @ColumnInfo(name = "user_id")
     private int userId;
 
@@ -61,12 +66,12 @@ public class Registry {
         this.id = id;
     }
 
-    public CallInfo getCallInfo() {
-        return callInfo;
+    public MedCall getCallInfo() {
+        return medCall;
     }
 
-    public void setCallInfo(CallInfo callInfo) {
-        this.callInfo = callInfo;
+    public void setCallInfo(MedCall medCall) {
+        this.medCall = medCall;
     }
 
     public Objectively getObjectively() {
@@ -155,12 +160,30 @@ public class Registry {
         this.callId = callId;
     }
 
+    public String getMedicalTherapy() {
+        if (medicalTherapy == null) {
+            return "";
+        }
+        return medicalTherapy;
+    }
+
+    public void setMedicalTherapy(String medicalTherapy) {
+        this.medicalTherapy = medicalTherapy;
+    }
+
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public List<Field> getData() {
+        List<Field> list = new ArrayList<>();
+        list.add(new Field(R.string.createDate, getCreateDate()));
+        list.add(new Field(R.string.patientFullName, getCallInfo().getFullName()));
+        return list;
     }
 
     @Override

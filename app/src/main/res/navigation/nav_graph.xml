@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/authFragment">
+    app:startDestination="@id/loadingScreenFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -63,4 +63,24 @@
         android:name="com.injent.miscalls.ui.overview.OverviewFragment"
         android:label="fragment_overview"
         tools:layout="@layout/fragment_overview" />
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.injent.miscalls.ui.maps.MapsFragment"
+        android:label="MapsFragment" />
+    <fragment
+        android:id="@+id/loadingScreenFragment"
+        android:name="com.injent.miscalls.ui.loading.LoadingScreenFragment"
+        android:label="fragment_loading_screen"
+        tools:layout="@layout/fragment_loading_screen" >
+        <action
+            android:id="@+id/action_loadingScreenFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_loadingScreenFragment_to_authFragment"
+            app:destination="@id/authFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
 </navigation>

@@ -2,6 +2,7 @@ package com.injent.miscalls.data.database;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -9,8 +10,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.injent.miscalls.data.database.calls.CallInfo;
-import com.injent.miscalls.data.database.calls.CallInfoDao;
+import com.injent.miscalls.data.database.calls.MedCall;
+import com.injent.miscalls.data.database.calls.CallDao;
 import com.injent.miscalls.data.database.calls.Geo;
 import com.injent.miscalls.data.database.calls.GeoDao;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
@@ -31,12 +32,11 @@ import net.sqlcipher.database.SupportFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Geo.class, Diagnosis.class, Registry.class, CallInfo.class, Medication.class, Objectively.class, User.class, Organization.class, Token.class}, version = 1, exportSchema = false)
+@Database(entities = {Geo.class, Diagnosis.class, Registry.class, MedCall.class, Medication.class, Objectively.class, User.class, Organization.class, Token.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
 
@@ -46,7 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
     private static UserDao userDao;
-    private static CallInfoDao callInfoDao;
+    private static CallDao callDao;
     private static RegistryDao registryDao;
     private static DiagnosisDao diagnosisDao;
     private static GeoDao geoDao;
@@ -55,8 +55,8 @@ public abstract class AppDatabase extends RoomDatabase {
         return userDao;
     }
 
-    public static CallInfoDao getCallInfoDao() {
-        return callInfoDao;
+    public static CallDao getCallInfoDao() {
+        return callDao;
     }
 
     public static RegistryDao getRegistryDao() {
@@ -72,7 +72,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract DiagnosisDao diagnosisDao();
-    public abstract CallInfoDao callInfoDao();
+    public abstract CallDao callInfoDao();
     public abstract RegistryDao registryDao();
     public abstract RecommendationDao recommendationDao();
     public abstract UserDao userDao();
@@ -87,14 +87,14 @@ public abstract class AppDatabase extends RoomDatabase {
         final SupportFactory factory = new SupportFactory(passphraseBytes);
 
         instance = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
-                .openHelperFactory(factory)
+                //.openHelperFactory(factory)
                 .addCallback(new RoomPreloadCallback(context))
                 .build();
 
         userDao = instance.userDao();
         diagnosisDao = instance.diagnosisDao();
         registryDao = instance.registryDao();
-        callInfoDao = instance.callInfoDao();
+        callDao = instance.callInfoDao();
         geoDao = instance.geoDao();
         return instance;
     }

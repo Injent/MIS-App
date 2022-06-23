@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.callstuff;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,32 +16,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.injent.miscalls.MainActivity;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.data.database.calls.Geo;
 import com.injent.miscalls.databinding.FragmentCallStuffBinding;
 import com.injent.miscalls.ui.adapters.ViewPagerAdapter;
-import com.injent.miscalls.ui.callinfo.CallInfoFragment;
-import com.injent.miscalls.ui.diagnosis.DiagnosisFragment;
-import com.injent.miscalls.ui.inspection.InspectionFragment;
-import com.injent.miscalls.ui.maps.MapsFragment;
-
-import org.w3c.dom.ls.LSOutput;
 
 public class CallStuffFragment extends Fragment {
 
     private FragmentCallStuffBinding binding;
     private CallStuffViewModel viewModel;
     private ViewPagerAdapter adapter;
+    private NavController navController;
     private int callId;
 
     @Override
@@ -51,7 +43,7 @@ public class CallStuffFragment extends Fragment {
         if (getArguments() != null) {
             callId = getArguments().getInt(getString(R.string.keyCallId));
         }
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_call_stuff,container,false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_call_stuff, container, false);
         return binding.getRoot();
     }
 
@@ -59,12 +51,14 @@ public class CallStuffFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController = Navigation.findNavController(requireView());
         viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
+        viewModel.init();
 
         viewModel.loadCall(callId);
 
         binding.callInfopdfWebView.setInitialScale(150);
-        binding.titleCallStuff.setText(R.string.callInfo);
+        binding.titleCallStuff.setText(R.string.medCall);
         setListeners();
         setupViewPager2();
     }
@@ -107,7 +101,7 @@ public class CallStuffFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0: {
-                        binding.titleCallStuff.setText(R.string.callInfo);
+                        binding.titleCallStuff.setText(R.string.medCall);
                     }
                     break;
                     case 1: {
@@ -116,10 +110,6 @@ public class CallStuffFragment extends Fragment {
                     break;
                     case 2: {
                         binding.titleCallStuff.setText(R.string.diagnosis);
-                    }
-                    break;
-                    case 3: {
-                        binding.titleCallStuff.setText(R.string.maps);
                     }
                     break;
                     default: throw new IllegalStateException();
@@ -168,6 +158,13 @@ public class CallStuffFragment extends Fragment {
                 Toast.makeText(requireContext(), R.string.diagnosesIsEmpty, Toast.LENGTH_SHORT).show();
             }
         });
+
+        viewModel.getActionLiveData().observe(getViewLifecycleOwner(), action -> {
+            switch (action) {
+                case 1: openMap();
+                break;
+            }
+        });
     }
 
     private void previewPdf(String s) {
@@ -200,7 +197,7 @@ public class CallStuffFragment extends Fragment {
     }
 
     private void setupViewPager2() {
-        adapter = new ViewPagerAdapter(CallStuffFragment.this, 4);
+        adapter = new ViewPagerAdapter(CallStuffFragment.this, 3, viewModel);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.setUserInputEnabled(false);
         new TabLayoutMediator(binding.tabs, binding.viewPager, (tab, position) -> tab.setCustomView(configureTab(position))).attach();
@@ -216,7 +213,7 @@ public class CallStuffFragment extends Fragment {
         switch (position) {
             case 0: {
                 tabIcon.setImageResource(R.drawable.ic_medical_suitcase);
-                tabText.setText(R.string.callInfo);
+                tabText.setText(R.string.medCall);
             }
             break;
             case 1: {
@@ -229,11 +226,6 @@ public class CallStuffFragment extends Fragment {
                 tabText.setText(R.string.diagnosis);
             }
             break;
-            case 3: {
-                tabIcon.setImageResource(R.drawable.ic_map);
-                tabText.setText(R.string.maps);
-            }
-            break;
             default: throw new IllegalStateException();
         }
 
@@ -243,14 +235,24 @@ public class CallStuffFragment extends Fragment {
     private void navigateToHome() {
         Bundle args = new Bundle();
         args.putBoolean(getString(R.string.keyDownloadDb), false);
-        Navigation.findNavController(requireView()).navigate(R.id.homeFragment, args);
+        navController.navigate(R.id.homeFragment, args);
+    }
+
+    private void openMap() {
+        Geo geo = viewModel.getGeo();
+        if (geo == null) return;
+        Bundle args = new Bundle();
+        args.putDouble(getString(R.string.keyLatitude), geo.getLatitude());
+        args.putDouble(getString(R.string.keyLongitude), geo.getLongitude());
+        navController.navigate(R.id.mapsFragment, args);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.onCleared();
+        adapter = null;
+        navController = null;
         binding = null;
     }
-
 }

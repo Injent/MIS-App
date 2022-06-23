@@ -5,6 +5,10 @@ import com.injent.miscalls.data.database.user.Token;
 
 public class TokenDto {
 
+    public TokenDto(String value) {
+        this.value = value;
+    }
+
     @SerializedName("value")
     private String value;
 
@@ -44,5 +48,9 @@ public class TokenDto {
                 tokenDto.getExpirationDate(),
                 userId
         );
+    }
+
+    public static TokenDto toDto(Token token) {
+        return new TokenDto(token.getValue());
     }
 }

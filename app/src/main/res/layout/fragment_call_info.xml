@@ -61,7 +61,7 @@
                 android:padding="@dimen/editTextPadding"
                 android:scrollbarThumbVertical="@drawable/scroll"
                 android:scrollbars="vertical"
-                android:text="@string/loading"
+                android:text="@string/text"
                 android:textColor="@color/grayText"
                 android:textColorHighlight="@color/highlight"
                 android:textSize="@dimen/hintFont"
@@ -138,6 +138,22 @@
                 app:elevation="0dp"
                 app:fabCustomSize="@dimen/minDp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/white" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mapButton"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="#888888"
+                android:clickable="true"
+                android:src="@drawable/ic_map"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabCustomSize="@dimen/minDp"
+                app:layout_constraintBottom_toTopOf="@+id/callButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="@color/white" />
 

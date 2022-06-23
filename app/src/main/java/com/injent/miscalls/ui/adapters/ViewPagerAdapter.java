@@ -2,6 +2,7 @@ package com.injent.miscalls.ui.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.injent.miscalls.ui.callinfo.CallInfoFragment;
@@ -17,8 +18,9 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     private int viewType;
     private final int itemCount;
+    private ViewModel viewModel;
 
-    public ViewPagerAdapter(@NonNull Fragment fragment, int itemCount) {
+    public ViewPagerAdapter(@NonNull Fragment fragment, int itemCount, ViewModel viewModel) {
         super(fragment);
         if (fragment instanceof CallStuffFragment) {
             viewType = ViewType.VIEW_PAGER_CALL;
@@ -26,6 +28,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             viewType = ViewType.VIEW_PAGER_OVERVIEW;
         }
         this.itemCount = itemCount;
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -34,11 +37,11 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         Fragment fragment = null;
         if (viewType == ViewType.VIEW_PAGER_CALL) {
             switch (position) {
-                case 0: fragment = new CallInfoFragment();
+                case 0: fragment = new CallInfoFragment(viewModel);
                     break;
-                case 1: fragment = new InspectionFragment();
+                case 1: fragment = new InspectionFragment(viewModel);
                     break;
-                case 2: fragment = new DiagnosisFragment();
+                case 2: fragment = new DiagnosisFragment(viewModel);
                     break;
                 case 3: fragment = new MapsFragment();
                     break;
@@ -46,9 +49,9 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             }
         } else if (viewType == ViewType.VIEW_PAGER_OVERVIEW) {
             switch (position) {
-                case 0: fragment = new EditorFragment();
+                case 0: fragment = new EditorFragment(viewModel);
                     break;
-                case 1: fragment = new PdfViewerFragment();
+                case 1: fragment = new PdfViewerFragment(viewModel);
                     break;
                 default: throw new IllegalStateException();
             }

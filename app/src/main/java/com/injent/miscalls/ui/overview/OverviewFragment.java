@@ -1,12 +1,14 @@
 package com.injent.miscalls.ui.overview;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -46,7 +48,7 @@ public class OverviewFragment extends Fragment {
 
         setListeners();
         setupViewPager();
-        binding.overviewTitle.setText(R.string.overview);
+        binding.overviewTitle.setText(R.string.patientInspected);
         viewModel.loadSelectedRegistry(registryId);
     }
 
@@ -54,7 +56,8 @@ public class OverviewFragment extends Fragment {
         viewModel.getSelectedRegistryLiveData().observe(getViewLifecycleOwner(), this::loadRegistryData);
         binding.overviewBack.setOnClickListener(view -> {
             if (binding.overviewViewPager.getCurrentItem() == 1) {
-                binding.overviewTitle.setText(R.string.overview);
+                binding.overviewTitle.setText(R.string.patientInspected);
+                binding.overviewLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.invisible));
                 binding.overviewViewPager.setCurrentItem(0, true);
                 binding.overviewDelete.setEnabled(true);
                 binding.overviewDelete.setVisibility(View.VISIBLE);
@@ -65,6 +68,7 @@ public class OverviewFragment extends Fragment {
 
         viewModel.getClickPreviewPdf().observe(getViewLifecycleOwner(), click -> {
             binding.overviewTitle.setText(R.string.document);
+            binding.overviewLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
             binding.overviewViewPager.setCurrentItem(1, true);
             binding.overviewDelete.setEnabled(false);
             binding.overviewDelete.setVisibility(View.INVISIBLE);
@@ -74,7 +78,7 @@ public class OverviewFragment extends Fragment {
     }
 
     private void setupViewPager() {
-        adapter = new ViewPagerAdapter(OverviewFragment.this, 2);
+        adapter = new ViewPagerAdapter(OverviewFragment.this, 2, viewModel);
         binding.overviewViewPager.setAdapter(adapter);
         binding.overviewViewPager.setUserInputEnabled(false);
     }
@@ -97,6 +101,8 @@ public class OverviewFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.onCleared();
+        adapter = null;
+        navController = null;
         binding = null;
     }
 }

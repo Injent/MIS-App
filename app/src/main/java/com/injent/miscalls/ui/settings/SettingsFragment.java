@@ -1,7 +1,6 @@
 package com.injent.miscalls.ui.settings;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.App;
-import com.injent.miscalls.MainActivity;
+import com.injent.miscalls.ui.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
 import com.injent.miscalls.ui.adapters.ViewType;
@@ -101,6 +100,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        navController = null;
         binding = null;
     }
 }

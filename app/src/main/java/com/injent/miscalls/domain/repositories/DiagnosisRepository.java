@@ -1,5 +1,8 @@
 package com.injent.miscalls.domain.repositories;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.injent.miscalls.data.database.AppDatabase;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
@@ -15,16 +18,23 @@ public class DiagnosisRepository {
 
     private final DiagnosisDao dao;
 
-    public DiagnosisRepository() {
-        this.dao = AppDatabase.getDiagnosisDao();
-    }
+    private MutableLiveData<List<Diagnosis>> diagnoses;
+    private MutableLiveData<List<Diagnosis>> searchDiagnosesList;
+    private MutableLiveData<Throwable> error;
 
     private CompletableFuture<List<Diagnosis>> diagnosesByParent;
     private CompletableFuture<Diagnosis> diagnosisFuture;
     private CompletableFuture<List<Diagnosis>> searchNotParentDiagnoses;
     private CompletableFuture<List<Diagnosis>> searchDiagnoses;
 
-    public void cancelFutures() {
+    public DiagnosisRepository() {
+        this.dao = AppDatabase.getDiagnosisDao();
+        diagnoses = new MutableLiveData<>();
+        searchDiagnosesList = new MutableLiveData<>();
+        error = new MutableLiveData<>();
+    }
+
+    public void clear() {
         if (diagnosesByParent != null) {
             diagnosesByParent.cancel(true);
         }
@@ -37,30 +47,54 @@ public class DiagnosisRepository {
         if (searchDiagnoses != null) {
             searchDiagnoses.cancel(true);
         }
+        diagnoses = null;
+        searchDiagnosesList = null;
+        error = null;
     }
 
-    public void searchNotParentDiagnoses(String s, Consumer<List<Diagnosis>> consumer) {
+    public LiveData<List<Diagnosis>> getSearchDiagnoses() {
+        return searchDiagnosesList;
+    }
+
+    public LiveData<List<Diagnosis>> getDiagnoses() {
+        return diagnoses;
+    }
+
+    public LiveData<Throwable> getError() {
+        return error;
+    }
+
+    public void searchNotParentDiagnoses(String s) {
         searchNotParentDiagnoses = CompletableFuture
                 .supplyAsync(() -> dao.searchNotParentLike("%" + s + "%"))
         .exceptionally(throwable -> {
+            error.postValue(throwable);
             throwable.printStackTrace();
             return null;
         });
-        searchNotParentDiagnoses.thenAcceptAsync(consumer);
+        searchNotParentDiagnoses.thenAcceptAsync(list -> searchDiagnosesList.postValue(list));
     }
 
-    public void searchDiagnoses(Function<Throwable, List<Diagnosis>> ex, Consumer<List<Diagnosis>> consumer, String s) {
+    public void searchDiagnoses(String s) {
         searchDiagnoses = CompletableFuture
                 .supplyAsync(() -> dao.searchLike("%" + s + "%"))
-                .exceptionally(ex);
-        searchDiagnoses.thenAcceptAsync(consumer);
+                .exceptionally(throwable -> {
+                    error.postValue(throwable);
+                    throwable.printStackTrace();
+                    return null;
+                });
+        searchDiagnoses.thenAcceptAsync(list -> searchDiagnosesList.postValue(list));
     }
 
-    public void getDiagnosesByParentId(Function<Throwable, List<Diagnosis>> ex, Consumer<List<Diagnosis>> consumer, int parentId) {
+    public void getDiagnosesByParentId(int parentId) {
         diagnosesByParent = CompletableFuture
                 .supplyAsync(() -> dao.getByParentId(parentId))
-                .exceptionally(ex);
-        diagnosesByParent.thenAcceptAsync(consumer);
+                .exceptionally(throwable -> {
+                    error.postValue(throwable);
+                    throwable.printStackTrace();
+                    return null;
+                });
+        diagnosesByParent.thenAcceptAsync(list -> diagnoses.postValue(list));
     }
 
     public void loadDiagnosisById(Function<Throwable, Diagnosis> ex, Consumer<Diagnosis> consumer, int id) {

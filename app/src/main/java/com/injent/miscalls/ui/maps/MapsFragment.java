@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.maps;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,18 @@ import org.osmdroid.views.overlay.Marker;
 public class MapsFragment extends Fragment {
 
     private FragmentMapsBinding binding;
-    private CallStuffViewModel viewModel;
+    private double latitude;
+    private double longitude;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_maps,container,false);
+
+        if (getArguments() != null) {
+            latitude = getArguments().getDouble(getString(R.string.keyLatitude));
+            longitude = getArguments().getDouble(getString(R.string.keyLongitude));
+        }
         return binding.getRoot();
     }
 
@@ -38,21 +45,12 @@ public class MapsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
-
-        setupRecyclerView();
         setListeners();
         setupMap();
     }
 
-    private void setupRecyclerView() {
-        binding.recommendationRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.recommendationRecycler.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        binding.recommendationRecycler.setItemAnimator(null);
-    }
-
     private void setupMap() {
-        GeoPoint geoPoint = Geo.toGeoPoint(viewModel.getCallLiveData().getValue().getGeo());
+        GeoPoint geoPoint = Geo.toGeoPoint(new Geo(latitude, longitude));
         binding.map.setTileSource(TileSourceFactory.MAPNIK);
         binding.map.getController().setCenter(geoPoint);
         binding.map.getController().setZoom(18D);
@@ -67,7 +65,7 @@ public class MapsFragment extends Fragment {
     }
 
     private void setListeners() {
-
+        binding.mapBack.setOnClickListener(view -> getParentFragmentManager().popBackStack());
     }
 
     @Override

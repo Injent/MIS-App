@@ -6,7 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.data.database.calls.MedCall;
+import com.injent.miscalls.data.database.calls.Geo;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
@@ -14,6 +15,7 @@ import com.injent.miscalls.domain.repositories.CallRepository;
 import com.injent.miscalls.domain.repositories.DiagnosisRepository;
 import com.injent.miscalls.domain.repositories.PdfRepository;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
+import com.injent.miscalls.ui.adapters.AdditionalField;
 import com.injent.miscalls.ui.adapters.Field;
 
 import java.text.SimpleDateFormat;
@@ -23,26 +25,30 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class CallStuffViewModel extends ViewModel {
 
-    private final RegistryRepository registryRepository;
-    private final CallRepository homeRepository;
-    private final DiagnosisRepository diagnosisRepository;
-    private final PdfRepository pdfRepository;
+    private RegistryRepository registryRepository;
+    private CallRepository callRepository;
+    private DiagnosisRepository diagnosisRepository;
+    private PdfRepository pdfRepository;
 
-    private MutableLiveData<CallInfo> selectedCall = new MutableLiveData<>();
+    private MutableLiveData<Integer> action = new MutableLiveData<>();
+    private MutableLiveData<MedCall> selectedCall = new MutableLiveData<>();
     private MutableLiveData<Registry> currentRegistry = new MutableLiveData<>();
     private MutableLiveData<Throwable> successOperation = new MutableLiveData<>();
     private MutableLiveData<String> html = new MutableLiveData<>();
-    private MutableLiveData<List<Diagnosis>> searchDiagnoses = new MutableLiveData<>();
+    private LiveData<List<Diagnosis>> searchDiagnoses;
+    private MutableLiveData<List<AdditionalField>> additionalFields = new MutableLiveData<>();
 
-    public CallStuffViewModel() {
+    public void init() {
         registryRepository = new RegistryRepository();
-        homeRepository = new CallRepository();
+        callRepository = new CallRepository();
         diagnosisRepository = new DiagnosisRepository();
         pdfRepository = new PdfRepository();
+        searchDiagnoses = diagnosisRepository.getSearchDiagnoses();
     }
 
     public LiveData<String> getHtmlLiveData() {
@@ -73,9 +79,9 @@ public class CallStuffViewModel extends ViewModel {
 
     public void loadRegistry(Registry registry) {
         if (registry == null) {
-            String createDate = new SimpleDateFormat("dd-MM-yyyy\nhh:mm",Locale.getDefault()).format(new Date(Instant.now().toEpochMilli()));
+            String createDate = new SimpleDateFormat("dd-MM-yyyy hh:mm",Locale.getDefault()).format(new Date());
             registry = new Registry();
-            registry.setCallId(selectedCall.getValue().getId());
+            registry.setCallId(Objects.requireNonNull(selectedCall.getValue()).getId());
             registry.setCallInfo(selectedCall.getValue());
             registry.setCreateDate(createDate);
             Objectively objectively = new Objectively();
@@ -115,16 +121,16 @@ public class CallStuffViewModel extends ViewModel {
         }
         diagnoses.add(diagnosis);
         consumer.accept(diagnoses);
-        currentRegistry.getValue().setDiagnoses(diagnoses);
+        Objects.requireNonNull(currentRegistry.getValue()).setDiagnoses(diagnoses);
         currentRegistry.getValue().setDiagnosesId(Diagnosis.listToStringIds(diagnoses, ';'));
     }
 
-    public LiveData<CallInfo> getCallLiveData() {
+    public LiveData<MedCall> getCallLiveData() {
         return selectedCall;
     }
 
     public void loadCall(int callId) {
-        homeRepository.loadCallInfoById(throwable -> {
+        callRepository.loadCallInfoById(throwable -> {
             successOperation.postValue(throwable);
             return null;
         }, callInfo -> {
@@ -148,7 +154,7 @@ public class CallStuffViewModel extends ViewModel {
     }
 
     public void saveRegistry() {
-        if (currentRegistry.getValue() == null || selectedCall == null) return;
+        if (currentRegistry.getValue() == null || selectedCall.getValue() == null) return;
         List<Diagnosis> list = currentRegistry.getValue().getDiagnoses();
         if (list == null || list.isEmpty()) {
             successOperation.postValue(new NullPointerException());
@@ -165,8 +171,9 @@ public class CallStuffViewModel extends ViewModel {
 
         selectedCall.getValue().setInspected(true);
 
-        homeRepository.updateCall(throwable -> {
+        callRepository.updateCall(throwable -> {
             successOperation.postValue(throwable);
+            throwable.printStackTrace();
             return null;
         }, selectedCall.getValue());
 
@@ -178,7 +185,7 @@ public class CallStuffViewModel extends ViewModel {
     }
 
     public void searchDiagnosis(String s) {
-        diagnosisRepository.searchNotParentDiagnoses(s, list -> searchDiagnoses.postValue(list));
+        diagnosisRepository.searchNotParentDiagnoses(s);
     }
 
     public void setObjectivelyData(int index, String s) {
@@ -223,10 +230,25 @@ public class CallStuffViewModel extends ViewModel {
             break;
             case Field.LIVER: currentRegistry.getValue().getObjectively().setLiver(s);
             break;
-            default: throw new IllegalStateException();
+            case Field.SURVEYS: currentRegistry.getValue().setSurveys(s);
+            break;
+            case Field.MEDICAL_THERAPY: currentRegistry.getValue().setMedicalTherapy(s);
+            break;
+            default: throw new IllegalStateException("Invalid field index: " + index);
         }
 
         currentRegistry.getValue().setObjectively(obj);
+    }
+
+    public LiveData<List<AdditionalField>> getAdditionalFieldsLiveData() {
+        return additionalFields;
+    }
+
+    public void loadFieldsList() {
+        registryRepository.configureAdditionalFields(throwable -> {
+            successOperation.postValue(throwable);
+            return null;
+        }, list -> additionalFields.postValue(list));
     }
 
     @Override
@@ -236,10 +258,28 @@ public class CallStuffViewModel extends ViewModel {
         currentRegistry = new MutableLiveData<>();
         html = new MutableLiveData<>();
         searchDiagnoses = new MutableLiveData<>();
+        action = new MutableLiveData<>();
+        additionalFields = null;
 
-        diagnosisRepository.cancelFutures();
-        homeRepository.cancelFutures();
+        diagnosisRepository.clear();
+        callRepository.clear();
         registryRepository.cancelFutures();
         super.onCleared();
+    }
+
+    public Geo getGeo() {
+        if (selectedCall.getValue() == null) {
+            successOperation.setValue(new NullPointerException());
+            return null;
+        }
+        return selectedCall.getValue().getGeo();
+    }
+
+    public void openMap() {
+       action.setValue(1);
+    }
+
+    public LiveData<Integer> getActionLiveData() {
+        return action;
     }
 }

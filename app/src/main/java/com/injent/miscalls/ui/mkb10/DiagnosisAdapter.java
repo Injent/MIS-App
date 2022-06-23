@@ -1,15 +1,10 @@
 package com.injent.miscalls.ui.mkb10;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
@@ -18,10 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.databinding.ItemHandbookDiagnosisBinding;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class DiagnosisAdapter extends ListAdapter<Diagnosis, DiagnosisAdapter.ViewHolder> {
 

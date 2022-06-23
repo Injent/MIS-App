@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.CallInfo;
+import com.injent.miscalls.data.database.calls.MedCall;
 import com.injent.miscalls.databinding.CallListItemBinding;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
+public class CallAdapter extends ListAdapter<MedCall, CallAdapter.ViewHolder> {
 
     private final OnItemClickListener listener;
 
@@ -27,14 +27,14 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    static DiffUtil.ItemCallback<CallInfo> diffCallback = new DiffUtil.ItemCallback<>() {
+    static DiffUtil.ItemCallback<MedCall> diffCallback = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull CallInfo oldItem, @NonNull CallInfo newItem) {
+        public boolean areItemsTheSame(@NonNull MedCall oldItem, @NonNull MedCall newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull CallInfo oldItem, @NonNull CallInfo newItem) {
+        public boolean areContentsTheSame(@NonNull MedCall oldItem, @NonNull MedCall newItem) {
             return oldItem.sameContent(newItem);
         }
     };
@@ -49,8 +49,8 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CallInfo callInfo = getItem(position);
-        holder.setData(callInfo, position);
+        MedCall medCall = getItem(position);
+        holder.setData(medCall, position);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -65,21 +65,21 @@ public class CallAdapter extends ListAdapter<CallInfo, CallAdapter.ViewHolder> {
         }
 
         @SuppressLint("SetTextI18n")
-        public void setData(CallInfo callInfo, int position){
+        public void setData(MedCall medCall, int position){
             if (position == 0) binding.callCardView.setBackgroundResource(R.drawable.call_list_top_ripple);
             binding.listId.setText(String.valueOf(position + 1));
-            binding.listHeader.setText(callInfo.getFullName());
-            binding.listAddress.setText(callInfo.getResidence());
-            binding.listAge.setText(callInfo.getAge() + " " + binding.getRoot().getContext().getString(R.string.age));
-            if (callInfo.isInspected()) {
+            binding.listHeader.setText(medCall.getFullName());
+            binding.listAddress.setText(medCall.getResidence());
+            binding.listAge.setText(medCall.getAge() + " " + binding.getRoot().getContext().getString(R.string.age));
+            if (medCall.isInspected()) {
                 binding.statusBar.setBackgroundResource(R.drawable.status_bar_done);
             }
-            itemView.setOnClickListener(v -> listener.onClick(callInfo.getId()));
+            itemView.setOnClickListener(v -> listener.onClick(medCall.getId()));
         }
     }
 
     @Override
-    public void submitList(@Nullable List<CallInfo> list) {
+    public void submitList(@Nullable List<MedCall> list) {
         if (list != null)
             super.submitList(list);
         else

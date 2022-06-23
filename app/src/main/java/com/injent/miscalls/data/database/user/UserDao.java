@@ -21,7 +21,7 @@ public interface UserDao {
     @Query("SELECT * FROM user WHERE last_active = 1 LIMIT 1")
     User getByLastActive();
 
-    @Query("SELECT * FROM token WHERE user_id =:id LIMIT 1")
+    @Query("SELECT * FROM token WHERE id =:id LIMIT 1")
     Token getTokenById(int id);
 
     @Query("SELECT * FROM organization WHERE id =:id LIMIT 1")
@@ -38,7 +38,4 @@ public interface UserDao {
 
     @Insert(onConflict = REPLACE)
     long insertOrganization(Organization organization);
-
-    @Query("SELECT * FROM user JOIN token ON token.id = user.token_id JOIN organization ON organization.id = user.org_id")
-    UserWithTokenAndOrg getUserWithTokenAndOrg();
 }

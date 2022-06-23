@@ -1,13 +1,17 @@
 package com.injent.miscalls.domain.repositories;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.print.PDFPrint;
-import android.util.Log;
+import android.provider.MediaStore;
+import android.widget.Toast;
 
 import com.injent.miscalls.App;
-import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
@@ -16,6 +20,7 @@ import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -23,7 +28,7 @@ import java.util.function.Function;
 
 public class PdfRepository {
 
-    public interface OnFileManageListener {
+    public interface FileManageListener {
         boolean onFileExists(File file);
     }
 
@@ -35,24 +40,42 @@ public class PdfRepository {
         }
     }
 
-    public void generatePdf(Context context, String html, String fileName, PDFPrint.OnPDFPrintListener pdfListener, OnFileManageListener fileListener) throws IOException {
-        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
-        File file = new File(filePath
-                + File.separator
-                + fileName
-                + ".pdf");
-        boolean fileCreated = false;
-        if (!file.exists()) {
-            fileCreated = file.createNewFile();
+    public void generatePdf(Context context, String html, String fileName, PDFPrint.OnPDFPrintListener pdfListener, FileManageListener fileListener) throws IOException {
+        File file;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+                ContentResolver contentResolver = context.getContentResolver();
+
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName + ".pdf");
+                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + File.separator + "Мобильный терапевт");
+
+                Uri uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues);
+                file = new File(uri.getPath());
+//                outputStream = contentResolver.openOutputStream(uri);
+//                outputStream.write("SUCCESSFUL".getBytes());
+//                outputStream.close();
+                Toast.makeText(context, "OPERATION DONE",Toast.LENGTH_LONG).show();
+
         } else {
-            if (fileListener.onFileExists(file)) {
-                file.delete();
-                fileCreated = file.createNewFile();
+            String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
+            file = new File(filePath
+                    + File.separator
+                    + fileName
+                    + ".pdf");
+            boolean fileCreated = false;
+            if (!file.exists()) {
+                 file.createNewFile();
+
+                if (fileListener.onFileExists(file)) {
+                    file.delete();
+                    file.createNewFile();
+                }
             }
         }
 
-        if (fileCreated)
-            PDFUtil.generatePDFFromHTML(context, file, html, pdfListener);
+        PDFUtil.generatePDFFromHTML(context, file, html, pdfListener);
     }
 
     public void getFetchedHtml(Function<Throwable,String> ex, Consumer<String> consumer, Context context, Registry registry) {

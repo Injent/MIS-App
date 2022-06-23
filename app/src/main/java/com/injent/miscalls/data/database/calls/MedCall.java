@@ -1,5 +1,7 @@
 package com.injent.miscalls.data.database.calls;
 
+import static com.injent.miscalls.data.database.DateConverter.DATE_PATTERN;
+
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -7,7 +9,9 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.DateConverter;
+import com.injent.miscalls.ui.adapters.Field;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,15 +21,13 @@ import java.util.Locale;
 
 @Entity(tableName = "calls")
 @TypeConverters(DateConverter.class)
-public class CallInfo {
+public class MedCall {
 
-    public static final String pattern = "dd-MM-yyyy";
-
-    public CallInfo() {
+    public MedCall() {
     }
 
     @Ignore
-    public CallInfo(
+    public MedCall(
             int id,
             int userId,
             Date editCardDate,
@@ -158,6 +160,10 @@ public class CallInfo {
         return lastname;
     }
 
+    public boolean isSex() {
+        return sex;
+    }
+
     public void setSex(boolean sex) {
         this.sex = sex;
     }
@@ -171,7 +177,7 @@ public class CallInfo {
     }
 
     public String getBornDateString() {
-        return new SimpleDateFormat(pattern, Locale.getDefault()).format(bornDate);
+        return new SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(bornDate);
     }
 
     public void setId(int id) {
@@ -254,7 +260,7 @@ public class CallInfo {
         this.callTime = callTime;
     }
 
-    public boolean getSex() {
+    public boolean isMale() {
         return sex;
     }
 
@@ -270,21 +276,20 @@ public class CallInfo {
         this.geo = geo;
     }
 
-    public List<String> getData() {
-        List<String> list = new ArrayList<>();
-        list.add(new SimpleDateFormat(pattern +" hh:mm", Locale.getDefault()).format(callTime));
-        list.add(new SimpleDateFormat(pattern, Locale.getDefault()).format(editCardDate));
-        list.add(lastname + " " + firstname + " " + getMiddleName());
-        if (sex) list.add("Муж.");
-        else list.add("Жен.");
-        list.add(new SimpleDateFormat(pattern, Locale.getDefault()).format(bornDate));
-        list.add(residence);
-        list.add(benefitCategoryCode);
-        list.add(String.valueOf(snils));
-        list.add(String.valueOf(polis));
-        list.add(organization);
-        list.add(passport);
-        list.add(phoneNumber);
+    public List<Field> getData() {
+        List<Field> list = new ArrayList<>();
+        list.add(new Field(R.string.callTime, new SimpleDateFormat(DATE_PATTERN +" hh:mm", Locale.getDefault()).format(callTime)));
+        list.add(new Field(R.string.dateOfMedCardEdit, new SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(editCardDate)));
+        list.add(new Field(R.string.fullName, getFullName()));
+        list.add(new Field(R.string.sex, getSex()));
+        list.add(new Field(R.string.dateOfBirth, new SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(bornDate)));
+        list.add(new Field(R.string.residence, residence));
+        list.add(new Field(R.string.bcc, benefitCategoryCode));
+        list.add(new Field(R.string.snils, String.valueOf(snils)));
+        list.add(new Field(R.string.snils, String.valueOf(polis)));
+        list.add(new Field(R.string.medOrg, organization));
+        list.add(new Field(R.string.document, passport));
+        list.add(new Field(R.string.call, phoneNumber));
         return list;
     }
 
@@ -299,18 +304,23 @@ public class CallInfo {
         return age;
     }
 
+    public String getSex() {
+        if (isMale()) return "Муж.";
+        return "Жен.";
+    }
+
     public String getFullName() {
         return lastname + " " + firstname + " " + getMiddleName();
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (obj instanceof CallInfo)
-            return ((CallInfo) obj).getId() == id;
+        if (obj instanceof MedCall)
+            return ((MedCall) obj).getId() == id;
         return false;
     }
 
-    public boolean sameContent(CallInfo callInfo) {
-        return callInfo.getSnils() == snils;
+    public boolean sameContent(MedCall medCall) {
+        return medCall.getSnils() == snils;
     }
 }

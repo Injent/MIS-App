@@ -3,6 +3,7 @@ package com.injent.miscalls.network;
 import com.injent.miscalls.data.database.user.Token;
 import com.injent.miscalls.network.rest.dto.CallDto;
 import com.injent.miscalls.network.rest.dto.RegistryDto;
+import com.injent.miscalls.network.rest.dto.TokenDto;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface MisAPI {
      * from server
      */
     @POST("calls")
-    Call<JResponse> patients(@Body Token token);
+    Call<JResponse> patients(@Body TokenDto token);
 
     /**
      * @param authModel contains login and password that will be used to search the server
@@ -42,7 +43,7 @@ public interface MisAPI {
      * @return {@link JResponse}
      */
     @POST("token/expiration")
-    Call<JResponse> checkTokenExpiration(Token token);
+    Call<JResponse> checkTokenExpiration(TokenDto token);
 
     @POST("registry/upload")
     Call<JResponse> uploadDocument(@Body RegistryDto registry);

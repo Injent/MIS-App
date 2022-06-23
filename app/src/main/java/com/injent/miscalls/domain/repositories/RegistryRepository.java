@@ -2,16 +2,16 @@ package com.injent.miscalls.domain.repositories;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.database.AppDatabase;
-import com.injent.miscalls.data.database.calls.CallInfo;
-import com.injent.miscalls.data.database.calls.CallInfoDao;
+import com.injent.miscalls.data.database.calls.MedCall;
+import com.injent.miscalls.data.database.calls.CallDao;
 import com.injent.miscalls.data.database.diagnoses.Diagnosis;
 import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.data.database.registry.RegistryDao;
-import com.injent.miscalls.network.JResponse;
 import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.network.rest.dto.RegistryDto;
+import com.injent.miscalls.ui.adapters.AdditionalField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class RegistryRepository {
 
     private final RegistryDao registryDao;
     private final DiagnosisDao diagnosisDao;
-    private final CallInfoDao callInfoDao;
+    private final CallDao callDao;
 
     private CompletableFuture<Registry> loadRegistryByIdFuture;
     private CompletableFuture<Void> insertRegistryFuture;
@@ -34,11 +34,12 @@ public class RegistryRepository {
     private CompletableFuture<Void> deleteRegistryFuture;
     private CompletableFuture<Registry> loadRegistryByCallId;
     private CompletableFuture<Void> sendRegistries;
+    private CompletableFuture<List<AdditionalField>> configureAdditionalFields;
 
     public RegistryRepository() {
         this.registryDao = AppDatabase.getRegistryDao();
         this.diagnosisDao = AppDatabase.getDiagnosisDao();
-        this.callInfoDao = AppDatabase.getCallInfoDao();
+        this.callDao = AppDatabase.getCallInfoDao();
     }
 
     public void cancelFutures() {
@@ -54,6 +55,8 @@ public class RegistryRepository {
             loadRegistryByCallId.cancel(true);
         if (sendRegistries != null)
             sendRegistries.cancel(true);
+        if (configureAdditionalFields != null)
+            configureAdditionalFields.cancel(true);
     }
 
     public void insertRegistry(Function<Throwable, Void> ex, Registry registry) {
@@ -98,7 +101,7 @@ public class RegistryRepository {
                 .supplyAsync(() -> {
                     Registry registry = registryDao.getRegistry(id, App.getUser().getId());
                     registry.setObjectively(registryDao.getObjectivelyByRegId(id));
-                    registry.setCallInfo(callInfoDao.getById(registry.getCallId()));
+                    registry.setCallInfo(callDao.getById(registry.getCallId()));
 
                     List<Diagnosis> diagnoses = new ArrayList<>();
                     String[] diagnosesId = registry.getDiagnosesId().split(";");
@@ -112,7 +115,7 @@ public class RegistryRepository {
         loadRegistryByIdFuture.thenAcceptAsync(consumer);
     }
 
-    public Call<JResponse> sendDocument(Registry registry) {
+    public Call sendDocument(Registry registry) {
         return NetworkManager.getMisAPI().uploadDocument(RegistryDto.toDto(registry));
     }
 
@@ -121,7 +124,7 @@ public class RegistryRepository {
                 .supplyAsync(() -> {
                     Registry registry = registryDao.getRegistryByCallId(id);
                     registry.setObjectively(registryDao.getObjectivelyByRegId(registry.getId()));
-                    registry.setCallInfo(callInfoDao.getById(registry.getCallId()));
+                    registry.setCallInfo(callDao.getById(registry.getCallId()));
 
                     List<Diagnosis> diagnoses = new ArrayList<>();
                     String[] diagnosesId = registry.getDiagnosesId().split(";");
@@ -141,9 +144,9 @@ public class RegistryRepository {
                     Registry registry = registryDao.getRegistry(id, App.getUser().getId());
                     registryDao.deleteRegistry(id);
                     registryDao.deleteObjectivelyByRegId(id);
-                    CallInfo call = callInfoDao.getById(registry.getCallId());
-                    call.setInspected(false);
-                    callInfoDao.updateCall(call);
+                    MedCall medCall = callDao.getById(registry.getCallId());
+                    medCall.setInspected(false);
+                    callDao.updateCall(medCall);
                     return null;
                 })
                 .exceptionally(ex);
@@ -159,5 +162,18 @@ public class RegistryRepository {
                 })
                 .exceptionally(ex);
         sendRegistries.thenAcceptAsync(consumer);
+    }
+
+    public void configureAdditionalFields(Function<Throwable, List<AdditionalField>> ex, Consumer<List<AdditionalField>> consumer) {
+        configureAdditionalFields = CompletableFuture
+                .supplyAsync(new Supplier<List<AdditionalField>>() {
+                    @Override
+                    public List<AdditionalField> get() {
+
+                        return null;
+                    }
+                })
+                .exceptionally(ex);
+        configureAdditionalFields.thenAcceptAsync(consumer);
     }
 }

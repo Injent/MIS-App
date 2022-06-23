@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +27,6 @@ import com.injent.miscalls.databinding.FragmentHandbookBinding;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.Random;
 
 public class HandBookFragment extends Fragment {
 
@@ -91,7 +88,7 @@ public class HandBookFragment extends Fragment {
         });
 
         // Observers
-        viewModel.getDiagnosesLiveData().observe(getViewLifecycleOwner(), list -> {
+        viewModel.getDiagnoses().observe(getViewLifecycleOwner(), list -> {
             adapter.submitList(list);
         });
     }
@@ -116,7 +113,6 @@ public class HandBookFragment extends Fragment {
                 // Nothing to do
             }
         };
-
         binding.handbookSearchText.addTextChangedListener(textWatcherSearchListener);
     }
 
@@ -142,5 +138,15 @@ public class HandBookFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(getString(R.string.keyDiagnosisId), id);
         navController.navigate(R.id.handBookFragment, args);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.onCleared();
+        adapter = null;
+        fragmentManager = null;
+        navController = null;
+        binding = null;
     }
 }

@@ -5,104 +5,59 @@
     tools:context=".ui.maps.RecommendationTempFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/recSearchLayout"
+        android:id="@+id/mapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mapHeaderLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:elevation="@dimen/cardElevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/mapTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/maps"
+                android:textAppearance="@style/titleText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/mapBack"
+                android:layout_width="@dimen/minDp"
+                android:layout_height="@dimen/minDp"
+                android:layout_marginStart="8dp"
+                android:background="?android:attr/actionBarItemBackground"
+                android:padding="8dp"
+                android:src="@drawable/ic_back_arrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/darkGrayText" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <org.osmdroid.views.MapView
             android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/searchRecommendations"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/displayPadding"
-            android:background="@drawable/search"
-            android:drawableStart="@drawable/ic_search"
-            android:drawablePadding="4dp"
-            android:fontFamily="@font/clear_sans_medium"
-            android:hint="@string/search"
-            android:maxLines="1"
-            android:padding="12dp"
-            android:textColor="@color/grayText"
-            android:textColorHint="@color/lowGray"
-            android:textSize="@dimen/mediumFont"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/recSearchCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:src="@drawable/ic_cancel"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/searchRecommendations"
-            app:layout_constraintEnd_toEndOf="@+id/searchRecommendations"
-            app:layout_constraintTop_toTopOf="@+id/searchRecommendations"
-            app:tint="@color/grayText" />
-
-        <TextView
-            android:id="@+id/recHeader"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/clear_sans_medium"
-            android:text="@string/maps"
-            android:textColor="@color/darkGrayText"
-            android:textSize="@dimen/mediumFont"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@+id/recommendationsText"
-            app:layout_constraintStart_toStartOf="@+id/recommendationsText"
-            app:layout_constraintTop_toBottomOf="@+id/searchRecommendations" />
-
-        <EditText
-            android:id="@+id/recommendationsText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/edit_text"
-            android:ems="10"
-            android:fontFamily="@font/clear_sans_regular"
-            android:gravity="start|top"
-            android:hint="@string/maps"
-            android:inputType="textMultiLine"
-            android:minHeight="96dp"
-            android:padding="8dp"
-            android:textColor="@color/darkGrayText"
-            android:textColorHighlight="@color/highlight"
-            android:textColorHint="@color/lightGrayText"
-            android:textSize="@dimen/headerFont"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recHeader" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recommendationRecycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:background="@null"
-            android:overScrollMode="never"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchRecommendations">
+            app:layout_constraintTop_toBottomOf="@+id/mapHeaderLayout" />
 
-        </androidx.recyclerview.widget.RecyclerView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

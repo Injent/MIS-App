@@ -1,15 +1,18 @@
 package com.injent.miscalls.ui.auth;
 
+import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.biometric.BiometricPrompt;
@@ -38,6 +41,20 @@ public class AuthFragment extends Fragment {
     private BiometricPrompt.PromptInfo promptInfo;
     private boolean downloadDb = false;
     private boolean moveToSettings;
+    private final ActivityResultLauncher<String[]> activityResultLauncher;
+
+    public AuthFragment() {
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+            boolean areAllGranted = true;
+            for(Boolean b : result.values()) {
+                areAllGranted = areAllGranted && b;
+            }
+
+            if(!areAllGranted) {
+                showRequestPermissionDialog();
+            }
+        });
+    }
 
     @Nullable
     @Override
@@ -57,7 +74,9 @@ public class AuthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         viewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        viewModel.init(requireContext());
         navController = Navigation.findNavController(requireView());
 
         binding.loading.setVisibility(View.GONE);
@@ -67,31 +86,18 @@ public class AuthFragment extends Fragment {
 
         binding.copyrightText.setText(getString(R.string.app_name));
         binding.version.setText(BuildConfig.VERSION_NAME);
+
+        activityResultLauncher.launch(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
     }
 
     private void setListeners() {
-        // Live Data observers
-        viewModel.getActiveUser().observe(getViewLifecycleOwner(), hasActiveUser -> {
-            downloadDb = !hasActiveUser;
-            if (hasActiveUser)
+        // Observers
+        viewModel.getActiveUser().observe(getViewLifecycleOwner(), user -> {
+            downloadDb = user != null;
+            if (user != null)
                 successfulAuth();
             else
                 setupBiometricAuthorization();
-        });
-
-        viewModel.getAuthOfflineLiveData().observe(getViewLifecycleOwner(), authed -> {
-            if (authed) {
-                successfulAuth();
-            } else {
-                actionAuth(true);
-            }
-        });
-
-        viewModel.getAuthorized().observe(this, authed -> {
-            hideLoading();
-            if (authed) {
-                successfulAuth();
-            }
         });
 
         viewModel.getErrorUser().observe(this, throwable -> {
@@ -99,33 +105,21 @@ public class AuthFragment extends Fragment {
             displayError(throwable);
         });
 
-        // UI Listeners
+        // Listeners
         binding.signInButton.setOnClickListener(v -> {
             showLoading();
-            actionAuth(false);
+            auth();
         });
 
         binding.authFingerprint.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                confirmExit();
-            }
-        });
-
-        viewModel.findActiveUser();
     }
 
-    private void actionAuth(boolean fromServer) {
+    private void auth() {
         binding.error.setVisibility(View.INVISIBLE);
         String login = binding.emailField.getText().toString().trim();
         String password = binding.passwordField.getText().toString().trim();
 
-        if (fromServer)
-            viewModel.auth(login, password);
-        else
-            viewModel.authFromDb(login, password);
+        viewModel.auth(login, password);
     }
 
     private void displayError(Throwable throwable) {
@@ -166,15 +160,6 @@ public class AuthFragment extends Fragment {
         navController.navigate(R.id.settingsFragment);
     }
 
-    public void confirmExit() {
-        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.exit)
-                .setPositiveButton(R.string.yes, (dialog, b) -> closeApp())
-                .setNegativeButton(R.string.no, (dialog, b) -> dialog.dismiss())
-                .create();
-        alertDialog.show();
-    }
-
     private void setupBiometricAuthorization() {
         Executor executor = ContextCompat.getMainExecutor(requireContext());
 
@@ -194,7 +179,7 @@ public class AuthFragment extends Fragment {
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
-                Toast.makeText(requireContext(), R.string.unknownError, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.fingerprint_not_recognized, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -204,9 +189,15 @@ public class AuthFragment extends Fragment {
                 .build();
     }
 
-    public void closeApp() {
-        requireActivity().finish();
-        System.exit(0);
+    private void showRequestPermissionDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.allow)
+                .setPositiveButton(R.string.ok, (dialog, b) -> activityResultLauncher.launch(new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }))
+                .setNegativeButton(R.string.cancel, (dialog, b) -> dialog.dismiss())
+                .create();
+        alertDialog.show();
     }
 
     @Override
@@ -215,6 +206,7 @@ public class AuthFragment extends Fragment {
         viewModel.onCleared();
         biometricPrompt = null;
         promptInfo = null;
+        navController = null;
         binding = null;
     }
 }

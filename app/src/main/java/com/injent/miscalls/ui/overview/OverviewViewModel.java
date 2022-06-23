@@ -14,6 +14,7 @@ import com.injent.miscalls.domain.repositories.PdfRepository;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
 import com.injent.miscalls.network.JResponse;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -70,7 +71,7 @@ public class OverviewViewModel extends ViewModel {
     }
 
 
-    public void generatePdf(Context context, PDFPrint.OnPDFPrintListener pdfListener, PdfRepository.OnFileManageListener fileManageListener) {
+    public void generatePdf(Context context, PDFPrint.OnPDFPrintListener pdfListener, PdfRepository.FileManageListener fileManageListener) {
         Registry registry = getSelectedRegistryLiveData().getValue();
         if (registry == null) {
             error.setValue(new IllegalStateException());

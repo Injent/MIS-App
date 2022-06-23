@@ -18,10 +18,18 @@ public class Field implements ViewType {
     public static final int TEMPERATURE = 13;
     public static final int ABDOMEN = 14;
     public static final int LIVER = 15;
+    public static final int SURVEYS = 16;
+    public static final int MEDICAL_THERAPY = 17;
 
     private int nameStringResId;
     private int hintStringResId;
+    private String value;
     private int index;
+
+    public Field(int nameStringResId, String value) {
+        this.nameStringResId = nameStringResId;
+        this.value = value;
+    }
 
     public Field(int nameStringResId, int hintStringResId, int index) {
         this.nameStringResId = nameStringResId;
@@ -51,6 +59,14 @@ public class Field implements ViewType {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override

@@ -4,10 +4,15 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
+import com.injent.miscalls.data.database.DateConverter;
+
+import java.util.Date;
 
 @Entity(tableName = "user")
+@TypeConverters(DateConverter.class)
 public class User {
 
     public User() {
@@ -71,6 +76,9 @@ public class User {
 
     @ColumnInfo(name = "last_active")
     private boolean lastActive;
+
+    @ColumnInfo(name = "update_time")
+    private Date dbUpdateTime;
 
     public int getId() {
         return id;
@@ -176,6 +184,14 @@ public class User {
 
     public void setLastActive(boolean lastActive) {
         this.lastActive = lastActive;
+    }
+
+    public Date getDbUpdateTime() {
+        return dbUpdateTime;
+    }
+
+    public void setDbUpdateTime(Date dbUpdateTime) {
+        this.dbUpdateTime = dbUpdateTime;
     }
 
     public String getFullName() {

@@ -1,7 +1,6 @@
 package com.injent.miscalls.ui.registry;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.injent.miscalls.MainActivity;
+import com.injent.miscalls.ui.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.databinding.FragmentRegistryBinding;
-import com.injent.miscalls.domain.repositories.RegistryRepository;
 import com.injent.miscalls.ui.Section;
 import com.injent.miscalls.ui.SectionAdapter;
 
@@ -36,9 +34,9 @@ import java.util.TimerTask;
 
 public class RegistryFragment extends Fragment {
 
-    private RegistryAdapter adapter;
     private RegistryViewModel viewModel;
     private FragmentRegistryBinding binding;
+    private RegistryAdapter adapter;
     private NavController navController;
     private int deleteRegistryId;
     private Snackbar snackbar;
@@ -193,11 +191,13 @@ public class RegistryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        viewModel.onCleared();
         timer = null;
         if (snackbar != null)
             snackbar.dismiss();
         snackbar = null;
-        viewModel.onCleared();
+        adapter = null;
+        navController = null;
         binding = null;
     }
 }

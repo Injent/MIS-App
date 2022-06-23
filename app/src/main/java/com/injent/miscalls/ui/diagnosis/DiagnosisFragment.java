@@ -20,6 +20,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +49,10 @@ public class DiagnosisFragment extends Fragment {
     private boolean inspected;
     private int searchDelay;
 
+    public DiagnosisFragment(ViewModel viewModel) {
+        this.viewModel = (CallStuffViewModel) viewModel;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,7 +64,6 @@ public class DiagnosisFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(CallStuffViewModel.class);
         if (viewModel.getCallLiveData().getValue() != null)
             inspected = viewModel.getCallLiveData().getValue().isInspected();
 
@@ -153,6 +157,8 @@ public class DiagnosisFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        diagnosisUsedAdapter = null;
+        diagnosesSearchAdapter = null;
         binding = null;
     }
 }

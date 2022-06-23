@@ -1,9 +1,7 @@
 package com.injent.miscalls.network.rest.dto;
 
 import com.google.gson.annotations.SerializedName;
-import com.injent.miscalls.data.database.calls.CallInfo;
-
-import org.osmdroid.util.GeoPoint;
+import com.injent.miscalls.data.database.calls.MedCall;
 
 import java.sql.Date;
 
@@ -124,8 +122,8 @@ public class CallDto {
         return geoPoint;
     }
 
-    public static CallInfo toDomainObject(CallDto callDto) {
-        return new CallInfo(
+    public static MedCall toDomainObject(CallDto callDto) {
+        return new MedCall(
                 callDto.getId(),
                 callDto.getUserId(),
                 Date.valueOf(callDto.getEditCardDate()),

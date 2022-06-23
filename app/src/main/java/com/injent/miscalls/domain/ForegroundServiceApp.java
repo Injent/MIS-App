@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.navigation.NavDeepLinkBuilder;
 
-import com.injent.miscalls.MainActivity;
+import com.injent.miscalls.ui.MainActivity;
 import com.injent.miscalls.R;
 
 public class ForegroundServiceApp extends Service {

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.injent.miscalls.R;
@@ -25,6 +26,10 @@ public class PdfViewerFragment extends Fragment {
     private OverviewViewModel viewModel;
     private FragmentPdfViewerBinding binding;
 
+    public PdfViewerFragment(ViewModel viewModel) {
+        this.viewModel = (OverviewViewModel) viewModel;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,8 +40,6 @@ public class PdfViewerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        viewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
 
         binding.pdfWebView.setInitialScale(150);
 
@@ -80,5 +83,11 @@ public class PdfViewerFragment extends Fragment {
                     .show();
             return replace[0];
         }));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
