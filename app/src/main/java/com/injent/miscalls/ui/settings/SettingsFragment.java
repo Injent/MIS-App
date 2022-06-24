@@ -17,10 +17,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.App;
-import com.injent.miscalls.ui.MainActivity;
+import com.injent.miscalls.ui.adapters.SettingAdapter;
+import com.injent.miscalls.ui.main.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
-import com.injent.miscalls.ui.adapters.ViewType;
+import com.injent.miscalls.util.ViewType;
 
 import java.util.ArrayList;
 import java.util.List;

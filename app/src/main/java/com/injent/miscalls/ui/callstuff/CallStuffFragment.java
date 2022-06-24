@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.callstuff;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -25,11 +23,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.Geo;
+import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.databinding.FragmentCallStuffBinding;
+import com.injent.miscalls.util.CustomOnBackPressedFragment;
 import com.injent.miscalls.ui.adapters.ViewPagerAdapter;
 
-public class CallStuffFragment extends Fragment {
+public class CallStuffFragment extends Fragment implements CustomOnBackPressedFragment {
 
     private FragmentCallStuffBinding binding;
     private CallStuffViewModel viewModel;
@@ -63,6 +62,12 @@ public class CallStuffFragment extends Fragment {
         setupViewPager2();
     }
 
+    @Override
+    public boolean onBackPressed() {
+        confirmExitAction();
+        return false;
+    }
+
     private void setListeners() {
         // Listeners
         binding.darkBgPdf.setOnClickListener(v -> {
@@ -78,13 +83,6 @@ public class CallStuffFragment extends Fragment {
         binding.closeButton.setOnClickListener(v -> confirmExitAction());
 
         binding.doneButton.setOnClickListener(v -> save());
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                confirmExitAction();
-            }
-        });
 
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override

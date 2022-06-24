@@ -13,6 +13,7 @@ import com.injent.miscalls.ui.inspection.InspectionFragment;
 import com.injent.miscalls.ui.maps.MapsFragment;
 import com.injent.miscalls.ui.overview.OverviewFragment;
 import com.injent.miscalls.ui.pdfviewer.PdfViewerFragment;
+import com.injent.miscalls.util.ViewType;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 

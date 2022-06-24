@@ -19,12 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.injent.miscalls.ui.MainActivity;
+import com.injent.miscalls.ui.adapters.RegistryAdapter;
+import com.injent.miscalls.ui.main.MainActivity;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.databinding.FragmentRegistryBinding;
-import com.injent.miscalls.ui.Section;
-import com.injent.miscalls.ui.SectionAdapter;
+import com.injent.miscalls.ui.adapters.SectionAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,13 +99,6 @@ public class RegistryFragment extends Fragment {
         binding.registrySearchButton.setOnClickListener(v -> showSearch());
 
         binding.registrySearchCancel.setOnClickListener(v -> hideSearch());
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                navigateToHome();
-            }
-        });
 
         //Observers
         viewModel.getRegistryItemsLiveData().observe(getViewLifecycleOwner(), registryItems -> {
@@ -185,7 +178,10 @@ public class RegistryFragment extends Fragment {
     }
 
     private boolean notMatchingDestination() {
-        return Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.registryFragment;
+        if (navController != null && navController.getCurrentDestination() != null) {
+            return navController.getCurrentDestination().getId() != R.id.registryFragment;
+        }
+        return false;
     }
 
     @Override

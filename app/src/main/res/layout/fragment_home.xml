@@ -15,16 +15,18 @@
             android:background="@drawable/background_gradient">
 
             <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/homeAppBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                app:elevation="0dp"
                 android:fitsSystemWindows="true">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
-                    app:contentScrim="@color/endColor"
+                    app:contentScrim="@null"
                     app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
                     <LinearLayout
@@ -84,14 +86,6 @@
                                         android:textSize="@dimen/hintFont" />
                                 </LinearLayout>
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/transparent_glass"
-                                    android:clickable="true"
-                                    android:focusable="true"
-                                    android:orientation="vertical"/>
-
                             </LinearLayout>
                         </HorizontalScrollView>
                     </LinearLayout>
@@ -99,6 +93,10 @@
                     <androidx.appcompat.widget.Toolbar
                         android:layout_width="match_parent"
                         android:layout_height="72dp"
+                        android:background="@null"
+                        app:elevation="0dp"
+                        android:elevation="0dp"
+                        android:visibility="invisible"
                         app:layout_collapseMode="pin" />
 
                     <LinearLayout

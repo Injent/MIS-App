@@ -21,8 +21,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.MedCall;
+import com.injent.miscalls.data.database.medcall.MedCall;
 import com.injent.miscalls.databinding.FragmentCallInfoBinding;
+import com.injent.miscalls.ui.adapters.InfoAdapter;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
 public class CallInfoFragment extends Fragment {

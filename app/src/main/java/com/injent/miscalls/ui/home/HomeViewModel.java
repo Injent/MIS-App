@@ -3,11 +3,10 @@ package com.injent.miscalls.ui.home;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.MedCall;
+import com.injent.miscalls.data.database.medcall.MedCall;
 import com.injent.miscalls.data.database.user.Token;
 import com.injent.miscalls.domain.repositories.AuthRepository;
 import com.injent.miscalls.App;

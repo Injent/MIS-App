@@ -55,11 +55,11 @@
     <color name="lowGray">#8398AA</color>
     <color name="lightGrayText">#c7cbd8</color>
     <color name="black_overlay">#66000000</color>
+    <color name="adaptiveTitle">#272727</color>
 
     <!-- Gradients -->
-    <color name="startColor">#83cfc8</color>
-    <color name="centerColor">#2af598</color>
-    <color name="endColor">#0ab2e5</color>
+    <color name="centerColor">#87e1a5</color>
+    <color name="endColor">#05b5d7</color>
 
     <color name="search">@color/uiLightGray</color>
 

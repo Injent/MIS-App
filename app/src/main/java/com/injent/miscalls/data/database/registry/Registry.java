@@ -6,9 +6,9 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.MedCall;
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
-import com.injent.miscalls.ui.adapters.Field;
+import com.injent.miscalls.data.database.medcall.MedCall;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
+import com.injent.miscalls.ui.overview.Field;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,17 +18,9 @@ import java.util.List;
 public class Registry {
 
     public Registry() {
-        // Empty
+        // Empty body
     }
 
-    @Ignore
-    private boolean delete;
-    @Ignore
-    private Objectively objectively;
-    @Ignore
-    private MedCall medCall;
-    @Ignore
-    private List<Diagnosis> diagnoses;
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "complaints")
@@ -49,6 +41,14 @@ public class Registry {
     private String medicalTherapy;
     @ColumnInfo(name = "user_id")
     private int userId;
+    @Ignore
+    private boolean delete;
+    @Ignore
+    private Objectively objectively;
+    @Ignore
+    private MedCall medCall;
+    @Ignore
+    private List<Diagnosis> diagnoses;
 
     public boolean isDelete() {
         return delete;
@@ -184,32 +184,5 @@ public class Registry {
         list.add(new Field(R.string.createDate, getCreateDate()));
         list.add(new Field(R.string.patientFullName, getCallInfo().getFullName()));
         return list;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Registry)) return false;
-
-        Registry registry = (Registry) o;
-
-        return getId() == registry.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (isDelete() ? 1 : 0);
-        result = 31 * result + (getObjectively() != null ? getObjectively().hashCode() : 0);
-        result = 31 * result + (getCallInfo() != null ? getCallInfo().hashCode() : 0);
-        result = 31 * result + (getDiagnoses() != null ? getDiagnoses().hashCode() : 0);
-        result = 31 * result + getId();
-        result = 31 * result + (getComplaints() != null ? getComplaints().hashCode() : 0);
-        result = 31 * result + (getAnamnesis() != null ? getAnamnesis().hashCode() : 0);
-        result = 31 * result + (getRecommendation() != null ? getRecommendation().hashCode() : 0);
-        result = 31 * result + (getDiagnosesId() != null ? getDiagnosesId().hashCode() : 0);
-        result = 31 * result + (getCreateDate() != null ? getCreateDate().hashCode() : 0);
-        result = 31 * result + getCallId();
-        result = 31 * result + (getSurveys() != null ? getSurveys().hashCode() : 0);
-        return result;
     }
 }

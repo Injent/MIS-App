@@ -41,7 +41,7 @@ android {
                         "room.expandProjection":"true"]
             }
         }
-        versionNameSuffix '22w24c'
+        versionNameSuffix '22w25b'
     }
 }
 

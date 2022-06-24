@@ -1,6 +1,5 @@
 package com.injent.miscalls.domain.repositories;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -9,13 +8,17 @@ import android.os.Build;
 import android.os.Environment;
 import android.print.PDFPrint;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.injent.miscalls.App;
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
+import com.injent.miscalls.R;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
-import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,41 +26,53 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class PdfRepository {
 
-    public interface FileManageListener {
-        boolean onFileExists(File file);
-    }
+    private MutableLiveData<String> html;
+    private MutableLiveData<Throwable> error;
 
     private CompletableFuture<String> getFetchedHtmlFuture;
 
-    public void cancelFutures() {
+    public PdfRepository() {
+        html = new MutableLiveData<>();
+        error = new MutableLiveData<>();
+    }
+
+    public void clear() {
         if (getFetchedHtmlFuture != null) {
             getFetchedHtmlFuture.cancel(true);
         }
+        html = null;
+        error = null;
+    }
+
+    public LiveData<String> getHtml() {
+        return html;
+    }
+
+    public LiveData<Throwable> getError() {
+        return error;
     }
 
     public void generatePdf(Context context, String html, String fileName, PDFPrint.OnPDFPrintListener pdfListener, FileManageListener fileListener) throws IOException {
         File file;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-                ContentResolver contentResolver = context.getContentResolver();
+            ContentValues values = new ContentValues();
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName + ".pdf");
-                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
-                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + File.separator + "Мобильный терапевт");
+            values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);       //file name
+            values.put(MediaStore.MediaColumns.MIME_TYPE, "text/html");        //file extension, will automatically add to file
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/" + context.getString(R.string.app_name) + "/");     //end "/" is not mandatory
 
-                Uri uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues);
-                file = new File(uri.getPath());
-//                outputStream = contentResolver.openOutputStream(uri);
-//                outputStream.write("SUCCESSFUL".getBytes());
-//                outputStream.close();
-                Toast.makeText(context, "OPERATION DONE",Toast.LENGTH_LONG).show();
+            Uri uri = context.getContentResolver().insert(MediaStore.Files.getContentUri("external"), values);      //important!
 
+            OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
+            outputStream.write("This is menu category data.".getBytes());
+            outputStream.close();
+
+            Toast.makeText(context, "OPERATION DONE",Toast.LENGTH_LONG).show();
+            Log.e("TAG", "generatePdf: "  + uri.toString());
         } else {
             String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
             file = new File(filePath
@@ -74,11 +89,10 @@ public class PdfRepository {
                 }
             }
         }
-
-        PDFUtil.generatePDFFromHTML(context, file, html, pdfListener);
+        //PDFUtil.generatePDFFromHTML(context, file, html, pdfListener);
     }
 
-    public void getFetchedHtml(Function<Throwable,String> ex, Consumer<String> consumer, Context context, Registry registry) {
+    public void loadFetchedHtml(Context context, Registry registry) {
         getFetchedHtmlFuture = CompletableFuture
                 .supplyAsync(() -> {
                     StringBuilder sb = new StringBuilder();
@@ -130,6 +144,7 @@ public class PdfRepository {
                                 .replace("$pulse", obj.getPulse())
                                 .replace("$abdomen", obj.getAbdomen())
                                 .replace("$liver", obj.getLiver())
+                                .replace("$diagnosis_code", Diagnosis.listToStringCodes(registry.getDiagnoses(), ','))
                                 .replace("$diagnosis", Diagnosis.listToStringNames(registry.getDiagnoses(), "<br>"))
                                 .replace("$surveys", registry.getSurveys())
                                 .replace("$working", obj.isWorking())
@@ -139,7 +154,15 @@ public class PdfRepository {
                     }
                     return "";
                 })
-                .exceptionally(ex);
-        getFetchedHtmlFuture.thenAcceptAsync(consumer);
+                .exceptionally(throwable -> {
+                    error.postValue(throwable);
+                    throwable.printStackTrace();
+                    return null;
+                });
+        getFetchedHtmlFuture.thenAcceptAsync(s -> html.postValue(s));
+    }
+
+    public interface FileManageListener {
+        boolean onFileExists(File file);
     }
 }

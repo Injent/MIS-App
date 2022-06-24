@@ -3,7 +3,6 @@ package com.injent.miscalls.domain.repositories;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.media.DeniedByServerException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -16,7 +15,8 @@ import com.injent.miscalls.data.database.user.UserDao;
 import com.injent.miscalls.network.AuthModelOut;
 import com.injent.miscalls.network.AuthorizationException;
 import com.injent.miscalls.network.JResponse;
-import com.injent.miscalls.network.NetworkManager;
+import com.injent.miscalls.util.NetworkManager;
+import com.injent.miscalls.network.dto.UserDto;
 
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
@@ -130,7 +130,7 @@ public class AuthRepository {
         return activeSession;
     }
 
-    public void findActiveSession() {
+    public void loginActiveSession() {
         findActiveSession = CompletableFuture
                 .supplyAsync(() -> {
                     User user = dao.getCurrentUser(1);
@@ -139,6 +139,9 @@ public class AuthRepository {
                     }
                     user.setToken(dao.getTokenById(user.getTokenId()));
                     user.setOrganization(dao.getOrganizationById(user.getOrganizationId()));
+                    user.setAuthed(true);
+                    user.setLastActive(true);
+                    App.setUser(user);
                     return user;
                 })
         .exceptionally(throwable -> {
@@ -171,8 +174,8 @@ public class AuthRepository {
                     error.postValue(new DeniedByServerException("Wrong body"));
                     return;
                 }
-                User user = response.body().getUser();
-                if (user != null) {
+                if (response.body().getUser() != null) {
+                    User user = UserDto.toDomainObject(response.body().getUser());
                     user.setLogin(login);
                     user.setPassword(password);
                     user.setAuthed(true);

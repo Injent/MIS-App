@@ -6,8 +6,8 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.google.gson.annotations.SerializedName;
-import com.injent.miscalls.data.database.DateConverter;
+import com.injent.miscalls.network.dto.UserDto;
+import com.injent.miscalls.util.DateConverter;
 
 import java.util.Date;
 
@@ -16,10 +16,24 @@ import java.util.Date;
 public class User {
 
     public User() {
-        // Empty
+        // Empty body
     }
 
-    public User(String login, String password, String firstName, String lastName, String middleName, String workingPosition, Token token) {
+    /**
+     * Used only in {@link UserDto#toDomainObject(UserDto)}
+     */
+    @Ignore
+    public User(int id,
+                String login,
+                String password,
+                String firstName,
+                String lastName,
+                String middleName,
+                String workingPosition,
+                Token token,
+                Organization organization
+    ) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.firstName = firstName;
@@ -27,56 +41,34 @@ public class User {
         this.middleName = middleName;
         this.workingPosition = workingPosition;
         this.token = token;
+        this.organization = organization;
     }
 
-    @SerializedName("id")
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
-
-    @SerializedName("login")
     @ColumnInfo(name = "login")
     private String login;
-
-    @SerializedName("password")
     @ColumnInfo(name = "password")
     private String password;
-
-    @SerializedName("firstName")
     @ColumnInfo(name = "first_name")
     private String firstName;
-
-    @SerializedName("lastName")
     @ColumnInfo(name = "last_name")
     private String lastName;
-
-    @SerializedName("middleName")
     @ColumnInfo(name = "middle_name")
     private String middleName;
-
-    @SerializedName("workingPosition")
     @ColumnInfo(name = "working_position")
     private String workingPosition;
-
-    @SerializedName("token")
     @Ignore
     private Token token;
-
-    @ColumnInfo(name = "token_id")
     private int tokenId;
-
     @ColumnInfo(name = "authed")
     private boolean authed;
-
     @ColumnInfo(name = "org_id")
     private int organizationId;
-
     @Ignore
-    @SerializedName("organization")
     private Organization organization;
-
     @ColumnInfo(name = "last_active")
     private boolean lastActive;
-
     @ColumnInfo(name = "update_time")
     private Date dbUpdateTime;
 

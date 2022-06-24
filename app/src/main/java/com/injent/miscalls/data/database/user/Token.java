@@ -10,6 +10,10 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "token")
 public class Token {
 
+    public Token() {
+        // Empty body
+    }
+
     @Ignore
     public Token(String value, long expirationDate, int userId) {
         this.value = value;
@@ -17,19 +21,13 @@ public class Token {
         this.userId = userId;
     }
 
-    public Token() {
-    }
-
     @PrimaryKey
     @ColumnInfo(name = "id")
     private int id;
-
     @ColumnInfo(name = "value")
     private String value;
-
     @ColumnInfo(name = "exp_date")
     private long expirationDate;
-
     @ColumnInfo(name = "user_id")
     private int userId;
 

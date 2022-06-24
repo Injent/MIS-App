@@ -2,7 +2,7 @@ package com.injent.miscalls.ui.settings;
 
 import android.view.View;
 
-import com.injent.miscalls.ui.adapters.ViewType;
+import com.injent.miscalls.util.ViewType;
 
 public class ButtonLayout implements ViewType {
 

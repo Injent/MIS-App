@@ -4,17 +4,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.injent.miscalls.data.database.AppDatabase;
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
-import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
+import com.injent.miscalls.data.database.diagnosis.DiagnosisDao;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class DiagnosisRepository {
+
+    public static final int DIAGNOSES_SEARCH_LIMIT = 20;
 
     private final DiagnosisDao dao;
 
@@ -64,20 +65,20 @@ public class DiagnosisRepository {
         return error;
     }
 
-    public void searchNotParentDiagnoses(String s) {
+    public void searchNotParentDiagnoses(String s, int limit) {
         searchNotParentDiagnoses = CompletableFuture
-                .supplyAsync(() -> dao.searchNotParentLike("%" + s + "%"))
+                .supplyAsync(() -> dao.searchNotParentLike("%" + s + "%", limit))
         .exceptionally(throwable -> {
             error.postValue(throwable);
             throwable.printStackTrace();
-            return null;
+            return Collections.emptyList();
         });
         searchNotParentDiagnoses.thenAcceptAsync(list -> searchDiagnosesList.postValue(list));
     }
 
-    public void searchDiagnoses(String s) {
+    public void searchDiagnoses(String s, int limit) {
         searchDiagnoses = CompletableFuture
-                .supplyAsync(() -> dao.searchLike("%" + s + "%"))
+                .supplyAsync(() -> dao.searchLike("%" + s + "%",  limit))
                 .exceptionally(throwable -> {
                     error.postValue(throwable);
                     throwable.printStackTrace();

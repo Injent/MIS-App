@@ -2,7 +2,6 @@ package com.injent.miscalls.data.database;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -10,20 +9,20 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.injent.miscalls.data.database.calls.MedCall;
-import com.injent.miscalls.data.database.calls.CallDao;
-import com.injent.miscalls.data.database.calls.Geo;
-import com.injent.miscalls.data.database.calls.GeoDao;
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
-import com.injent.miscalls.data.database.diagnoses.DiagnosisDao;
+import com.injent.miscalls.data.database.medcall.MedCall;
+import com.injent.miscalls.data.database.medcall.MedCallDao;
+import com.injent.miscalls.data.database.medcall.Geo;
+import com.injent.miscalls.data.database.medcall.GeoDao;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
+import com.injent.miscalls.data.database.diagnosis.DiagnosisDao;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.data.database.user.Organization;
 import com.injent.miscalls.data.database.user.Token;
 import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.data.database.user.UserDao;
-import com.injent.miscalls.data.recommendation.Medication;
-import com.injent.miscalls.data.recommendation.RecommendationDao;
+import com.injent.miscalls.data.database.recommendation.Medication;
+import com.injent.miscalls.data.database.recommendation.RecommendationDao;
 import com.injent.miscalls.data.database.registry.RegistryDao;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -36,7 +35,20 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Geo.class, Diagnosis.class, Registry.class, MedCall.class, Medication.class, Objectively.class, User.class, Organization.class, Token.class}, version = 1, exportSchema = false)
+@Database(
+        entities = {
+                Geo.class,
+                Diagnosis.class,
+                Registry.class,
+                MedCall.class,
+                Medication.class,
+                Objectively.class,
+                User.class,
+                Organization.class,
+                Token.class
+        },
+        version = 1,
+        exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
 
@@ -46,7 +58,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
     private static UserDao userDao;
-    private static CallDao callDao;
+    private static MedCallDao medCallDao;
     private static RegistryDao registryDao;
     private static DiagnosisDao diagnosisDao;
     private static GeoDao geoDao;
@@ -55,8 +67,8 @@ public abstract class AppDatabase extends RoomDatabase {
         return userDao;
     }
 
-    public static CallDao getCallInfoDao() {
-        return callDao;
+    public static MedCallDao getCallInfoDao() {
+        return medCallDao;
     }
 
     public static RegistryDao getRegistryDao() {
@@ -72,7 +84,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract DiagnosisDao diagnosisDao();
-    public abstract CallDao callInfoDao();
+    public abstract MedCallDao callInfoDao();
     public abstract RegistryDao registryDao();
     public abstract RecommendationDao recommendationDao();
     public abstract UserDao userDao();
@@ -87,14 +99,14 @@ public abstract class AppDatabase extends RoomDatabase {
         final SupportFactory factory = new SupportFactory(passphraseBytes);
 
         instance = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
-                //.openHelperFactory(factory)
+                .openHelperFactory(factory)
                 .addCallback(new RoomPreloadCallback(context))
                 .build();
 
         userDao = instance.userDao();
         diagnosisDao = instance.diagnosisDao();
         registryDao = instance.registryDao();
-        callDao = instance.callInfoDao();
+        medCallDao = instance.callInfoDao();
         geoDao = instance.geoDao();
         return instance;
     }
@@ -114,7 +126,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 try {
 
                     DiagnosisDao dao = instance.diagnosisDao();
-                    dao.insertAll(getListDiagnoses());
+                    dao.insertList(getListDiagnoses());
                     RecommendationDao recommendationDao = instance.recommendationDao();
                     recommendationDao.insertAll(getListRecommendations());
                 } catch (IOException e) {

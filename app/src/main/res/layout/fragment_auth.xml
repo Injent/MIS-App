@@ -211,13 +211,23 @@
                     android:layout_marginTop="2dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/clear_sans_regular"
-                    android:text="version"
                     android:textColor="@color/lightGrayText"
                     android:textSize="@dimen/hintFont"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/copyrightText"
                     app:layout_constraintStart_toStartOf="@+id/copyrightText"
                     app:layout_constraintTop_toBottomOf="@+id/copyrightText" />
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_marginBottom="2dp"
+                    android:src="@drawable/logo"
+                    app:layout_constraintBottom_toBottomOf="@+id/copyrightText"
+                    app:layout_constraintEnd_toStartOf="@+id/copyrightText"
+                    app:layout_constraintTop_toTopOf="@+id/copyrightText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -237,6 +247,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </layout>

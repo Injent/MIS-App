@@ -1,10 +1,8 @@
 package com.injent.miscalls.ui.overview;
 
-import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.print.PDFPrint;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,34 +10,33 @@ import androidx.lifecycle.ViewModel;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.domain.repositories.PdfRepository;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
-import com.injent.miscalls.network.JResponse;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class OverviewViewModel extends ViewModel {
 
-    private final RegistryRepository registryRepository;
-    private final PdfRepository pdfRepository;
+    private RegistryRepository registryRepository;
+    private PdfRepository pdfRepository;
 
-    private MutableLiveData<Throwable> error = new MutableLiveData<>();
-    private MutableLiveData<Registry> selectedRegistry = new MutableLiveData<>();
-    private MutableLiveData<String> html = new MutableLiveData<>();
+    private LiveData<Throwable> registryError;
+    private LiveData<Throwable> pdfError;
+    private LiveData<Registry> selectedRegistry;
+    private LiveData<String> html;
+    private LiveData<String> docSentMessage;
     private MutableLiveData<Boolean> clickPreviewPdf = new MutableLiveData<>();
 
-    public OverviewViewModel() {
-        this.registryRepository = new RegistryRepository();
-        this.pdfRepository = new PdfRepository();
+    public void init() {
+        registryRepository = new RegistryRepository();
+        pdfRepository = new PdfRepository();
+        docSentMessage = registryRepository.getDocSentMessage();
+        selectedRegistry = registryRepository.getRegistry();
+        registryError = registryRepository.getError();
+        pdfError = pdfRepository.getError();
+        html = pdfRepository.getHtml();
     }
 
     public LiveData<Throwable> getErrorLiveData() {
-        return error;
+        return registryError;
     }
 
     public LiveData<Registry> getSelectedRegistryLiveData() {
@@ -47,11 +44,7 @@ public class OverviewViewModel extends ViewModel {
     }
 
     public void loadSelectedRegistry(int id) {
-        registryRepository.loadRegistryById(throwable -> {
-            error.postValue(throwable);
-            throwable.printStackTrace();
-            return null;
-        }, registry -> selectedRegistry.postValue(registry), id);
+        registryRepository.loadRegistryById(id);
     }
 
     public LiveData<String> getHtmlLiveData() {
@@ -59,22 +52,13 @@ public class OverviewViewModel extends ViewModel {
     }
 
     public void loadHtml(Context context) {
-        if (selectedRegistry.getValue() == null) {
-            error.setValue(new IllegalStateException());
-            return;
-        }
-        pdfRepository.getFetchedHtml(throwable -> {
-            error.postValue(throwable);
-            throwable.printStackTrace();
-            return "";
-        }, s -> html.postValue(s), context, selectedRegistry.getValue());
+        pdfRepository.loadFetchedHtml(context, selectedRegistry.getValue());
     }
 
 
     public void generatePdf(Context context, PDFPrint.OnPDFPrintListener pdfListener, PdfRepository.FileManageListener fileManageListener) {
         Registry registry = getSelectedRegistryLiveData().getValue();
         if (registry == null) {
-            error.setValue(new IllegalStateException());
             return;
         }
         String fileName = registry.getCallInfo().getFullName() + "-" + registry.getCreateDate();
@@ -93,37 +77,24 @@ public class OverviewViewModel extends ViewModel {
         return clickPreviewPdf;
     }
 
-    public void sendDocument(Supplier<String> supplier) {
-        Call<JResponse> call = registryRepository.sendDocument(selectedRegistry.getValue());
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<JResponse> call, @NonNull Response<JResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    if (response.body().isSuccessful()) {
-                        supplier.get();
-                    } else {
-                        error.postValue(new NetworkErrorException());
-                    }
-                }
-            }
+    public LiveData<String> getDocSentMessage() {
+        return docSentMessage;
+    }
 
-            @Override
-            public void onFailure(@NonNull Call<JResponse> call, @NonNull Throwable t) {
-                error.postValue(t);
-                t.printStackTrace();
-            }
-        });
+    public void sendDocument() {
+        registryRepository.sendDocument(selectedRegistry.getValue());
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        selectedRegistry = new MutableLiveData<>();
-        error = new MutableLiveData<>();
-        html = new MutableLiveData<>();
-        clickPreviewPdf = new MutableLiveData<>();
+        selectedRegistry = null;
+        registryError = null;
+        html = null;
+        clickPreviewPdf = null;
+        pdfError = null;
 
-        pdfRepository.cancelFutures();
-        registryRepository.cancelFutures();
+        pdfRepository.clear();
+        registryRepository.clear();
     }
 }

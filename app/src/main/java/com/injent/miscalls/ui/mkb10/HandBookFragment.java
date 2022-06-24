@@ -24,11 +24,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentHandbookBinding;
+import com.injent.miscalls.util.CustomOnBackPressedFragment;
+import com.injent.miscalls.ui.adapters.DiagnosisAdapter;
 
 import java.util.Collections;
 import java.util.Objects;
 
-public class HandBookFragment extends Fragment {
+public class HandBookFragment extends Fragment implements CustomOnBackPressedFragment {
+
+    public static final int DIAGNOSIS_SEARCH_LIMIT = 20;
 
     private HandBookViewModel viewModel;
     private FragmentHandbookBinding binding;
@@ -75,7 +79,14 @@ public class HandBookFragment extends Fragment {
                 nextPage(diagnosis.getId());
         });
         binding.handbookRecycler.setAdapter(adapter);
-        adapter.submitList(Collections.emptyList());
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (diagnosisId == -1) {
+            viewModel.onCleared();
+        }
+        return true;
     }
 
     private void setListeners() {
@@ -90,7 +101,14 @@ public class HandBookFragment extends Fragment {
         // Observers
         viewModel.getDiagnoses().observe(getViewLifecycleOwner(), list -> {
             adapter.submitList(list);
+            if (list.isEmpty()) {
+                binding.handbookError.setVisibility(View.VISIBLE);
+            } else {
+                binding.handbookError.setVisibility(View.GONE);
+            }
         });
+
+        viewModel.getSearchDiagnoses().observe(getViewLifecycleOwner(), list -> adapter.submitList(list));
     }
 
     private void setupSearch() {
@@ -104,7 +122,11 @@ public class HandBookFragment extends Fragment {
 
             @Override
             public void afterTextChanged(final Editable s) {
-                runnable = () -> viewModel.searchDiagnoses(s.toString());
+                if (s.toString().trim().isEmpty()) {
+                    adapter.submitList(Collections.emptyList());
+                    return;
+                }
+                runnable = () -> viewModel.searchDiagnoses(s.toString().trim(), DIAGNOSIS_SEARCH_LIMIT);
                 handler.postDelayed(runnable, SEARCH_DELAY);
             }
 
@@ -121,6 +143,7 @@ public class HandBookFragment extends Fragment {
         binding.titleHandBook.setVisibility(View.INVISIBLE);
         binding.handbookSearch.setVisibility(View.INVISIBLE);
         binding.handbookSearch.setEnabled(false);
+        adapter.submitList(viewModel.getSearchDiagnoses().getValue());
     }
 
     private void hideSearch() {
@@ -128,10 +151,7 @@ public class HandBookFragment extends Fragment {
         binding.titleHandBook.setVisibility(View.VISIBLE);
         binding.handbookSearch.setVisibility(View.VISIBLE);
         binding.handbookSearch.setEnabled(true);
-    }
-
-    private void navigateToHome() {
-        navController.navigate(R.id.homeFragment);
+        adapter.submitList(viewModel.getDiagnoses().getValue());
     }
 
     private void nextPage(int id) {
@@ -143,7 +163,6 @@ public class HandBookFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewModel.onCleared();
         adapter = null;
         fragmentManager = null;
         navController = null;

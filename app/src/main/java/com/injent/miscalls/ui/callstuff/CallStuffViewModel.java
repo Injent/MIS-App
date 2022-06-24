@@ -6,20 +6,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.database.calls.MedCall;
-import com.injent.miscalls.data.database.calls.Geo;
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
+import com.injent.miscalls.data.database.medcall.MedCall;
+import com.injent.miscalls.data.database.medcall.Geo;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.domain.repositories.CallRepository;
 import com.injent.miscalls.domain.repositories.DiagnosisRepository;
 import com.injent.miscalls.domain.repositories.PdfRepository;
 import com.injent.miscalls.domain.repositories.RegistryRepository;
-import com.injent.miscalls.ui.adapters.AdditionalField;
-import com.injent.miscalls.ui.adapters.Field;
+import com.injent.miscalls.ui.inspection.AdditionalField;
+import com.injent.miscalls.ui.overview.Field;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -39,7 +38,7 @@ public class CallStuffViewModel extends ViewModel {
     private MutableLiveData<MedCall> selectedCall = new MutableLiveData<>();
     private MutableLiveData<Registry> currentRegistry = new MutableLiveData<>();
     private MutableLiveData<Throwable> successOperation = new MutableLiveData<>();
-    private MutableLiveData<String> html = new MutableLiveData<>();
+    private LiveData<String> html;
     private LiveData<List<Diagnosis>> searchDiagnoses;
     private MutableLiveData<List<AdditionalField>> additionalFields = new MutableLiveData<>();
 
@@ -49,6 +48,7 @@ public class CallStuffViewModel extends ViewModel {
         diagnosisRepository = new DiagnosisRepository();
         pdfRepository = new PdfRepository();
         searchDiagnoses = diagnosisRepository.getSearchDiagnoses();
+        html = pdfRepository.getHtml();
     }
 
     public LiveData<String> getHtmlLiveData() {
@@ -60,13 +60,7 @@ public class CallStuffViewModel extends ViewModel {
     }
 
     public void loadHtml(Context context) {
-        pdfRepository.getFetchedHtml(throwable -> {
-            throwable.printStackTrace();
-            return null;
-                },
-                s -> html.postValue(s),
-                context,
-                currentRegistry.getValue());
+        pdfRepository.loadFetchedHtml(context, currentRegistry.getValue());
     }
 
     public LiveData<Throwable> getErrorLiveData() {
@@ -79,7 +73,7 @@ public class CallStuffViewModel extends ViewModel {
 
     public void loadRegistry(Registry registry) {
         if (registry == null) {
-            String createDate = new SimpleDateFormat("dd-MM-yyyy hh:mm",Locale.getDefault()).format(new Date());
+            String createDate = new SimpleDateFormat("dd-MM-yyyy HH:mm",Locale.getDefault()).format(new Date());
             registry = new Registry();
             registry.setCallId(Objects.requireNonNull(selectedCall.getValue()).getId());
             registry.setCallInfo(selectedCall.getValue());
@@ -184,8 +178,8 @@ public class CallStuffViewModel extends ViewModel {
         return false;
     }
 
-    public void searchDiagnosis(String s) {
-        diagnosisRepository.searchNotParentDiagnoses(s);
+    public void searchDiagnosis(String s, int limit) {
+        diagnosisRepository.searchNotParentDiagnoses(s, limit);
     }
 
     public void setObjectivelyData(int index, String s) {
@@ -263,7 +257,7 @@ public class CallStuffViewModel extends ViewModel {
 
         diagnosisRepository.clear();
         callRepository.clear();
-        registryRepository.cancelFutures();
+        registryRepository.clear();
         super.onCleared();
     }
 

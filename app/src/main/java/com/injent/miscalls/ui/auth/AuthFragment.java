@@ -5,7 +5,6 @@ import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +26,13 @@ import com.injent.miscalls.BuildConfig;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentAuthBinding;
 import com.injent.miscalls.network.AuthorizationException;
+import com.injent.miscalls.util.CustomOnBackPressedFragment;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.Executor;
 
-public class AuthFragment extends Fragment {
+public class AuthFragment extends Fragment implements CustomOnBackPressedFragment {
 
     private FragmentAuthBinding binding;
     private AuthViewModel viewModel;
@@ -88,6 +88,11 @@ public class AuthFragment extends Fragment {
         binding.version.setText(BuildConfig.VERSION_NAME);
 
         activityResultLauncher.launch(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 
     private void setListeners() {

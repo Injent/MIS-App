@@ -14,14 +14,13 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.MedCall;
+import com.injent.miscalls.data.database.medcall.MedCall;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.databinding.FragmentInspectionBinding;
-import com.injent.miscalls.ui.adapters.AdditionalField;
-import com.injent.miscalls.ui.adapters.Field;
+import com.injent.miscalls.ui.overview.Field;
 import com.injent.miscalls.ui.adapters.FieldAdapter;
-import com.injent.miscalls.ui.adapters.ViewType;
+import com.injent.miscalls.util.ViewType;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;

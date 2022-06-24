@@ -1,8 +1,8 @@
 package com.injent.miscalls.network;
 
 import com.google.gson.annotations.SerializedName;
-import com.injent.miscalls.network.rest.dto.CallDto;
-import com.injent.miscalls.data.database.user.User;
+import com.injent.miscalls.network.dto.CallDto;
+import com.injent.miscalls.network.dto.UserDto;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class JResponse {
     private int code;
 
     @SerializedName("user")
-    private User user;
+    private UserDto user;
 
     @SerializedName("calls")
     private List<CallDto> calls;
@@ -28,7 +28,7 @@ public class JResponse {
         return code;
     }
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 

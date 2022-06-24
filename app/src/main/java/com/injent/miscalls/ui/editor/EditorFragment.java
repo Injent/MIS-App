@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
@@ -19,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.databinding.FragmentEditorBinding;
-import com.injent.miscalls.ui.callinfo.InfoAdapter;
+import com.injent.miscalls.ui.adapters.InfoAdapter;
 import com.injent.miscalls.ui.overview.OverviewViewModel;
 
 public class EditorFragment extends Fragment {
@@ -53,6 +52,8 @@ public class EditorFragment extends Fragment {
 
         // Observers
         viewModel.getSelectedRegistryLiveData().observe(getViewLifecycleOwner(), this::loadRegistryData);
+
+        viewModel.getDocSentMessage().observe(getViewLifecycleOwner(), s -> Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show());
     }
 
     private void loadRegistryData(Registry registry) {
@@ -75,10 +76,7 @@ public class EditorFragment extends Fragment {
 
     private void sendRegistry() {
         Toast.makeText(requireContext(), R.string.documentSending, Toast.LENGTH_SHORT).show();
-        viewModel.sendDocument(() -> {
-            Toast.makeText(requireContext(), R.string.docsSent, Toast.LENGTH_SHORT).show();
-            return null;
-        });
+        viewModel.sendDocument();
     }
 
     @Override

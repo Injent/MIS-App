@@ -1,7 +1,6 @@
 package com.injent.miscalls.ui.maps;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.calls.Geo;
+import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.databinding.FragmentMapsBinding;
-import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;

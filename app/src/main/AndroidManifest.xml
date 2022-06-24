@@ -23,13 +23,28 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MISLight"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
+
+<!--        <provider-->
+<!--            android:name="androidx.startup.InitializationProvider"-->
+<!--            android:authorities="com.injent.miscalls.androidx-startup"-->
+<!--            android:directBootAware="false"-->
+<!--            android:exported="false"-->
+<!--            android:multiprocess="true"-->
+<!--            tools:targetApi="n"-->
+<!--            tools:node="merge">-->
+<!--            <meta-data-->
+<!--                android:name="androidx.work.WorkManagerInitializer"-->
+<!--                android:value="androidx.startup"-->
+<!--                tools:node="remove" />-->
+<!--        </provider>-->
 
         <!--            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"-->
 
         <activity
             android:theme="@style/Theme.MISLight"
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -41,9 +56,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".domain.ForegroundServiceApp"
+        
+        <service android:name=".util.ForegroundServiceApp"
             android:foregroundServiceType="dataSync"/>
-        <receiver android:name=".domain.BackgroundDownloaderStartReceiver"
+        <receiver android:name=".util.BackgroundDownloaderStartReceiver"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:exported="true" android:enabled="true">
             <intent-filter>

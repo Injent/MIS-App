@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class Organization {
 
     public Organization() {
+        // Empty body
     }
 
     @Ignore
@@ -22,13 +23,10 @@ public class Organization {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-
     @ColumnInfo(name = "name")
     private String name;
-
     @ColumnInfo(name = "user_id")
     private int userId;
-
     @ColumnInfo(name = "address")
     private String address;
 

@@ -1,17 +1,15 @@
 package com.injent.miscalls.ui.diagnosis;
 
+import static com.injent.miscalls.domain.repositories.DiagnosisRepository.DIAGNOSES_SEARCH_LIMIT;
+
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,24 +17,19 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 import com.injent.miscalls.databinding.FragmentDiagnosisBinding;
 import com.injent.miscalls.ui.callstuff.CallStuffViewModel;
-import com.injent.miscalls.ui.mkb10.DiagnosisAdapter;
+import com.injent.miscalls.ui.adapters.DiagnosisAdapter;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.function.Consumer;
 
 public class DiagnosisFragment extends Fragment {
 
@@ -47,7 +40,6 @@ public class DiagnosisFragment extends Fragment {
     private DiagnosisAdapter diagnosesSearchAdapter;
     private CallStuffViewModel viewModel;
     private boolean inspected;
-    private int searchDelay;
 
     public DiagnosisFragment(ViewModel viewModel) {
         this.viewModel = (CallStuffViewModel) viewModel;
@@ -88,7 +80,11 @@ public class DiagnosisFragment extends Fragment {
 
             @Override
             public void afterTextChanged(final Editable s) {
-                runnable = () -> viewModel.searchDiagnosis(s.toString());
+                if (s.toString().trim().isEmpty()) {
+                    diagnosesSearchAdapter.submitList(Collections.emptyList());
+                    return;
+                }
+                runnable = () -> viewModel.searchDiagnosis(s.toString().trim(), DIAGNOSES_SEARCH_LIMIT);
                 handler.postDelayed(runnable, SEARCH_DELAY);
             }
 
@@ -108,7 +104,10 @@ public class DiagnosisFragment extends Fragment {
         });
 
         // Observers
-        viewModel.getSearchDiagnoses().observe(getViewLifecycleOwner(), list -> diagnosesSearchAdapter.submitList(list));
+        viewModel.getSearchDiagnoses().observe(getViewLifecycleOwner(), list -> {
+            diagnosesSearchAdapter.submitList(list);
+            Log.e("TAG", "setListeners: " );
+        });
     }
 
     private void setupDiagnosesRecyclerView() {

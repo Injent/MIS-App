@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,7 +21,9 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.ui.settings.SpinnerAdapter;
+import com.injent.miscalls.ui.inspection.AdditionalField;
+import com.injent.miscalls.ui.overview.Field;
+import com.injent.miscalls.util.ViewType;
 
 import java.util.List;
 

@@ -9,7 +9,6 @@ import com.injent.miscalls.domain.repositories.RegistryRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class RegistryViewModel extends ViewModel {
 
@@ -64,7 +63,7 @@ public class RegistryViewModel extends ViewModel {
         registryItems = new MutableLiveData<>();
         error = new MutableLiveData<>();
 
-        repository.cancelFutures();
+        repository.clear();
         super.onCleared();
     }
 }

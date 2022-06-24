@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -15,8 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.user.User;
-import com.injent.miscalls.ui.MainViewModel;
+import com.injent.miscalls.ui.main.MainViewModel;
 
 public class LoadingScreenFragment extends Fragment {
 

@@ -44,6 +44,7 @@ public class OverviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
+        viewModel.init();
         navController = Navigation.findNavController(requireView());
 
         setListeners();

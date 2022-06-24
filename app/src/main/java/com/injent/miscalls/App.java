@@ -1,7 +1,10 @@
 package com.injent.miscalls;
 
+import static android.util.Log.VERBOSE;
+
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 public class App extends Application {
 
@@ -93,7 +97,7 @@ public class App extends Application {
         return getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
     }
 
-    public void initSettings() {
+    public void initData() {
         Configuration.getInstance().load(getApplicationContext(), getSharedPreferences());
         setEncryptedUserDataManager(new UserDataManager(getResources(), getEncryptedPreferences()));
         setUserSettings(new UserDataManager(getResources(), getSharedPreferences()));
@@ -102,10 +106,14 @@ public class App extends Application {
             getUserDataManager().init();
 
             SecureRandom random = new SecureRandom();
+            byte[] bytes = new byte[20];
+            random.nextBytes(bytes);
+            String passPhrase = new String(bytes);
             getEncryptedUserDataManager()
                     .setData(R.string.keyAuthed, false)
-                    .setData(R.string.keyDb, random.nextInt())
+                    .setData(R.string.keyDb, passPhrase)
                     .write();
+            Toast.makeText(getApplicationContext(), passPhrase, Toast.LENGTH_LONG).show();
         }
 
         AppDatabase.getInstance(

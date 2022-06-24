@@ -7,8 +7,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.injent.miscalls.data.database.calls.UserActiveUpdate;
-
 @Dao
 public interface UserDao {
 

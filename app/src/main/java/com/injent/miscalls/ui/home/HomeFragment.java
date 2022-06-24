@@ -21,26 +21,29 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.FailedDownloadDb;
-import com.injent.miscalls.data.database.calls.ListEmptyException;
+import com.injent.miscalls.util.FailedDownloadDb;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
+import com.injent.miscalls.util.AppBarStateChangeListener;
+import com.injent.miscalls.util.CustomOnBackPressedFragment;
+import com.injent.miscalls.ui.adapters.CallAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements CustomOnBackPressedFragment {
 
     private CallAdapter adapter;
 
     private FragmentHomeBinding binding;
     private NavController navController;
     private HomeViewModel viewModel;
-    private boolean downloadDb = false;
+    private boolean downloadDb;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +68,11 @@ public class HomeFragment extends Fragment {
         setListeners();
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
     private void setListeners() {
         //Listeners
         binding.patientListSection.setOnClickListener(v -> downloadNewDb());
@@ -82,6 +90,17 @@ public class HomeFragment extends Fragment {
             hideLoading();
             failed(throwable);
         });
+
+        binding.homeAppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if (state == State.COLLAPSED) {
+                    binding.patientListSection.animate().setDuration(300L).alpha(0f).start();
+                } else {
+                    binding.patientListSection.animate().setDuration(300L).alpha(1f).start();
+                }
+            }
+        });
     }
 
     private void displayList() {
@@ -96,7 +115,7 @@ public class HomeFragment extends Fragment {
         } else if (t instanceof NetworkErrorException) {
             displayList();
             Toast.makeText(requireContext(), R.string.noInternetConnection, Toast.LENGTH_SHORT).show();
-        } else if (t instanceof ListEmptyException) {
+        } else if (t instanceof ArrayStoreException) {
             showErrorMessage(getResources().getString(R.string.emptyDbError));
         }
     }
@@ -158,6 +177,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void navigateToHandbook() {
+        closeNavigationMenu();
         Bundle args = new Bundle();
         args.putInt(getString(R.string.keyDiagnosisId), -1);
         navController.navigate(R.id.handBookFragment, args);

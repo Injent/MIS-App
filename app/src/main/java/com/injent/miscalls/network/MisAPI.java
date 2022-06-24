@@ -1,9 +1,8 @@
 package com.injent.miscalls.network;
 
-import com.injent.miscalls.data.database.user.Token;
-import com.injent.miscalls.network.rest.dto.CallDto;
-import com.injent.miscalls.network.rest.dto.RegistryDto;
-import com.injent.miscalls.network.rest.dto.TokenDto;
+import com.injent.miscalls.network.dto.CallDto;
+import com.injent.miscalls.network.dto.RegistryDto;
+import com.injent.miscalls.network.dto.TokenDto;
 
 import java.util.List;
 

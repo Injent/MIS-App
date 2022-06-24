@@ -141,7 +141,7 @@
     <string name="writeResultOfInspection">Напишите результаты осмотра…</string>
     <string name="writeConclusion">Напишите заключение…</string>
     <string name="treatmentHint">Напишите…</string>
-    <string name="authHint">Авторизуйтесь чтобы получить доступ к базе данных пациентов</string>
+    <string name="authHint">Авторизуйтесь чтобы начать работу</string>
     <string name="writingPatientsInspection">Заполнение общего осмотра пациента</string>
     <string name="recDownloadHint"> Может потребоваться много места на устройстве</string>
     <string name="recDownloadDesc">Скачайте доступные рекомендации по лечению и используйте их при
@@ -220,11 +220,12 @@
     <string name="userNotFound">Пользователь не найден</string>
     <string name="unknownError">Возникла неизвестная ошибка</string>
     <string name="serverDoesNotRespond">Сервер не отвечает</string>
-    <string name="emptyDbError">База данных пациентов не загружена!</string>
+    <string name="emptyDbError">База данных пациентов пуста!</string>
     <string name="emptyServerProtocols">На сервере отсутсвтуют протоколы</string>
     <string name="serverError">Ошибка сервера</string>
     <string name="socketTimeOut">Превышено время ожидания</string>
     <string name="diagnosesIsEmpty">Не заполнен диагноз</string>
+    <string name="emptyCategory">Пустая категория</string>
 
     <string name="callTime">Время вызова</string>
     <string name="dateOfMedCardEdit">Дата заполнения мед. карты</string>

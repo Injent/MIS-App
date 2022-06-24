@@ -1,6 +1,6 @@
 package com.injent.miscalls.ui.settings;
 
-import com.injent.miscalls.ui.adapters.ViewType;
+import com.injent.miscalls.util.ViewType;
 
 public class SectionLayout implements ViewType {
 

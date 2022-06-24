@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.injent.miscalls.data.database.calls.MedCall;
-import com.injent.miscalls.data.database.diagnoses.Diagnosis;
+import com.injent.miscalls.data.database.medcall.MedCall;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 
 import java.util.List;
 

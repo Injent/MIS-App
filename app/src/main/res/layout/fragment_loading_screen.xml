@@ -23,7 +23,7 @@
         android:layout_marginBottom="120dp"
         android:text="@string/app_name"
         android:textAppearance="@style/titleText"
-        android:textColor="#333333"
+        android:textColor="@color/adaptiveTitle"
         android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
