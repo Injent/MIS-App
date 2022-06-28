@@ -86,18 +86,7 @@ public class PdfViewerFragment extends Fragment {
 
     private void generatePdfFile() {
         if (havePermission()) {
-            viewModel.generatePdf(requireContext(), new PDFPrint.OnPDFPrintListener() {
-                @Override
-                public void onSuccess(File file) {
-                    String toastText = getString(R.string.fileSaveByPath) + file.getPath();
-                    Toast.makeText(requireContext(), toastText, Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onError(Exception exception) {
-                    Toast.makeText(requireContext(), R.string.errorOfDocumentGeneration, Toast.LENGTH_SHORT).show();
-                }
-            }, file -> true);
+            viewModel.generatePdf(requireContext());
         } else {
             requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }

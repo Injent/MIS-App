@@ -109,8 +109,6 @@ n
 >app/src/main/java/com/injent/miscalls/network/dto/CallDto.java,9\e\9e4c26157a814265e75e0d4776acea53de3b4ab7
 |
 Lapp/src/main/java/com/injent/miscalls/ui/adapters/RecommendationAdapter.java,6\2\62c54a042e387abf4ffe659d05117b467863dcf1
-P
- app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 t
 Dapp/src/main/java/com/injent/miscalls/util/ForegroundServiceApp.java,8\4\84857bdb2a19c34b897c64c4be31e57b8629bf86
 x

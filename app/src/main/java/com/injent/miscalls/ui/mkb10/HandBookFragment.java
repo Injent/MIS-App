@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 import com.injent.miscalls.databinding.FragmentHandbookBinding;
 import com.injent.miscalls.ui.adapters.DiagnosisAdapter;
-import com.injent.miscalls.ui.callstuff.CallStuffFragment;
 import com.injent.miscalls.ui.main.MainActivity;
 import com.injent.miscalls.util.CustomOnBackPressedFragment;
 
@@ -40,9 +40,14 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
     private NavController navController;
     private int diagnosisId;
     private boolean selectMode;
+    private DiagnosisListener listener;
 
     public HandBookFragment() {
         // Empty body
+    }
+
+    public HandBookFragment(DiagnosisListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -61,8 +66,7 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
 
         navController = Navigation.findNavController(requireView());
         viewModel = new ViewModelProvider(requireActivity()).get(HandBookViewModel.class);
-        if (!selectMode)
-            viewModel.init();
+        viewModel.init();
 
         setListeners();
         setupHandbookRecyclerView();
@@ -84,6 +88,7 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
             else {
                 if (selectMode) {
                     viewModel.setSelectedDiagnosis(diagnosis);
+                    listener.onSelect(HandBookFragment.this, diagnosis);
                 }
             }
         });
@@ -168,15 +173,16 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
     }
 
     private void nextPage(int id) {
-//        Bundle args = new Bundle();
-//        args.putInt(getString(R.string.keyDiagnosisId), id);
-//        args.putBoolean(getString(R.string.keySelectMode), selectMode);
-//        getParentFragmentManager().beginTransaction()
-//                .replace()
-    }
-
-    private void showCallStuffFragment() {
-
+        Fragment fragment = new HandBookFragment(listener);
+        Bundle args = new Bundle();
+        args.putInt(getString(R.string.keyDiagnosisId), id);
+        args.putBoolean(getString(R.string.keySelectMode), selectMode);
+        fragment.setArguments(args);
+        getParentFragmentManager().beginTransaction()
+                .hide(this)
+                .add(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -185,5 +191,9 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
         adapter = null;
         navController = null;
         binding = null;
+    }
+
+    public interface DiagnosisListener {
+        void onSelect(Fragment fragment, Diagnosis diagnosis);
     }
 }

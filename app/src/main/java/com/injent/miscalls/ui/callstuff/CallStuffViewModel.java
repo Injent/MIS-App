@@ -2,7 +2,6 @@ package com.injent.miscalls.ui.callstuff;
 
 import android.content.Context;
 
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -35,7 +34,6 @@ public class CallStuffViewModel extends ViewModel {
     private DiagnosisRepository diagnosisRepository;
     private PdfRepository pdfRepository;
 
-    private MutableLiveData<Fragment> previousFragment;
     private MutableLiveData<Integer> action = new MutableLiveData<>();
     private MutableLiveData<MedCall> selectedCall = new MutableLiveData<>();
     private MutableLiveData<Registry> currentRegistry;
@@ -52,7 +50,6 @@ public class CallStuffViewModel extends ViewModel {
         html = pdfRepository.getHtml();
         selectedDiagnosis = new MutableLiveData<>();
         currentRegistry = new MutableLiveData<>();
-        previousFragment = new MutableLiveData<>();
     }
 
     public LiveData<Diagnosis> getSelectedDiagnosis() {
@@ -77,14 +74,6 @@ public class CallStuffViewModel extends ViewModel {
 
     public LiveData<Registry> getCurrentRegistryLiveData() {
         return currentRegistry;
-    }
-
-    public LiveData<Fragment> getPreviousFragment() {
-        return previousFragment;
-    }
-
-    public void setPreviousFragment(Fragment fragment) {
-        previousFragment.setValue(fragment);
     }
 
     public void loadRegistry(Registry registry) {
@@ -290,7 +279,6 @@ public class CallStuffViewModel extends ViewModel {
         selectedDiagnosis = null;
         action = new MutableLiveData<>();
         additionalFields = null;
-        previousFragment = null;
 
         diagnosisRepository.clear();
         callRepository.clear();

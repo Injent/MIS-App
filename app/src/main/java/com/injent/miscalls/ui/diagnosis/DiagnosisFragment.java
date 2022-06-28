@@ -78,7 +78,6 @@ public class DiagnosisFragment extends Fragment {
 
             @Override
             public void onAddClick() {
-                viewModel.setPreviousFragment(DiagnosisFragment.this);
                 viewModel.runAction(CallStuffFragment.CODE_OPEN_HANDBOOK);
             }
         });

@@ -295,6 +295,4 @@
     <string name="keyTokenId">TOKEN_ID</string>
     <string name="keyTokenExpirationDate">TOKEN_EXPIRATION_DATE</string>
     <string name="keyDb">DB_KEY</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

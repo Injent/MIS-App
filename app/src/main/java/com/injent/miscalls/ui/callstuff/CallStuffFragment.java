@@ -35,12 +35,13 @@ import com.injent.miscalls.ui.mkb10.HandBookFragment;
 import com.injent.miscalls.util.CustomOnBackPressedFragment;
 import com.injent.miscalls.ui.adapters.ViewPagerAdapter;
 
+import java.util.function.Consumer;
+
 public class CallStuffFragment extends Fragment implements CustomOnBackPressedFragment {
 
     public static final String TAG = "CallStuffFragment";
     public static final int CODE_OPEN_MAP = 0;
     public static final int CODE_OPEN_HANDBOOK = 1;
-    public static final int CODE_CLOSE_HANDBOOK = 2;
 
     private FragmentCallStuffBinding binding;
     private CallStuffViewModel viewModel;
@@ -179,8 +180,6 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
                 break;
                 case CODE_OPEN_HANDBOOK: openHandbook();
                 break;
-                case CODE_CLOSE_HANDBOOK: handbookBackAction(viewModel.getPreviousFragment().getValue());
-                break;
                 default: throw new IllegalStateException("Code is wrong");
             }
         });
@@ -275,7 +274,10 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
     }
 
     private void openHandbook() {
-        Fragment handbookFragment = new HandBookFragment();
+        Fragment handbookFragment = new HandBookFragment((fragment, diagnosis) -> {
+            viewModel.setSelectedDiagnosis(diagnosis);
+            handbookBackAction(fragment);
+        });
         Bundle args = new Bundle();
         args.putBoolean(getString(R.string.keySelectMode), true);
         handbookFragment.setArguments(args);

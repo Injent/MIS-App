@@ -66,13 +66,13 @@ public class OverviewViewModel extends ViewModel {
     }
 
 
-    public void generatePdf(Context context, PDFPrint.OnPDFPrintListener pdfListener, PdfRepository.FileManageListener fileManageListener) {
+    public void generatePdf(Context context) {
         Registry registry = getSelectedRegistry().getValue();
         if (registry == null)
             return;
         String fileName = registry.getCallInfo().getFullName() + "-" + registry.getCreateDate();
         try {
-            pdfRepository.generatePdf(context, html.getValue(), fileName, pdfListener, fileManageListener);
+            pdfRepository.generatePdf(context, html.getValue(), fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
