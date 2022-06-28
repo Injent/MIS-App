@@ -13,6 +13,12 @@ import com.injent.miscalls.domain.repositories.RegistryRepository;
 
 import java.io.IOException;
 
+/**
+ * A {@link ViewModel} for {@link OverviewFragment} and
+ * {@link com.injent.miscalls.ui.pdfviewer.PdfViewerFragment}.
+ *
+ * Provides short info about call and generates pdf file.
+ */
 public class OverviewViewModel extends ViewModel {
 
     private RegistryRepository registryRepository;
@@ -35,11 +41,15 @@ public class OverviewViewModel extends ViewModel {
         html = pdfRepository.getHtml();
     }
 
-    public LiveData<Throwable> getErrorLiveData() {
+    public LiveData<Throwable> getPdfError() {
+        return pdfError;
+    }
+
+    public LiveData<Throwable> getRegistryError() {
         return registryError;
     }
 
-    public LiveData<Registry> getSelectedRegistryLiveData() {
+    public LiveData<Registry> getSelectedRegistry() {
         return selectedRegistry;
     }
 
@@ -47,7 +57,7 @@ public class OverviewViewModel extends ViewModel {
         registryRepository.loadRegistryById(id);
     }
 
-    public LiveData<String> getHtmlLiveData() {
+    public LiveData<String> getHtml() {
         return html;
     }
 
@@ -57,10 +67,9 @@ public class OverviewViewModel extends ViewModel {
 
 
     public void generatePdf(Context context, PDFPrint.OnPDFPrintListener pdfListener, PdfRepository.FileManageListener fileManageListener) {
-        Registry registry = getSelectedRegistryLiveData().getValue();
-        if (registry == null) {
+        Registry registry = getSelectedRegistry().getValue();
+        if (registry == null)
             return;
-        }
         String fileName = registry.getCallInfo().getFullName() + "-" + registry.getCreateDate();
         try {
             pdfRepository.generatePdf(context, html.getValue(), fileName, pdfListener, fileManageListener);

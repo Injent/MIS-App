@@ -20,7 +20,8 @@ import com.injent.miscalls.domain.repositories.AuthRepository;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A {@link ViewModel} for {@link MainActivity}.
+ * A {@link ViewModel} for {@link MainActivity} and
+ * {@link com.injent.miscalls.ui.loading.LoadingScreenFragment}.
  *
  * Checks the activity of the session and performs background tasks.
  */
@@ -37,6 +38,13 @@ public class MainViewModel extends ViewModel {
         repository = new AuthRepository(context);
         activeUser = repository.getActiveSession();
         workManager = WorkManager.getInstance(context);
+    }
+
+    public LiveData<WorkInfo> getWorkInfo() {
+        return workInfo;
+    }
+
+    public void startWork() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.NOT_ROAMING)
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -51,14 +59,6 @@ public class MainViewModel extends ViewModel {
         workInfo = workManager.getWorkInfoByIdLiveData(backgroundWorkRequest.getId());
 
         workManager.enqueueUniquePeriodicWork(AppWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, backgroundWorkRequest);
-    }
-
-    public LiveData<WorkInfo> getWorkInfo() {
-        return workInfo;
-    }
-
-    public void startWork() {
-
     }
 
     public void cancelWork() {

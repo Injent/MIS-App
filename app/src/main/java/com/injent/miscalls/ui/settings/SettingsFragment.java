@@ -1,5 +1,7 @@
 package com.injent.miscalls.ui.settings;
 
+import static com.injent.miscalls.data.UserDataManager.MODE_REGULAR_UPDATE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,14 +51,6 @@ public class SettingsFragment extends Fragment {
 
         binding.backFromSettings.setOnClickListener(v -> back());
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(this,
-                new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                back();
-            }
-        });
-
         setupSettingsRecyclerView();
     }
 
@@ -80,6 +74,9 @@ public class SettingsFragment extends Fragment {
                     @Override
                     public void onSelect(int position) {
                         App.getUserDataManager().setData(R.string.keyMode, position).write();
+                        if (position == MODE_REGULAR_UPDATE) {
+                            ((MainActivity) requireActivity()).startWork(position);
+                        }
                     }
                 }));
         list.add(new SwitchLayout(R.drawable.ic_call, R.color.green, R.string.anonCall, R.string.anonCallDesc, App.getUserDataManager().getBoolean(R.string.keyAnonCall), R.drawable.switch_thumb_phone, R.drawable.switch_track, new SwitchLayout.OnFlickListener() {
@@ -88,8 +85,8 @@ public class SettingsFragment extends Fragment {
                 App.getUserDataManager().setData(R.string.keyAnonCall, state).write();
             }
         }));
-        list.add(new SectionLayout(R.string.interfaceName));
         list.add(new ButtonLayout(R.drawable.ic_folder, R.color.icFolder, R.string.openDocFolder, R.string.open, view -> ((MainActivity) requireContext()).openExplorer(App.getUserDataManager().getString(R.string.keyPdfFilePath))));
+        list.add(new SectionLayout(R.string.interfaceName));
         settingAdapter.submitList(list);
     }
 

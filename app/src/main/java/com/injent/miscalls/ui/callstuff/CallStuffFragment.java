@@ -3,6 +3,7 @@ package com.injent.miscalls.ui.callstuff;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,12 +26,21 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.injent.miscalls.R;
+import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.databinding.FragmentCallStuffBinding;
+import com.injent.miscalls.ui.main.MainActivity;
+import com.injent.miscalls.ui.maps.MapsFragment;
+import com.injent.miscalls.ui.mkb10.HandBookFragment;
 import com.injent.miscalls.util.CustomOnBackPressedFragment;
 import com.injent.miscalls.ui.adapters.ViewPagerAdapter;
 
 public class CallStuffFragment extends Fragment implements CustomOnBackPressedFragment {
+
+    public static final String TAG = "CallStuffFragment";
+    public static final int CODE_OPEN_MAP = 0;
+    public static final int CODE_OPEN_HANDBOOK = 1;
+    public static final int CODE_CLOSE_HANDBOOK = 2;
 
     private FragmentCallStuffBinding binding;
     private CallStuffViewModel viewModel;
@@ -64,8 +76,12 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
 
     @Override
     public boolean onBackPressed() {
-        confirmExitAction();
-        return false;
+        if (!this.isHidden()) {
+            confirmExitAction();
+            return false;
+        }
+        viewModel.onCleared();
+        return true;
     }
 
     private void setListeners() {
@@ -159,8 +175,20 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
 
         viewModel.getActionLiveData().observe(getViewLifecycleOwner(), action -> {
             switch (action) {
-                case 1: openMap();
+                case CODE_OPEN_MAP: openMap();
                 break;
+                case CODE_OPEN_HANDBOOK: openHandbook();
+                break;
+                case CODE_CLOSE_HANDBOOK: handbookBackAction(viewModel.getPreviousFragment().getValue());
+                break;
+                default: throw new IllegalStateException("Code is wrong");
+            }
+        });
+
+        viewModel.getSelectedDiagnosis().observe(getViewLifecycleOwner(), new Observer<Diagnosis>() {
+            @Override
+            public void onChanged(Diagnosis diagnosis) {
+
             }
         });
     }
@@ -207,21 +235,25 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
         View tabView = getLayoutInflater().inflate(R.layout.tab_view, null);
         ImageView tabIcon = tabView.findViewById(R.id.tabIcon);
         TextView tabText = tabView.findViewById(R.id.tabText);
+        TextView tabNumber = tabView.findViewById(R.id.tabNumber);
 
         switch (position) {
             case 0: {
                 tabIcon.setImageResource(R.drawable.ic_medical_suitcase);
                 tabText.setText(R.string.medCall);
+                tabNumber.setText("1");
             }
             break;
             case 1: {
                 tabIcon.setImageResource(R.drawable.ic_inspection);
                 tabText.setText(R.string.inspectionShort);
+                tabNumber.setText("2");
             }
             break;
             case 2: {
                 tabIcon.setImageResource(R.drawable.ic_diagnosis);
                 tabText.setText(R.string.diagnosis);
+                tabNumber.setText("3");
             }
             break;
             default: throw new IllegalStateException();
@@ -231,24 +263,43 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
     }
 
     private void navigateToHome() {
-        Bundle args = new Bundle();
-        args.putBoolean(getString(R.string.keyDownloadDb), false);
-        navController.navigate(R.id.homeFragment, args);
+        navController.navigate(R.id.homeFragment);
+        viewModel.onCleared();
     }
 
     private void openMap() {
         Geo geo = viewModel.getGeo();
         if (geo == null) return;
+        Fragment mapsFragment = new MapsFragment(geo.getLatitude(), geo.getLongitude());
+        showFragment(mapsFragment);
+    }
+
+    private void openHandbook() {
+        Fragment handbookFragment = new HandBookFragment();
         Bundle args = new Bundle();
-        args.putDouble(getString(R.string.keyLatitude), geo.getLatitude());
-        args.putDouble(getString(R.string.keyLongitude), geo.getLongitude());
-        navController.navigate(R.id.mapsFragment, args);
+        args.putBoolean(getString(R.string.keySelectMode), true);
+        handbookFragment.setArguments(args);
+        showFragment(handbookFragment);
+    }
+
+    private void showFragment(Fragment fragment) {
+        getParentFragmentManager().beginTransaction()
+                .hide(this)
+                .add(R.id.container, fragment)
+                .addToBackStack(TAG)
+                .commit();
+    }
+
+    private void handbookBackAction(Fragment fragment) {
+        getParentFragmentManager().beginTransaction()
+                .show(this)
+                .remove(fragment)
+                .commit();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewModel.onCleared();
         adapter = null;
         navController = null;
         binding = null;

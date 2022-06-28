@@ -51,7 +51,7 @@ public class EditorFragment extends Fragment {
         binding.editorCard.setOnClickListener(view -> viewModel.setClickPreviewPdf(true));
 
         // Observers
-        viewModel.getSelectedRegistryLiveData().observe(getViewLifecycleOwner(), this::loadRegistryData);
+        viewModel.getSelectedRegistry().observe(getViewLifecycleOwner(), this::loadRegistryData);
 
         viewModel.getDocSentMessage().observe(getViewLifecycleOwner(), s -> Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show());
     }

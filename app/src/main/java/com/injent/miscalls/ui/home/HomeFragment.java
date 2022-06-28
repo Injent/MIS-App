@@ -3,6 +3,7 @@ package com.injent.miscalls.ui.home;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,17 @@ public class HomeFragment extends Fragment implements CustomOnBackPressedFragmen
 
         binding.moreButton.setOnClickListener(v -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
+        binding.homeAppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if (state == State.COLLAPSED) {
+                    binding.patientListSection.animate().setDuration(300L).alpha(0f).start();
+                } else {
+                    binding.patientListSection.animate().setDuration(300L).alpha(1f).start();
+                }
+            }
+        });
+
         //Observers
         viewModel.getCallListLiveData().observe(getViewLifecycleOwner(), callList -> {
             hideLoading();
@@ -89,17 +101,6 @@ public class HomeFragment extends Fragment implements CustomOnBackPressedFragmen
         viewModel.getCallListError().observe(getViewLifecycleOwner(), throwable -> {
             hideLoading();
             failed(throwable);
-        });
-
-        binding.homeAppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
-            @Override
-            public void onStateChanged(AppBarLayout appBarLayout, State state) {
-                if (state == State.COLLAPSED) {
-                    binding.patientListSection.animate().setDuration(300L).alpha(0f).start();
-                } else {
-                    binding.patientListSection.animate().setDuration(300L).alpha(1f).start();
-                }
-            }
         });
     }
 
@@ -173,6 +174,7 @@ public class HomeFragment extends Fragment implements CustomOnBackPressedFragmen
     }
 
     private void navigateToRegistry() {
+        closeNavigationMenu();
         navController.navigate(R.id.registryFragment);
     }
 

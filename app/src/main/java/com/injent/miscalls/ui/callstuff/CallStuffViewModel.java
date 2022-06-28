@@ -2,13 +2,14 @@ package com.injent.miscalls.ui.callstuff;
 
 import android.content.Context;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.data.database.medcall.MedCall;
-import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.data.database.diagnosis.Diagnosis;
+import com.injent.miscalls.data.database.medcall.Geo;
+import com.injent.miscalls.data.database.medcall.MedCall;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.domain.repositories.CallRepository;
@@ -34,12 +35,13 @@ public class CallStuffViewModel extends ViewModel {
     private DiagnosisRepository diagnosisRepository;
     private PdfRepository pdfRepository;
 
+    private MutableLiveData<Fragment> previousFragment;
     private MutableLiveData<Integer> action = new MutableLiveData<>();
     private MutableLiveData<MedCall> selectedCall = new MutableLiveData<>();
-    private MutableLiveData<Registry> currentRegistry = new MutableLiveData<>();
+    private MutableLiveData<Registry> currentRegistry;
+    private MutableLiveData<Diagnosis> selectedDiagnosis;
     private MutableLiveData<Throwable> successOperation = new MutableLiveData<>();
     private LiveData<String> html;
-    private LiveData<List<Diagnosis>> searchDiagnoses;
     private MutableLiveData<List<AdditionalField>> additionalFields = new MutableLiveData<>();
 
     public void init() {
@@ -47,16 +49,22 @@ public class CallStuffViewModel extends ViewModel {
         callRepository = new CallRepository();
         diagnosisRepository = new DiagnosisRepository();
         pdfRepository = new PdfRepository();
-        searchDiagnoses = diagnosisRepository.getSearchDiagnoses();
         html = pdfRepository.getHtml();
+        selectedDiagnosis = new MutableLiveData<>();
+        currentRegistry = new MutableLiveData<>();
+        previousFragment = new MutableLiveData<>();
+    }
+
+    public LiveData<Diagnosis> getSelectedDiagnosis() {
+        return selectedDiagnosis;
+    }
+
+    public void setSelectedDiagnosis(Diagnosis diagnosis) {
+        selectedDiagnosis.setValue(diagnosis);
     }
 
     public LiveData<String> getHtmlLiveData() {
         return html;
-    }
-
-    public LiveData<List<Diagnosis>> getSearchDiagnoses() {
-        return searchDiagnoses;
     }
 
     public void loadHtml(Context context) {
@@ -69,6 +77,14 @@ public class CallStuffViewModel extends ViewModel {
 
     public LiveData<Registry> getCurrentRegistryLiveData() {
         return currentRegistry;
+    }
+
+    public LiveData<Fragment> getPreviousFragment() {
+        return previousFragment;
+    }
+
+    public void setPreviousFragment(Fragment fragment) {
+        previousFragment.setValue(fragment);
     }
 
     public void loadRegistry(Registry registry) {
@@ -245,22 +261,6 @@ public class CallStuffViewModel extends ViewModel {
         }, list -> additionalFields.postValue(list));
     }
 
-    @Override
-    protected void onCleared() {
-        selectedCall = new MutableLiveData<>();
-        successOperation = new MutableLiveData<>();
-        currentRegistry = new MutableLiveData<>();
-        html = new MutableLiveData<>();
-        searchDiagnoses = new MutableLiveData<>();
-        action = new MutableLiveData<>();
-        additionalFields = null;
-
-        diagnosisRepository.clear();
-        callRepository.clear();
-        registryRepository.clear();
-        super.onCleared();
-    }
-
     public Geo getGeo() {
         if (selectedCall.getValue() == null) {
             successOperation.setValue(new NullPointerException());
@@ -269,11 +269,31 @@ public class CallStuffViewModel extends ViewModel {
         return selectedCall.getValue().getGeo();
     }
 
-    public void openMap() {
-       action.setValue(1);
+    /**
+     * @param actionCode code from {@link CallStuffFragment}.
+     */
+    public void runAction(int actionCode) {
+       action.setValue(actionCode);
     }
 
     public LiveData<Integer> getActionLiveData() {
         return action;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        selectedCall = new MutableLiveData<>();
+        successOperation = new MutableLiveData<>();
+        currentRegistry = null;
+        html = null;
+        selectedDiagnosis = null;
+        action = new MutableLiveData<>();
+        additionalFields = null;
+        previousFragment = null;
+
+        diagnosisRepository.clear();
+        callRepository.clear();
+        registryRepository.clear();
     }
 }

@@ -10,6 +10,10 @@ import java.io.File;
 
 public class UserDataManager {
 
+    public static final int MODE_ON_ENTER = 0;
+    public static final int MODE_REGULAR_UPDATE = 1;
+    public static final int MODE_CUSTOM = 2;
+
     private final Resources res;
     private final SharedPreferences.Editor editor;
     private final SharedPreferences sp;
@@ -21,19 +25,19 @@ public class UserDataManager {
     }
 
     public void init() {
-        if (isInit()) return;
         File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         this
                 .setData(R.string.keyMode, 0)
                 .setData(R.string.keyAnonCall, false)
                 .setData(R.string.keyPdfFilePath, file.getAbsolutePath())
                 .setData(R.string.keyDbDate, "-")
+                .setData(R.string.keyInit, true)
                 .write();
-        editor.putBoolean(res.getString(R.string.keyInit), true);
     }
 
     public boolean isInit() {
-        return sp.getBoolean(res.getString(R.string.keyInit), false);
+        boolean b = sp.getBoolean(res.getString(R.string.keyInit), false);
+        return b;
     }
 
     /**

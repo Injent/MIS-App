@@ -44,8 +44,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                     break;
                 case 2: fragment = new DiagnosisFragment(viewModel);
                     break;
-                case 3: fragment = new MapsFragment();
-                    break;
                 default: throw new IllegalStateException();
             }
         } else if (viewType == ViewType.VIEW_PAGER_OVERVIEW) {

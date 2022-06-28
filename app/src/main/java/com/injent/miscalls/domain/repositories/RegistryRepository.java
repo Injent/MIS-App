@@ -16,7 +16,7 @@ import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
 import com.injent.miscalls.data.database.registry.RegistryDao;
 import com.injent.miscalls.network.JResponse;
-import com.injent.miscalls.util.NetworkManager;
+import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.network.dto.RegistryDto;
 import com.injent.miscalls.ui.inspection.AdditionalField;
 

@@ -10,30 +10,33 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.databinding.FragmentMapsBinding;
+import com.injent.miscalls.util.CustomOnBackPressedFragment;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements CustomOnBackPressedFragment {
 
     private FragmentMapsBinding binding;
-    private double latitude;
-    private double longitude;
+    private final double latitude;
+    private final double longitude;
+
+    public MapsFragment(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_maps,container,false);
-
-        if (getArguments() != null) {
-            latitude = getArguments().getDouble(getString(R.string.keyLatitude));
-            longitude = getArguments().getDouble(getString(R.string.keyLongitude));
-        }
         return binding.getRoot();
     }
 
@@ -61,7 +64,13 @@ public class MapsFragment extends Fragment {
     }
 
     private void setListeners() {
-        binding.mapBack.setOnClickListener(view -> getParentFragmentManager().popBackStack());
+        binding.mapBack.setOnClickListener(view -> onBackPressed());
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        getParentFragmentManager().popBackStack();
+        return false;
     }
 
     @Override

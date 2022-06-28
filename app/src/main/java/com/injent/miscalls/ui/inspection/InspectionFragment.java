@@ -59,7 +59,6 @@ public class InspectionFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void setInfo(MedCall medCall) {
         binding.fullnameText.setText(medCall.getFullName());
-
     }
 
     private void setupRecyclerView(Registry registry) {

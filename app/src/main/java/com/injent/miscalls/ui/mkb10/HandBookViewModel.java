@@ -1,6 +1,8 @@
 package com.injent.miscalls.ui.mkb10;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.injent.miscalls.data.database.diagnosis.Diagnosis;
@@ -10,17 +12,35 @@ import java.util.List;
 
 public class HandBookViewModel extends ViewModel {
 
-    private final DiagnosisRepository repository;
+    private DiagnosisRepository repository;
 
+    private MutableLiveData<Fragment> previousFragment = new MutableLiveData<>();
+    private MutableLiveData<Diagnosis> selectedDiagnosis = new MutableLiveData<>();
     private LiveData<List<Diagnosis>> diagnoses;
     private LiveData<List<Diagnosis>> searchDiagnoses;
     private LiveData<Throwable> error;
 
-    public HandBookViewModel() {
+    public void init() {
         repository = new DiagnosisRepository();
         diagnoses = repository.getDiagnoses();
         searchDiagnoses = repository.getSearchDiagnoses();
         error = repository.getError();
+    }
+
+    public LiveData<Fragment> getPreviousFragment() {
+        return previousFragment;
+    }
+
+    public void setPreviousFragment(Fragment fragment) {
+        previousFragment.setValue(fragment);
+    }
+
+    public LiveData<Diagnosis> getSelectedDiagnosis() {
+        return selectedDiagnosis;
+    }
+
+    public void setSelectedDiagnosis(Diagnosis diagnosis) {
+        selectedDiagnosis.setValue(diagnosis);
     }
 
     public LiveData<List<Diagnosis>> getDiagnoses() {
@@ -46,6 +66,7 @@ public class HandBookViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
+        selectedDiagnosis = null;
         diagnoses = null;
         searchDiagnoses = null;
         error = null;

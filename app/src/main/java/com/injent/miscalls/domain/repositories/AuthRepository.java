@@ -15,7 +15,7 @@ import com.injent.miscalls.data.database.user.UserDao;
 import com.injent.miscalls.network.AuthModelOut;
 import com.injent.miscalls.network.AuthorizationException;
 import com.injent.miscalls.network.JResponse;
-import com.injent.miscalls.util.NetworkManager;
+import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.network.dto.UserDto;
 
 import java.util.Date;

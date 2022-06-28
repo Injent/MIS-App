@@ -143,13 +143,11 @@
     <string name="treatmentHint">Напишите…</string>
     <string name="authHint">Авторизуйтесь чтобы начать работу</string>
     <string name="writingPatientsInspection">Заполнение общего осмотра пациента</string>
-    <string name="recDownloadHint"> Может потребоваться много места на устройстве</string>
-    <string name="recDownloadDesc">Скачайте доступные рекомендации по лечению и используйте их при
-        заполнении осмотра пациента</string>
     <string name="beforeExitSaveData">Перед закрытием нажмите «Сохранить изменения» если не хотите потерять данные</string>
     <string name="dataWontSave">Данные не сохранятся!</string>
     <string name="dataWillDeleteForever">Данные навсегда удалятся</string>
     <string name="commentary">Комментарий…</string>
+    <string name="requestWritePermission">Разрешите доступ к хранилищу, чтобы сохранять документы</string>
 
     <!-- Actions -->
     <string name="open">Открыть</string>
@@ -277,6 +275,7 @@
     <string name="keyRegistryId">REGISTRY_ID</string>
     <string name="keyLatitude">LATITUDE</string>
     <string name="keyLongitude">LONGITUDE</string>
+    <string name="keySelectMode">SELECT_MODE</string>
 
     <!-- Shared Preferences Keys -->
     <string name="keyPdfFilePath">PDF_FILE_PATH</string>

@@ -1,4 +1,4 @@
-package com.injent.miscalls.util;
+package com.injent.miscalls.network;
 
 import static com.injent.miscalls.network.MisAPI.BASE_URL;
 

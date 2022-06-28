@@ -1,7 +1,6 @@
 package com.injent.miscalls.ui.overview;
 
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,7 @@ public class OverviewFragment extends Fragment {
     }
 
     private void setListeners() {
-        viewModel.getSelectedRegistryLiveData().observe(getViewLifecycleOwner(), this::loadRegistryData);
+        viewModel.getSelectedRegistry().observe(getViewLifecycleOwner(), this::loadRegistryData);
         binding.overviewBack.setOnClickListener(view -> {
             if (binding.overviewViewPager.getCurrentItem() == 1) {
                 binding.overviewTitle.setText(R.string.patientInspected);
@@ -89,12 +88,12 @@ public class OverviewFragment extends Fragment {
     }
 
     private void navigateToRegistry(boolean deleteRegistry) {
-        if (!deleteRegistry || viewModel.getSelectedRegistryLiveData().getValue() == null) {
+        if (!deleteRegistry || viewModel.getSelectedRegistry().getValue() == null) {
             navController.navigate(R.id.registryFragment);
             return;
         }
         Bundle args = new Bundle();
-        args.putInt(getString(R.string.keyDeleteRegistry), viewModel.getSelectedRegistryLiveData().getValue().getId());
+        args.putInt(getString(R.string.keyDeleteRegistry), viewModel.getSelectedRegistry().getValue().getId());
         navController.navigate(R.id.registryFragment, args);
     }
 

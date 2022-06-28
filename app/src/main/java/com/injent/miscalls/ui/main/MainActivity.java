@@ -1,9 +1,7 @@
 package com.injent.miscalls.ui.main;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.injent.miscalls.App.getUserDataManager;
+import static com.injent.miscalls.data.UserDataManager.MODE_REGULAR_UPDATE;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -27,16 +22,15 @@ import androidx.work.WorkInfo;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.util.ForegroundServiceApp;
 import com.injent.miscalls.domain.repositories.AuthRepository;
 import com.injent.miscalls.util.CustomOnBackPressedFragment;
+import com.injent.miscalls.util.ForegroundServiceApp;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final int READ_EXTERNAL_STORAGE_REQUEST = 0x1045;
 
     private long backPressTime;
     private Toast exitToast;
@@ -65,10 +59,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.statusBar, getTheme()));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.statusBar, getTheme()));
 
+        // Init
         App.getInstance().initData();
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.init(getBaseContext());
+        startWork(App.getUserDataManager().getInt(R.string.keyMode));
+        // Find active session to login
+        viewModel.loginActiveSession();
+        setContentView(R.layout.activity_main);
+        setListeners();
+    }
+
+    private void setListeners() {
         viewModel.getActiveSession().observe(this, user -> {
             if (timer == null) {
                 timer = new Timer();
@@ -76,13 +81,6 @@ public class MainActivity extends AppCompatActivity {
             }
             clear();
         });
-        startWork();
-
-        viewModel.loginActiveSession();
-        setContentView(R.layout.activity_main);
-
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.statusBar, getTheme()));
-        getWindow().setStatusBarColor(getResources().getColor(R.color.statusBar, getTheme()));
     }
 
     @Override
@@ -90,23 +88,21 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         navController = Navigation.findNavController(this, R.id.container);
-        requestPermission();
     }
 
-    public void startWork() {
-        if (getUserDataManager().getInt(R.string.keyMode) != 1) {
+    public void startWork(int mode) {
+        if (mode != MODE_REGULAR_UPDATE) {
             cancelWork();
             return;
         }
+
+        viewModel.startWork();
 
         viewModel.getWorkInfo().observe(this, workInfo -> {
             WorkInfo.State state = workInfo.getState();
             Log.e("TAG", "startWork: " + state.name() );
             Intent service = new Intent(getApplicationContext(), ForegroundServiceApp.class);
             startForegroundService(service);
-//            if (state == WorkInfo.State.RUNNING || state == WorkInfo.State.ENQUEUED || state == WorkInfo.State.BLOCKED) {
-//
-//            }
         });
     }
 
@@ -144,7 +140,14 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.container);
         if (navHostFragment == null || navController.getCurrentDestination() == null) return;
 
-        Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+        List<Fragment> fragments = navHostFragment.getChildFragmentManager().getFragments();
+        Fragment fragment = null;
+        for (Fragment item : fragments) {
+            if (!item.isHidden()) {
+                fragment = item;
+                break;
+            }
+        }
         if (!(fragment instanceof CustomOnBackPressedFragment)) {
             super.onBackPressed();
         } else if (((CustomOnBackPressedFragment) fragment).onBackPressed()) {
@@ -163,46 +166,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 backPressTime = System.currentTimeMillis();
             }
-        }
-    }
-
-    private boolean haveStoragePermission() {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        if (!haveStoragePermission()) {
-            String[] permission = new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
-            ActivityCompat.requestPermissions(this, permission, READ_EXTERNAL_STORAGE_REQUEST);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case READ_EXTERNAL_STORAGE_REQUEST: {
-                if (grantResults.length != 0 && grantResults[0] == PERMISSION_GRANTED) {
-                    Toast.makeText(this, "SUCCESSFUL", Toast.LENGTH_LONG).show();
-                } else {
-                    boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-                            this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    );
-
-                    if (showRationale) {
-                        Toast.makeText(this, "SHOW NO ACCESS", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(this, "GO TO SETTINGS", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-            break;
         }
     }
 

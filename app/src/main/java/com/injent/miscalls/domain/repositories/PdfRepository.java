@@ -1,14 +1,11 @@
 package com.injent.miscalls.domain.repositories;
 
-import android.content.ContentValues;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.print.PDFPrint;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
@@ -19,11 +16,11 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 import com.injent.miscalls.data.database.registry.Objectively;
 import com.injent.miscalls.data.database.registry.Registry;
+import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
@@ -55,24 +52,64 @@ public class PdfRepository {
         return error;
     }
 
+    @SuppressLint("Range")
     public void generatePdf(Context context, String html, String fileName, PDFPrint.OnPDFPrintListener pdfListener, FileManageListener fileListener) throws IOException {
-        File file;
+        File file = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            final String appFolder = Environment.DIRECTORY_DOCUMENTS + "/" + context.getString(R.string.app_name) + "/";
+//            file = FileManager.getInstance().createTempFile(context, "pdf", false);
+//
+//            Uri contentUri = MediaStore.Files.getContentUri("external");
+//            String selection = MediaStore.MediaColumns.RELATIVE_PATH + "=?";
+//            String[] selectionArgs = new String[]{appFolder};
+//
+//            Cursor cursor = context.getContentResolver().query(contentUri, null, selection, selectionArgs, null);
+//
+//            Uri uri = null;
+//
+//            if (cursor.getCount() == 0) {
+//                Toast.makeText(context, "No file found in \"" + appFolder + "\"", Toast.LENGTH_LONG).show();
+//            } else {
+//                while (cursor.moveToNext()) {
+//                    fileName = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
+//
+//                    if (fileName.equals(fileName + ".pdf")) {
+//                        long id = cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+//                        uri = ContentUris.withAppendedId(contentUri, id);
+//                        break;
+//                    }
+//                }
+//
+//                context.getContentResolver().
+//
+//                if (uri == null) {
+//                    Toast.makeText(context, "\"" + fileName + ".pdf\" not found", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    try {
+//                        OutputStream outputStream = context.getContentResolver().openOutputStream(uri, "rwt");
+//                        outputStream.write("This is overwritten data".getBytes());
+//                        outputStream.close();
+//
+//                        Toast.makeText(context, "File written successfully", Toast.LENGTH_SHORT).show();
+//                    } catch (IOException e) {
+//                        Toast.makeText(context, "Fail to write file", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
 
-            ContentValues values = new ContentValues();
-
-            values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);       //file name
-            values.put(MediaStore.MediaColumns.MIME_TYPE, "text/html");        //file extension, will automatically add to file
-            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/" + context.getString(R.string.app_name) + "/");     //end "/" is not mandatory
-
-            Uri uri = context.getContentResolver().insert(MediaStore.Files.getContentUri("external"), values);      //important!
-
-            OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
-            outputStream.write("This is menu category data.".getBytes());
-            outputStream.close();
+//            ContentValues values = new ContentValues();
+//
+//            values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+//            values.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+//            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/" + context.getString(R.string.app_name) + "/");
+//
+//            Uri uri = context.getContentResolver().insert(MediaStore.Files.getContentUri("external"), values);
+//
+//            OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
+//            outputStream.write("".getBytes());
+//            outputStream.close();
 
             Toast.makeText(context, "OPERATION DONE",Toast.LENGTH_LONG).show();
-            Log.e("TAG", "generatePdf: "  + uri.toString());
         } else {
             String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
             file = new File(filePath
@@ -89,7 +126,7 @@ public class PdfRepository {
                 }
             }
         }
-        //PDFUtil.generatePDFFromHTML(context, file, html, pdfListener);
+        PDFUtil.generatePDFFromHTML(context, file, html, pdfListener);
     }
 
     public void loadFetchedHtml(Context context, Registry registry) {

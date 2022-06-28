@@ -13,7 +13,7 @@ import com.injent.miscalls.domain.repositories.CallRepository;
 public class AppWorker extends Worker {
 
     private Context context;
-    public static final String TAG =  "callSupplier";
+    public static final String TAG =  "BACKGROUND_WORKER";
 
     public AppWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
@@ -23,13 +23,8 @@ public class AppWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.e(TAG, "doWork: " + "WORKING" );
-        try {
-            Thread.sleep(5000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         downloadDatabase();
+        context = null;
         return Result.success();
     }
 

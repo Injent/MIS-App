@@ -1,7 +1,5 @@
 package com.injent.miscalls.ui.mkb10;
 
-import static com.injent.miscalls.ui.diagnosis.DiagnosisFragment.SEARCH_DELAY;
-
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
@@ -15,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,8 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentHandbookBinding;
-import com.injent.miscalls.util.CustomOnBackPressedFragment;
 import com.injent.miscalls.ui.adapters.DiagnosisAdapter;
+import com.injent.miscalls.ui.callstuff.CallStuffFragment;
+import com.injent.miscalls.ui.main.MainActivity;
+import com.injent.miscalls.util.CustomOnBackPressedFragment;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -33,20 +32,24 @@ import java.util.Objects;
 public class HandBookFragment extends Fragment implements CustomOnBackPressedFragment {
 
     public static final int DIAGNOSIS_SEARCH_LIMIT = 20;
+    public static final long SEARCH_DELAY = 500;
 
     private HandBookViewModel viewModel;
     private FragmentHandbookBinding binding;
     private DiagnosisAdapter adapter;
     private NavController navController;
-    private FragmentManager fragmentManager;
     private int diagnosisId;
+    private boolean selectMode;
+
+    public HandBookFragment() {
+        // Empty body
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (getArguments() != null) {
-            diagnosisId = getArguments().getInt(getString(R.string.keyDiagnosisId));
-        } else {
-            diagnosisId = -1;
+            selectMode = getArguments().getBoolean(getString(R.string.keySelectMode), false);
+            diagnosisId = getArguments().getInt(getString(R.string.keyDiagnosisId), -1);
         }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_handbook, container, false);
         return binding.getRoot();
@@ -56,9 +59,10 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(HandBookViewModel.class);
         navController = Navigation.findNavController(requireView());
-        fragmentManager = requireActivity().getSupportFragmentManager();
+        viewModel = new ViewModelProvider(requireActivity()).get(HandBookViewModel.class);
+        if (!selectMode)
+            viewModel.init();
 
         setListeners();
         setupHandbookRecyclerView();
@@ -77,21 +81,30 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
         adapter = new DiagnosisAdapter(diagnosis -> {
             if (!diagnosis.isNotParent())
                 nextPage(diagnosis.getId());
+            else {
+                if (selectMode) {
+                    viewModel.setSelectedDiagnosis(diagnosis);
+                }
+            }
         });
         binding.handbookRecycler.setAdapter(adapter);
     }
 
     @Override
     public boolean onBackPressed() {
-        if (diagnosisId == -1) {
+        if (diagnosisId != -1) return true;
+        if (selectMode) {
+            getParentFragmentManager().popBackStack();
+        } else {
             viewModel.onCleared();
+            navController.navigate(R.id.homeFragment);
         }
-        return true;
+        return false;
     }
 
     private void setListeners() {
         // Listeners
-        binding.handbookBack.setOnClickListener(v -> fragmentManager.popBackStack());
+        binding.handbookBack.setOnClickListener(v -> ((MainActivity) requireActivity()).onBackPressed());
         binding.handbookSearch.setOnClickListener(v -> showSearch());
         binding.handbookSearchCancel.setOnClickListener(v -> {
             binding.handbookSearchText.setText("");
@@ -155,16 +168,21 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
     }
 
     private void nextPage(int id) {
-        Bundle args = new Bundle();
-        args.putInt(getString(R.string.keyDiagnosisId), id);
-        navController.navigate(R.id.handBookFragment, args);
+//        Bundle args = new Bundle();
+//        args.putInt(getString(R.string.keyDiagnosisId), id);
+//        args.putBoolean(getString(R.string.keySelectMode), selectMode);
+//        getParentFragmentManager().beginTransaction()
+//                .replace()
+    }
+
+    private void showCallStuffFragment() {
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         adapter = null;
-        fragmentManager = null;
         navController = null;
         binding = null;
     }

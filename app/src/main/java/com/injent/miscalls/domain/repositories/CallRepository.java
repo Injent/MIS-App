@@ -3,7 +3,6 @@ package com.injent.miscalls.domain.repositories;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.media.DeniedByServerException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -16,7 +15,7 @@ import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.data.database.medcall.GeoDao;
 import com.injent.miscalls.data.database.user.Token;
 import com.injent.miscalls.network.JResponse;
-import com.injent.miscalls.util.NetworkManager;
+import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.network.dto.CallDto;
 import com.injent.miscalls.network.dto.TokenDto;
 
@@ -96,7 +95,7 @@ public class CallRepository {
         loadCalls.thenAcceptAsync(medCalls -> calls.postValue(medCalls));
     }
 
-    public void insertCallsWithDropTable(Function<Throwable,Void> ex, List<MedCall> list) {
+    public void insertCallsWithDropTable(List<MedCall> list) {
         insertCallsWithDropTable = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
                     for (MedCall item : list) {
@@ -109,7 +108,11 @@ public class CallRepository {
                     }
                     return null;
                 })
-                .exceptionally(ex);
+                .exceptionally(throwable -> {
+                    error.postValue(throwable);
+                    throwable.printStackTrace();
+                    return null;
+                });
     }
 
     public void updateCall(Function<Throwable, MedCall> ex, MedCall medCall) {
@@ -142,11 +145,7 @@ public class CallRepository {
                         error.postValue(new ArrayStoreException());
                         return;
                     }
-                    insertCallsWithDropTable(throwable -> {
-                        error.postValue(throwable);
-                        throwable.printStackTrace();
-                        return null;
-                    }, callList);
+                    insertCallsWithDropTable(callList);
                     calls.postValue(callList);
                 } else {
                     error.postValue(new DeniedByServerException("Wrong response"));
@@ -176,12 +175,8 @@ public class CallRepository {
                     if (callList.isEmpty()) {
                         return;
                     }
-                    insertCallsWithDropTable(throwable -> {
-                        throwable.printStackTrace();
-                        return null;
-                    }, callList);
+                    insertCallsWithDropTable(callList);
                 }
-                Log.e("TAG", "onResponse: " + "All WORKS!" );
         }
 
             @Override

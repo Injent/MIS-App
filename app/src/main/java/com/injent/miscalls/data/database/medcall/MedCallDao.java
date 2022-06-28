@@ -21,7 +21,7 @@ public interface MedCallDao {
     @Query("SELECT * FROM calls WHERE snils =:snils LIMIT 1")
     MedCall getBySnils(long snils);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertCall(MedCall medCall);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

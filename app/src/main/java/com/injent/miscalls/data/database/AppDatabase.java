@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.injent.miscalls.data.database.medcall.MedCall;
@@ -51,7 +52,6 @@ import java.util.concurrent.Executors;
         exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-
     public static final String DB_NAME = "database.db";
     private static final String MKB10_FILE_PATH = "databases/mkb10.csv";
     private static final String RECOMMENDATIONS_FILE_PATH = "databases/recommendations.csv";
@@ -62,6 +62,13 @@ public abstract class AppDatabase extends RoomDatabase {
     private static RegistryDao registryDao;
     private static DiagnosisDao diagnosisDao;
     private static GeoDao geoDao;
+
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE calls ADD COLUMN birthday INTEGER DEFAULT 0 NOT NULL");
+        }
+    };
 
     public static UserDao getUserDao() {
         return userDao;

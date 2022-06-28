@@ -1,6 +1,7 @@
 package com.injent.miscalls.ui.pdfviewer;
 
-import android.app.AlertDialog;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.print.PDFPrint;
 import android.view.LayoutInflater;
@@ -8,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentPdfViewerBinding;
@@ -25,6 +29,18 @@ public class PdfViewerFragment extends Fragment {
 
     private OverviewViewModel viewModel;
     private FragmentPdfViewerBinding binding;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+               if (!Boolean.TRUE.equals(isGranted)) {
+                   new AlertDialog.Builder(requireContext())
+                           .setMessage(R.string.requestWritePermission)
+                           .setPositiveButton(R.string.ok, (dialogInterface, i) ->
+                                   this.requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                           .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                           .show();
+               }
+            });
 
     public PdfViewerFragment(ViewModel viewModel) {
         this.viewModel = (OverviewViewModel) viewModel;
@@ -42,47 +58,49 @@ public class PdfViewerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.pdfWebView.setInitialScale(150);
+        viewModel.loadHtml(requireContext());
+        setListeners();
+    }
 
-        viewModel.getHtmlLiveData().observe(getViewLifecycleOwner(), s -> {
+    private void setListeners() {
+        // Listeners
+        binding.pdfViewerSave.setOnClickListener(v -> generatePdfFile());
+
+        // Observers
+        viewModel.getHtml().observe(getViewLifecycleOwner(), s -> {
             binding.pdfWebView.loadDataWithBaseURL(null, s, "text/html", "utf-8", null);
             binding.pdfPreviewLoad.setVisibility(View.GONE);
             binding.pdfViewerSave.setEnabled(true);
         });
 
-        viewModel.getErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
+        viewModel.getRegistryError().observe(getViewLifecycleOwner(), throwable -> {
             binding.pdfPreviewLoad.setVisibility(View.INVISIBLE);
             Toast.makeText(requireContext(), R.string.unknownError, Toast.LENGTH_LONG).show();
         });
+    }
 
-        viewModel.loadHtml(requireContext());
+    private boolean havePermission() {
+        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+    }
 
-        binding.pdfViewerSave.setOnClickListener(v -> viewModel.generatePdf(requireContext(), new PDFPrint.OnPDFPrintListener() {
-            @Override
-            public void onSuccess(File file) {
-                String toastText = getString(R.string.fileSaveByPath) + file.getPath();
-                Toast.makeText(requireContext(), toastText, Toast.LENGTH_LONG).show();
-            }
+    private void generatePdfFile() {
+        if (havePermission()) {
+            viewModel.generatePdf(requireContext(), new PDFPrint.OnPDFPrintListener() {
+                @Override
+                public void onSuccess(File file) {
+                    String toastText = getString(R.string.fileSaveByPath) + file.getPath();
+                    Toast.makeText(requireContext(), toastText, Toast.LENGTH_LONG).show();
+                }
 
-            @Override
-            public void onError(Exception exception) {
-                Toast.makeText(requireContext(), R.string.errorOfDocumentGeneration, Toast.LENGTH_SHORT).show();
-            }
-        }, file -> {
-            final boolean[] replace = new boolean[1];
-
-            new AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.fileAlreadyExists)
-                    .setMessage(R.string.replaceFile)
-                    .setPositiveButton(R.string.yes, (dialog, b) -> {
-                        replace[0] = true;
-                        String toastText = getString(R.string.fileSaveByPath) + file.getPath();
-                        Toast.makeText(requireContext(), toastText, Toast.LENGTH_LONG).show();
-                    })
-                    .setNegativeButton(R.string.no, (dialog, b) -> dialog.dismiss())
-                    .create()
-                    .show();
-            return replace[0];
-        }));
+                @Override
+                public void onError(Exception exception) {
+                    Toast.makeText(requireContext(), R.string.errorOfDocumentGeneration, Toast.LENGTH_SHORT).show();
+                }
+            }, file -> true);
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
     }
 
     @Override

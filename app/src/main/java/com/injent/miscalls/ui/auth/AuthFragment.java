@@ -1,17 +1,13 @@
 package com.injent.miscalls.ui.auth;
 
-import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.biometric.BiometricPrompt;
@@ -41,19 +37,8 @@ public class AuthFragment extends Fragment implements CustomOnBackPressedFragmen
     private BiometricPrompt.PromptInfo promptInfo;
     private boolean downloadDb = false;
     private boolean moveToSettings;
-    private final ActivityResultLauncher<String[]> activityResultLauncher;
 
     public AuthFragment() {
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-            boolean areAllGranted = true;
-            for(Boolean b : result.values()) {
-                areAllGranted = areAllGranted && b;
-            }
-
-            if(!areAllGranted) {
-                showRequestPermissionDialog();
-            }
-        });
     }
 
     @Nullable
@@ -86,8 +71,6 @@ public class AuthFragment extends Fragment implements CustomOnBackPressedFragmen
 
         binding.copyrightText.setText(getString(R.string.app_name));
         binding.version.setText(BuildConfig.VERSION_NAME);
-
-        activityResultLauncher.launch(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
     }
 
     @Override
@@ -192,17 +175,6 @@ public class AuthFragment extends Fragment implements CustomOnBackPressedFragmen
                 .setTitle(getString(R.string.biometricAuth))
                 .setNegativeButtonText(getString(R.string.cancel))
                 .build();
-    }
-
-    private void showRequestPermissionDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.allow)
-                .setPositiveButton(R.string.ok, (dialog, b) -> activityResultLauncher.launch(new String[]{
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                }))
-                .setNegativeButton(R.string.cancel, (dialog, b) -> dialog.dismiss())
-                .create();
-        alertDialog.show();
     }
 
     @Override

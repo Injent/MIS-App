@@ -1,5 +1,7 @@
 package com.injent.miscalls.ui.callinfo;
 
+import static com.injent.miscalls.ui.callstuff.CallStuffFragment.CODE_OPEN_MAP;
+
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -57,7 +59,7 @@ public class CallInfoFragment extends Fragment {
         viewModel.getCallLiveData().observe(getViewLifecycleOwner(), this::setInfo);
 
         // Listeners
-        binding.mapButton.setOnClickListener(view -> viewModel.openMap());
+        binding.mapButton.setOnClickListener(view -> viewModel.runAction(CODE_OPEN_MAP));
     }
 
     private void setupRecyclerViewInfo() {

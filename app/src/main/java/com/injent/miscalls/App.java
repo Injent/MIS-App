@@ -1,7 +1,5 @@
 package com.injent.miscalls;
 
-import static android.util.Log.VERBOSE;
-
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 public class App extends Application {
 
@@ -64,7 +61,7 @@ public class App extends Application {
         return userDataManager;
     }
 
-    static void setUserSettings(UserDataManager userDataManager) {
+    static void setUserDataManager(UserDataManager userDataManager) {
         App.userDataManager = userDataManager;
     }
 
@@ -100,9 +97,9 @@ public class App extends Application {
     public void initData() {
         Configuration.getInstance().load(getApplicationContext(), getSharedPreferences());
         setEncryptedUserDataManager(new UserDataManager(getResources(), getEncryptedPreferences()));
-        setUserSettings(new UserDataManager(getResources(), getSharedPreferences()));
+        setUserDataManager(new UserDataManager(getResources(), getSharedPreferences()));
 
-        if (!getSharedPreferences().contains(getString(R.string.keyInit))) {
+        if (!getUserDataManager().isInit()) {
             getUserDataManager().init();
 
             SecureRandom random = new SecureRandom();
@@ -113,7 +110,6 @@ public class App extends Application {
                     .setData(R.string.keyAuthed, false)
                     .setData(R.string.keyDb, passPhrase)
                     .write();
-            Toast.makeText(getApplicationContext(), passPhrase, Toast.LENGTH_LONG).show();
         }
 
         AppDatabase.getInstance(
