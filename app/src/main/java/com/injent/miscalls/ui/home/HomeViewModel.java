@@ -5,11 +5,11 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.data.database.medcall.MedCall;
-import com.injent.miscalls.data.database.user.Token;
+import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.domain.repositories.AuthRepository;
-import com.injent.miscalls.App;
 import com.injent.miscalls.domain.repositories.CallRepository;
 
 import java.util.List;
@@ -47,8 +47,8 @@ public class HomeViewModel extends ViewModel {
         authRepository.updateUser(App.getUser());
     }
 
-    public void downloadCallsDb(Context context, Token token) {
-        callRepository.downloadCallList(context, token);
+    public void downloadCallsDb(Context context, User user) {
+        callRepository.downloadCallList(context, user);
     }
 
     @Override

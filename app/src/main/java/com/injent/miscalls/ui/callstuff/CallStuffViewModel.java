@@ -231,7 +231,9 @@ public class CallStuffViewModel extends ViewModel {
             break;
             case Field.SURVEYS: currentRegistry.getValue().setSurveys(s);
             break;
-            case Field.MEDICAL_THERAPY: currentRegistry.getValue().setMedicalTherapy(s);
+            case Field.MEDICATION_THERAPY: currentRegistry.getValue().setMedicationTherapy(s);
+            break;
+            case Field.RECOMMENDATIONS: currentRegistry.getValue().setRecommendation(s);
             break;
             default: throw new IllegalStateException("Invalid field index: " + index);
         }

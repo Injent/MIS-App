@@ -13,6 +13,7 @@
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/check_box.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/diagnosis_background.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/diagnosis_focused_effect.xml" value="0.3828125" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/diagnosis_list_divider.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/divider_layer.xml" value="0.3402777777777778" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/edit_field.xml" value="0.3828125" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/drawable/edit_field_name.xml" value="0.3828125" />
@@ -101,6 +102,7 @@
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/call_list_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/diagnosis_item.xml" value="0.5" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/diagnosis_item_select.xml" value="0.22" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/dialog_pdf_preview.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/field_item.xml" value="0.32592592592592595" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_auth.xml" value="0.67" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_call_info.xml" value="0.3296875" />
@@ -128,6 +130,8 @@
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_saved_protocols.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_sign_in.xml" value="0.32592592592592595" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_test.xml" value="0.35260416666666666" />
+        <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/fragment_treatment.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/hand_book_fragment.xml" value="0.1691919191919192" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_base_field.xml" value="0.36666666666666664" />
         <entry key="..\:/Programs/AndroidProjects/MIS-App/app/src/main/res/layout/item_call_info.xml" value="0.36666666666666664" />

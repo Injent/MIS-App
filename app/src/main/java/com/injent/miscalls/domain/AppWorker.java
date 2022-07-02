@@ -1,4 +1,4 @@
-package com.injent.miscalls.util;
+package com.injent.miscalls.domain;
 
 import android.content.Context;
 import android.util.Log;
@@ -29,6 +29,6 @@ public class AppWorker extends Worker {
     }
 
     public void downloadDatabase() {
-        new CallRepository().downloadCallListInBackground(context, new Token("0",0,2));
+        new CallRepository().downloadCallListInBackground(context);
     }
 }

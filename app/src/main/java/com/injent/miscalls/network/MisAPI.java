@@ -8,7 +8,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Every method returns {@link JResponse} this object contains certain data received from the server
@@ -36,13 +38,11 @@ public interface MisAPI {
     @POST("user/auth")
     Call<JResponse> auth(@Body AuthModelOut authModel);
 
-    /**
-     * @param token you only need to specify the value of the token in the object to check it's
-     * validation, the rest is irrelevant
-     * @return {@link JResponse}
-     */
-    @POST("token/expiration")
-    Call<JResponse> checkTokenExpiration(TokenDto token);
+    @GET("calls/add")
+    Call<JResponse> addPatient(@Query("name") String name, @Query("userId") int userId);
+
+    @GET("calls/delete")
+    Call<JResponse> deletePatient(@Query("id") int id);
 
     @POST("registry/upload")
     Call<JResponse> uploadDocument(@Body RegistryDto registry);

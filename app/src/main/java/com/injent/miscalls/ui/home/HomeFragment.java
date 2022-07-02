@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.home;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +25,11 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.injent.miscalls.App;
 import com.injent.miscalls.R;
-import com.injent.miscalls.util.FailedDownloadDb;
 import com.injent.miscalls.databinding.FragmentHomeBinding;
+import com.injent.miscalls.ui.adapters.CallAdapter;
 import com.injent.miscalls.util.AppBarStateChangeListener;
 import com.injent.miscalls.util.CustomOnBackPressedFragment;
-import com.injent.miscalls.ui.adapters.CallAdapter;
+import com.injent.miscalls.util.FailedDownloadDb;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -124,7 +123,7 @@ public class HomeFragment extends Fragment implements CustomOnBackPressedFragmen
     @SuppressLint("SetTextI18n")
     public void displayDbDate() {
         Date date = App.getUser().getDbUpdateTime();
-        String dateString = new SimpleDateFormat("dd.MM.yyyy / hh:mm", Locale.getDefault()).format(date);
+        String dateString = new SimpleDateFormat("dd.MM.yyyy / HH:mm", Locale.getDefault()).format(date);
         binding.dbDateUpdateText.setText(String.format(getString(R.string.updated), dateString));
     }
 
@@ -158,6 +157,11 @@ public class HomeFragment extends Fragment implements CustomOnBackPressedFragmen
         navController.navigate(R.id.callStuffFragment, args);
     }
 
+    private void navigateToTest() {
+        closeNavigationMenu();
+        navController.navigate(R.id.testFragment);
+    }
+
     private void navigateToSettings() {
         closeNavigationMenu();
         navController.navigate(R.id.settingsFragment);
@@ -165,7 +169,7 @@ public class HomeFragment extends Fragment implements CustomOnBackPressedFragmen
 
     private void downloadNewDb() {
         showLoading();
-        viewModel.downloadCallsDb(requireContext(), App.getUser().getToken());
+        viewModel.downloadCallsDb(requireContext(), App.getUser());
     }
 
     private void navigateToAuth() {

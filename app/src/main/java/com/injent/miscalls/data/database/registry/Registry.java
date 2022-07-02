@@ -38,7 +38,7 @@ public class Registry {
     @ColumnInfo(name = "surveys")
     private String surveys;
     @ColumnInfo(name = "medical_therapy")
-    private String medicalTherapy;
+    private String medicationTherapy;
     @ColumnInfo(name = "user_id")
     private int userId;
     @Ignore
@@ -160,15 +160,15 @@ public class Registry {
         this.callId = callId;
     }
 
-    public String getMedicalTherapy() {
-        if (medicalTherapy == null) {
+    public String getMedicationTherapy() {
+        if (medicationTherapy == null) {
             return "";
         }
-        return medicalTherapy;
+        return medicationTherapy;
     }
 
-    public void setMedicalTherapy(String medicalTherapy) {
-        this.medicalTherapy = medicalTherapy;
+    public void setMedicationTherapy(String medicalTherapy) {
+        this.medicationTherapy = medicalTherapy;
     }
 
     public int getUserId() {

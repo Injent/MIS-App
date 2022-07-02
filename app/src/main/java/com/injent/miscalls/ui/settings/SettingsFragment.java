@@ -2,7 +2,11 @@ package com.injent.miscalls.ui.settings;
 
 import static com.injent.miscalls.data.UserDataManager.MODE_REGULAR_UPDATE;
 
+import android.app.UiModeManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +29,7 @@ import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentSettingsBinding;
 import com.injent.miscalls.util.ViewType;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -85,8 +90,15 @@ public class SettingsFragment extends Fragment {
                 App.getUserDataManager().setData(R.string.keyAnonCall, state).write();
             }
         }));
-        list.add(new ButtonLayout(R.drawable.ic_folder, R.color.icFolder, R.string.openDocFolder, R.string.open, view -> ((MainActivity) requireContext()).openExplorer(App.getUserDataManager().getString(R.string.keyPdfFilePath))));
-        list.add(new SectionLayout(R.string.interfaceName));
+        list.add(new ButtonLayout(R.drawable.ic_folder, R.color.icFolder, R.string.openDocFolder, R.string.open,
+                view -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+                    } else {
+                        final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + File.separator + getString(R.string.app_name);
+                        ((MainActivity) requireContext()).openExplorer(path);
+                    }
+                }));
         settingAdapter.submitList(list);
     }
 

@@ -27,6 +27,7 @@
     <color name="sectionColor">#3f3f3f</color>
     <color name="transparentDarkGlass">#34000000</color>
     <color name="transparentLightGlass">#34FFFFFF</color>
+    <color name="darkConsole">#077063</color>
 
     <color name="gradientDarkGreen">#17a366</color>
     <color name="gradientLightGreen">#11bc9c</color>
@@ -37,6 +38,7 @@
     <color name="uiGray">#f2f2f2</color>
     <color name="icLocation">#ED2828</color>
     <color name="uiLightGray">#ecedf0</color>
+    <color name="icMode">#0A306E</color>
 
     <color name="sectionButtonGradientStart">#89daff</color>
     <color name="sectionButtonGradientEnd">#449cfc</color>

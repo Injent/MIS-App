@@ -8,12 +8,15 @@
     <string name="settings">Настройки</string>
     <string name="overview">Обзор</string>
     <string name="document">Документ</string>
+    <string name="treatment">Лечение</string>
     <string name="patientInspected">Пациент осмотрен</string>
+    <string name="patientControl">Управление</string>
 
     <!-- Sections -->
     <string name="openDocFolder">Папка с документами</string>
     <string name="reason">Повод обращения</string>
     <string name="complaints">Жалобы</string>
+    <string name="recommendations">Рекомендации</string>
     <string name="anamnesis">Анамнез</string>
     <string name="allergicAnamnesis">Аллергологический анамнез</string>
     <string name="objectively">Объективно</string>
@@ -133,6 +136,7 @@
     <string name="inspection">Общий осмотр</string>
     <string name="inspectionShort">Осмотр</string>
     <string name="anonCall">Анонимность звонков</string>
+    <string name="test">Для разработчиков</string>
 
     <!-- Hints -->
     <string name="patientsComplaints">Жалобы со слов пациента</string>
@@ -148,6 +152,8 @@
     <string name="dataWillDeleteForever">Данные навсегда удалятся</string>
     <string name="commentary">Комментарий…</string>
     <string name="requestWritePermission">Разрешите доступ к хранилищу, чтобы сохранять документы</string>
+    <string name="testAddPatient">Чтобы добавить пациента введите его имя, остальные данные будут введены поумолчанию</string>
+    <string name="testPatientDelete">Для удаления пациента, введите его идентификатор</string>
 
     <!-- Actions -->
     <string name="open">Открыть</string>
@@ -169,6 +175,7 @@
     <string name="addDiagnosis">Добавить диагноз</string>
     <string name="saveDocument">Сохранить документ</string>
     <string name="selectExtraField">Выберите тип дополнительного поля</string>
+    <string name="darkMode">Ночной режим</string>
 
     <!-- Miscellaneous -->
     <string name="managerName">Менеджер списка</string>
@@ -193,7 +200,7 @@
     <string name="textCopied">Текст скопирован</string>
     <string name="undoDeleting">Отменить</string>
     <string name="exitFromEditing">Прекратить редактирование?</string>
-    <string name="pdfGeneration">Генерация PDF документа…</string>
+    <string name="pdfCreated">Файл создан</string>
     <string name="pdfGenerationFailed">Ошибка генерации PDF документа</string>
     <string name="diagnoseDeleted">Диагноз удален</string>
     <string name="diagnosisAlreadyAdded">Этот диагноз уже записан</string>

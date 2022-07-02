@@ -13,6 +13,7 @@ import com.injent.miscalls.ui.inspection.InspectionFragment;
 import com.injent.miscalls.ui.maps.MapsFragment;
 import com.injent.miscalls.ui.overview.OverviewFragment;
 import com.injent.miscalls.ui.pdfviewer.PdfViewerFragment;
+import com.injent.miscalls.ui.treatment.TreatmentFragment;
 import com.injent.miscalls.util.ViewType;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
@@ -43,6 +44,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                 case 1: fragment = new InspectionFragment(viewModel);
                     break;
                 case 2: fragment = new DiagnosisFragment(viewModel);
+                    break;
+                case 3: fragment = new TreatmentFragment(viewModel);
                     break;
                 default: throw new IllegalStateException();
             }

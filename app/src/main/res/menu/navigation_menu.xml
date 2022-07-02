@@ -18,6 +18,9 @@
             <item android:id="@+id/settingsMenu"
                 android:icon="@drawable/ic_settings"
                 android:title="@string/settings" />
+<!--            <item android:id="@+id/test"-->
+<!--                android:icon="@drawable/ic_test"-->
+<!--                android:title="@string/test" />-->
         </menu>
     </item>
 

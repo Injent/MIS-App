@@ -46,7 +46,7 @@ public class HandBookViewModel extends ViewModel {
     }
 
     public void searchDiagnoses(String s, int limit) {
-        repository.searchDiagnoses(s, limit);
+        repository.searchNotParentDiagnoses(s, limit);
     }
 
     @Override

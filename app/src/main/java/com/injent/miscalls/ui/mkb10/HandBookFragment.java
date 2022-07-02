@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
 
     private void setupHandbookRecyclerView() {
         DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.list_divider, requireContext().getTheme())));
+        divider.setDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.diagnosis_list_divider, requireContext().getTheme())));
         binding.handbookRecycler.addItemDecoration(divider);
         binding.handbookRecycler.setOverScrollMode(View.OVER_SCROLL_NEVER);
         binding.handbookRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -97,12 +98,15 @@ public class HandBookFragment extends Fragment implements CustomOnBackPressedFra
 
     @Override
     public boolean onBackPressed() {
-        if (diagnosisId != -1) return true;
-        if (selectMode) {
+        if (diagnosisId != -1) {
             getParentFragmentManager().popBackStack();
         } else {
-            viewModel.onCleared();
-            navController.navigate(R.id.homeFragment);
+            if (selectMode) {
+                getParentFragmentManager().popBackStack();
+            } else {
+                viewModel.onCleared();
+                navController.navigate(R.id.homeFragment);
+            }
         }
         return false;
     }

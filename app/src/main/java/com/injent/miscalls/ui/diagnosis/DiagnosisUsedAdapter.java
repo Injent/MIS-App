@@ -78,11 +78,10 @@ public class DiagnosisUsedAdapter extends ListAdapter<Diagnosis, DiagnosisUsedAd
             this.listener = listener;
         }
 
+        @SuppressLint("SetTextI18n")
         public void setData(Diagnosis diagnosis) {
-            binding.usedDiagnosisText.setText(diagnosis.getName());
-            binding.deleteDiagnosis.setOnClickListener(view -> {
-                listener.onDelete(diagnosis);
-            });
+            binding.usedDiagnosisText.setText(diagnosis.getCode() + " " + diagnosis.getName());
+            binding.deleteDiagnosis.setOnClickListener(view -> listener.onDelete(diagnosis));
         }
 
         public void setAddActionItem() {

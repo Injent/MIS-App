@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +25,7 @@ import com.injent.miscalls.App;
 import com.injent.miscalls.R;
 import com.injent.miscalls.domain.repositories.AuthRepository;
 import com.injent.miscalls.util.CustomOnBackPressedFragment;
-import com.injent.miscalls.util.ForegroundServiceApp;
+import com.injent.miscalls.domain.ForegroundServiceApp;
 
 import java.util.List;
 import java.util.Timer;
@@ -114,12 +115,16 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("QueryPermissionsNeeded")
     public void openExplorer(String path) {
-        Uri selectedUri = Uri.parse(path);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(selectedUri, "resource/folder");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-            startActivity(intent);
+        } else {
+            Uri selectedUri = Uri.parse(path);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(selectedUri, "resource/folder");
+
+            if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+                startActivity(intent);
+            }
         }
     }
 
@@ -148,24 +153,22 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+        int currentDestinationId = navController.getCurrentDestination().getId();
         if (!(fragment instanceof CustomOnBackPressedFragment)) {
             super.onBackPressed();
         } else if (((CustomOnBackPressedFragment) fragment).onBackPressed()) {
             super.onBackPressed();
-        } else {
+        } else if (currentDestinationId == R.id.homeFragment || currentDestinationId == R.id.authFragment) {
             // Confirm exit toast
-            int currentDestinationId = navController.getCurrentDestination().getId();
-            if (currentDestinationId == R.id.homeFragment || currentDestinationId == R.id.authFragment) {
-                if (backPressTime + 2000 > System.currentTimeMillis()) {
-                    exitToast.cancel();
-                    closeApp();
-                    return;
-                } else {
-                    exitToast = Toast.makeText(getBaseContext(), R.string.exit, Toast.LENGTH_SHORT);
-                    exitToast.show();
-                }
-                backPressTime = System.currentTimeMillis();
+            if (backPressTime + 2000 > System.currentTimeMillis()) {
+                exitToast.cancel();
+                closeApp();
+                return;
+            } else {
+                exitToast = Toast.makeText(getBaseContext(), R.string.exit, Toast.LENGTH_SHORT);
+                exitToast.show();
             }
+            backPressTime = System.currentTimeMillis();
         }
     }
 

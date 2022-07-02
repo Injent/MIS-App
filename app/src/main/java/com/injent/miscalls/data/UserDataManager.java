@@ -76,8 +76,4 @@ public class UserDataManager {
     public void write() {
         editor.apply();
     }
-
-    public void getUser() {
-
-    }
 }

@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.main;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -14,7 +13,7 @@ import androidx.work.WorkManager;
 
 import com.injent.miscalls.App;
 import com.injent.miscalls.data.database.user.User;
-import com.injent.miscalls.util.AppWorker;
+import com.injent.miscalls.domain.AppWorker;
 import com.injent.miscalls.domain.repositories.AuthRepository;
 
 import java.util.concurrent.TimeUnit;

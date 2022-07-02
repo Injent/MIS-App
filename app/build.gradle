@@ -11,7 +11,7 @@ android {
         minSdk 26
         targetSdk 31
         versionCode 1
-        versionName 'SNAPSHOT-'
+        versionName 'RELEASE-'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,7 +41,7 @@ android {
                         "room.expandProjection":"true"]
             }
         }
-        versionNameSuffix '22w25b'
+        versionNameSuffix '1.2'
     }
 }
 

@@ -29,7 +29,7 @@ public class OverviewViewModel extends ViewModel {
     private LiveData<Registry> selectedRegistry;
     private LiveData<String> html;
     private LiveData<String> docSentMessage;
-    private MutableLiveData<Boolean> clickPreviewPdf = new MutableLiveData<>();
+    private MutableLiveData<Boolean> clickPreviewPdf;
 
     public void init() {
         registryRepository = new RegistryRepository();
@@ -39,6 +39,7 @@ public class OverviewViewModel extends ViewModel {
         registryError = registryRepository.getError();
         pdfError = pdfRepository.getError();
         html = pdfRepository.getHtml();
+        clickPreviewPdf = new MutableLiveData<>();
     }
 
     public LiveData<Throwable> getPdfError() {
@@ -66,13 +67,13 @@ public class OverviewViewModel extends ViewModel {
     }
 
 
-    public void generatePdf(Context context) {
+    public void generatePdf(Context context, PdfRepository.PdfFileProcess listener) {
         Registry registry = getSelectedRegistry().getValue();
         if (registry == null)
             return;
         String fileName = registry.getCallInfo().getFullName() + "-" + registry.getCreateDate();
         try {
-            pdfRepository.generatePdf(context, html.getValue(), fileName);
+            pdfRepository.generatePdf(context, html.getValue(), fileName, listener);
         } catch (IOException e) {
             e.printStackTrace();
         }

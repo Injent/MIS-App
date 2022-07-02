@@ -130,6 +130,18 @@ public class AuthRepository {
         return activeSession;
     }
 
+    public User getCurrentUser() {
+        User user = dao.getCurrentUser(1);
+        if (user == null) {
+            return null;
+        }
+        user.setToken(dao.getTokenById(user.getTokenId()));
+        user.setOrganization(dao.getOrganizationById(user.getOrganizationId()));
+        user.setAuthed(true);
+        user.setLastActive(true);
+        return user;
+    }
+
     public void loginActiveSession() {
         findActiveSession = CompletableFuture
                 .supplyAsync(() -> {

@@ -1,4 +1,4 @@
-package com.injent.miscalls.util;
+package com.injent.miscalls.domain;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.pdfviewer;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.print.PDFPrint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.injent.miscalls.R;
 import com.injent.miscalls.databinding.FragmentPdfViewerBinding;
+import com.injent.miscalls.domain.repositories.PdfRepository;
+import com.injent.miscalls.ui.main.MainActivity;
 import com.injent.miscalls.ui.overview.OverviewViewModel;
-
-import java.io.File;
 
 public class PdfViewerFragment extends Fragment {
 
@@ -86,7 +87,22 @@ public class PdfViewerFragment extends Fragment {
 
     private void generatePdfFile() {
         if (havePermission()) {
-            viewModel.generatePdf(requireContext());
+            viewModel.generatePdf(requireContext(), new PdfRepository.PdfFileProcess() {
+                @Override
+                public void onSuccess(String s) {
+                    Snackbar.make(requireView(), R.string.pdfCreated, BaseTransientBottomBar.LENGTH_INDEFINITE)
+                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                            .setTextColor(ContextCompat.getColor(requireContext(), R.color.darkGrayText))
+                            .setActionTextColor(ContextCompat.getColor(requireContext(), R.color.lightBlue))
+                            .setAction(R.string.open, view -> ((MainActivity) requireActivity()).openExplorer(s))
+                            .show();
+                }
+
+                @Override
+                public void onError() {
+                    Toast.makeText(requireContext(), R.string.errorOfDocumentGeneration, Toast.LENGTH_LONG).show();
+                }
+            });
         } else {
             requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }

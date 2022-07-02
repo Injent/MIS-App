@@ -48,7 +48,7 @@ import java.util.concurrent.Executors;
                 Organization.class,
                 Token.class
         },
-        version = 1,
+        version = 2,
         exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -66,7 +66,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE calls ADD COLUMN birthday INTEGER DEFAULT 0 NOT NULL");
+            database.execSQL("ALTER TABLE registry ADD COLUMN medical_therapy TEXT");
         }
     };
 
@@ -108,6 +108,7 @@ public abstract class AppDatabase extends RoomDatabase {
         instance = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
                 .openHelperFactory(factory)
                 .addCallback(new RoomPreloadCallback(context))
+                .fallbackToDestructiveMigration()
                 .build();
 
         userDao = instance.userDao();

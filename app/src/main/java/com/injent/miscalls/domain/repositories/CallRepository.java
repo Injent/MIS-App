@@ -9,11 +9,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.injent.miscalls.data.database.AppDatabase;
-import com.injent.miscalls.data.database.medcall.MedCall;
-import com.injent.miscalls.data.database.medcall.MedCallDao;
 import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.data.database.medcall.GeoDao;
-import com.injent.miscalls.data.database.user.Token;
+import com.injent.miscalls.data.database.medcall.MedCall;
+import com.injent.miscalls.data.database.medcall.MedCallDao;
+import com.injent.miscalls.data.database.user.User;
+import com.injent.miscalls.data.database.user.UserDao;
 import com.injent.miscalls.network.JResponse;
 import com.injent.miscalls.network.NetworkManager;
 import com.injent.miscalls.network.dto.CallDto;
@@ -35,6 +36,7 @@ public class CallRepository {
 
     private final MedCallDao medCallDao;
     private final GeoDao geoDao;
+    private final UserDao userDao;
 
     private MutableLiveData<List<MedCall>> calls;
     private MutableLiveData<Throwable> error;
@@ -47,6 +49,7 @@ public class CallRepository {
     public CallRepository() {
         medCallDao = AppDatabase.getCallInfoDao();
         geoDao = AppDatabase.getGeoDao();
+        userDao = AppDatabase.getUserDao();
         calls = new MutableLiveData<>();
         error = new MutableLiveData<>();
     }
@@ -95,17 +98,21 @@ public class CallRepository {
         loadCalls.thenAcceptAsync(medCalls -> calls.postValue(medCalls));
     }
 
-    public void insertCallsWithDropTable(List<MedCall> list) {
+    public void insertCallsWithDropTable(List<MedCall> list, User user, boolean updateList) {
         insertCallsWithDropTable = CompletableFuture
                 .supplyAsync((Supplier<Void>) () -> {
+                    medCallDao.clearAll();
                     for (MedCall item : list) {
                         if (medCallDao.getBySnils(item.getSnils()) == null) {
+                            item.setUserId(user.getId());
                             long callId = medCallDao.insertCall(item);
                             Geo geo = item.getGeo();
                             geo.setCallId((int) callId);
                             geoDao.insertGeo(geo);
                         }
                     }
+                    if (updateList)
+                        loadAllCallsInfo(user.getId());
                     return null;
                 })
                 .exceptionally(throwable -> {
@@ -128,12 +135,13 @@ public class CallRepository {
         return calls;
     }
 
-    public void downloadCallList(Context context, Token token){
+    public void downloadCallList(Context context, User user){
         if (!NetworkManager.isInternetAvailable(context)) {
-            error.postValue(new NetworkErrorException());
+            loadAllCallsInfo(user.getId());
+            error.setValue(new NetworkErrorException());
             return;
         }
-        NetworkManager.getMisAPI().patients(TokenDto.toDto(token)).enqueue(new Callback<>() {
+        NetworkManager.getMisAPI().patients(TokenDto.toDto(user.getToken())).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<JResponse> call, @NonNull Response<JResponse> response) {
                 if (response.isSuccessful()) {
@@ -145,8 +153,7 @@ public class CallRepository {
                         error.postValue(new ArrayStoreException());
                         return;
                     }
-                    insertCallsWithDropTable(callList);
-                    calls.postValue(callList);
+                    insertCallsWithDropTable(callList, user, true);
                 } else {
                     error.postValue(new DeniedByServerException("Wrong response"));
                 }
@@ -160,11 +167,13 @@ public class CallRepository {
         });
     }
 
-    public void downloadCallListInBackground(Context context, Token token){
+    public void downloadCallListInBackground(Context context){
         if (!NetworkManager.isInternetAvailable(context)) {
             return;
         }
-        NetworkManager.getMisAPI().patients(TokenDto.toDto(token)).enqueue(new Callback<>() {
+        User user = new AuthRepository(context).getCurrentUser();
+        if (user == null) return;
+        NetworkManager.getMisAPI().patients(TokenDto.toDto(user.getToken())).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<JResponse> call, @NonNull Response<JResponse> response) {
                 if (response.isSuccessful()) {
@@ -175,13 +184,58 @@ public class CallRepository {
                     if (callList.isEmpty()) {
                         return;
                     }
-                    insertCallsWithDropTable(callList);
+                    insertCallsWithDropTable(callList, user, false);
                 }
         }
 
             @Override
             public void onFailure(@NonNull Call<JResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
+            }
+        });
+    }
+
+    public void addPatient(Context context, String name, int userId) {
+        if (!NetworkManager.isInternetAvailable(context)) {
+            error.setValue(new NetworkErrorException());
+            return;
+        }
+        NetworkManager.getMisAPI().addPatient(name, userId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<JResponse> call, @NonNull Response<JResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    error.postValue(new Throwable(response.body().getMessage()));
+                } else {
+                    error.postValue(new DeniedByServerException("Сервер не отвечает"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JResponse> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                error.postValue(t);
+            }
+        });
+    }
+
+    public void deletePatient(Context context, int id) {
+        if (!NetworkManager.isInternetAvailable(context)) {
+            error.setValue(new NetworkErrorException());
+        }
+        NetworkManager.getMisAPI().deletePatient(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<JResponse> call, @NonNull Response<JResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    error.postValue(new Throwable(response.body().getMessage()));
+                } else {
+                    error.postValue(new DeniedByServerException("Сервер не отвечает"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JResponse> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                error.postValue(t);
             }
         });
     }

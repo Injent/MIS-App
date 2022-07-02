@@ -3,10 +3,8 @@ package com.injent.miscalls.ui.auth;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.injent.miscalls.App;
 import com.injent.miscalls.data.database.user.User;
 import com.injent.miscalls.domain.repositories.AuthRepository;
 

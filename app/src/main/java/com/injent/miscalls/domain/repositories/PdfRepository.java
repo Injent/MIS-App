@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.print.PDFPrint;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -60,18 +59,25 @@ public class PdfRepository {
     }
 
     @SuppressLint("Range")
-    public void generatePdf(Context context, String html, String fileName) throws IOException {
-        final String docFolder = Environment.DIRECTORY_DOCUMENTS + "/" + context.getString(R.string.app_name) + "/";
+    public void generatePdf(Context context, String html, String fileName, PdfFileProcess listener) throws IOException {
+        String filePath;
+        final String docFolder = Environment.DIRECTORY_DOCUMENTS + File.separator + context.getString(R.string.app_name) + File.separator;
         final File file;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // Create temp file in app folder
             file = FileManager.getInstance().createTempFile(context, "pdf", false);
         } else {
-            String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
-            file = new File(filePath
+            filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath()
                     + File.separator
+                    + context.getString(R.string.app_name)
+                    + File.separator;
+            file = new File(filePath
                     + fileName
                     + ".pdf");
+            File folder = new File(filePath);
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
             if (!file.exists()) {
                  file.createNewFile();
             }
@@ -80,7 +86,6 @@ public class PdfRepository {
             @Override
             public void onSuccess(File file) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    Toast.makeText(context, context.getString(R.string.fileSaveByPath) + " " + docFolder, Toast.LENGTH_LONG).show();
                     OutputStream outputStream = null;
                     try {
                         // Read bytes from app folder temp file
@@ -97,8 +102,8 @@ public class PdfRepository {
                         outputStream.write(bytes);
                         outputStream.close();
 
+                        listener.onSuccess(docFolder);
                     } catch (IOException e) {
-                        Toast.makeText(context, R.string.pdfGenerationFailed, Toast.LENGTH_SHORT).show();
                         error.setValue(e);
                         e.printStackTrace();
                     } finally {
@@ -110,12 +115,15 @@ public class PdfRepository {
                             }
                         }
                     }
+                } else {
+                    listener.onSuccess(Environment.getExternalStorageDirectory() + "/" + docFolder);
                 }
             }
 
             @Override
             public void onError(Exception exception) {
                 error.postValue(exception);
+                listener.onError();
                 exception.printStackTrace();
             }
         });
@@ -176,6 +184,7 @@ public class PdfRepository {
                                 .replace("$diagnosis_code", Diagnosis.listToStringCodes(registry.getDiagnoses(), ','))
                                 .replace("$diagnosis", Diagnosis.listToStringNames(registry.getDiagnoses(), "<br>"))
                                 .replace("$surveys", registry.getSurveys())
+                                .replace("$medication_therapy", registry.getMedicationTherapy())
                                 .replace("$working", obj.isWorking())
                                 .replace("$sick", obj.isSick());
                     } catch (IOException e) {
@@ -189,5 +198,10 @@ public class PdfRepository {
                     return null;
                 });
         getFetchedHtmlFuture.thenAcceptAsync(s -> html.postValue(s));
+    }
+
+    public interface PdfFileProcess{
+        void onSuccess(String path);
+        void onError();
     }
 }

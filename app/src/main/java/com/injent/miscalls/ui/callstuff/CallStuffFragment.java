@@ -3,7 +3,6 @@ package com.injent.miscalls.ui.callstuff;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,16 +23,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.injent.miscalls.R;
-import com.injent.miscalls.data.database.diagnosis.Diagnosis;
 import com.injent.miscalls.data.database.medcall.Geo;
 import com.injent.miscalls.databinding.FragmentCallStuffBinding;
-import com.injent.miscalls.ui.main.MainActivity;
+import com.injent.miscalls.ui.adapters.ViewPagerAdapter;
+import com.injent.miscalls.ui.dialogs.PdfPreviewDialogFragment;
 import com.injent.miscalls.ui.maps.MapsFragment;
 import com.injent.miscalls.ui.mkb10.HandBookFragment;
 import com.injent.miscalls.util.CustomOnBackPressedFragment;
-import com.injent.miscalls.ui.adapters.ViewPagerAdapter;
-
-import java.util.function.Consumer;
 
 public class CallStuffFragment extends Fragment implements CustomOnBackPressedFragment {
 
@@ -69,7 +63,6 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
 
         viewModel.loadCall(callId);
 
-        binding.callInfopdfWebView.setInitialScale(150);
         binding.titleCallStuff.setText(R.string.medCall);
         setListeners();
         setupViewPager2();
@@ -87,19 +80,13 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
 
     private void setListeners() {
         // Listeners
-        binding.darkBgPdf.setOnClickListener(v -> {
-            if (binding.darkBgPdf.getVisibility() == View.VISIBLE) {
-                previewPdf("");
-            }
-        });
-
         binding.doneButton.setOnClickListener(v -> viewModel.saveRegistry());
 
         binding.previewPdfButton.setOnClickListener(v -> viewModel.loadHtml(requireContext()));
 
         binding.closeButton.setOnClickListener(v -> confirmExitAction());
 
-        binding.doneButton.setOnClickListener(v -> save());
+        binding.doneButton.setOnClickListener(v -> viewModel.saveRegistry());
 
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -125,6 +112,10 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
                     break;
                     case 2: {
                         binding.titleCallStuff.setText(R.string.diagnosis);
+                    }
+                    break;
+                    case 3: {
+                        binding.titleCallStuff.setText(R.string.treatment);
                     }
                     break;
                     default: throw new IllegalStateException();
@@ -183,24 +174,10 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
                 default: throw new IllegalStateException("Code is wrong");
             }
         });
-
-        viewModel.getSelectedDiagnosis().observe(getViewLifecycleOwner(), new Observer<Diagnosis>() {
-            @Override
-            public void onChanged(Diagnosis diagnosis) {
-
-            }
-        });
     }
 
     private void previewPdf(String s) {
-        if (binding.darkBgPdf.getVisibility() == View.VISIBLE) {
-            binding.darkBgPdf.setVisibility(View.INVISIBLE);
-            binding.callInfopdfWebView.setVisibility(View.INVISIBLE);
-        } else {
-            binding.darkBgPdf.setVisibility(View.VISIBLE);
-            binding.callInfopdfWebView.loadDataWithBaseURL(null,s,"text/html","utf-8",null);
-            binding.callInfopdfWebView.setVisibility(View.VISIBLE);
-        }
+        new PdfPreviewDialogFragment(s).show(getParentFragmentManager(), PdfPreviewDialogFragment.TAG);
     }
 
     private void confirmExitAction() {
@@ -217,12 +194,8 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
         }
     }
 
-    private void save() {
-        viewModel.saveRegistry();
-    }
-
     private void setupViewPager2() {
-        adapter = new ViewPagerAdapter(CallStuffFragment.this, 3, viewModel);
+        adapter = new ViewPagerAdapter(CallStuffFragment.this, 4, viewModel);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.setUserInputEnabled(false);
         new TabLayoutMediator(binding.tabs, binding.viewPager, (tab, position) -> tab.setCustomView(configureTab(position))).attach();
@@ -253,6 +226,12 @@ public class CallStuffFragment extends Fragment implements CustomOnBackPressedFr
                 tabIcon.setImageResource(R.drawable.ic_diagnosis);
                 tabText.setText(R.string.diagnosis);
                 tabNumber.setText("3");
+            }
+            break;
+            case 3: {
+                tabIcon.setImageResource(R.drawable.ic_treatment);
+                tabText.setText(R.string.treatment);
+                tabNumber.setText("4");
             }
             break;
             default: throw new IllegalStateException();

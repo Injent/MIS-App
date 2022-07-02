@@ -1,4 +1,4 @@
-package com.injent.miscalls.util;
+package com.injent.miscalls.domain;
 
 import static com.injent.miscalls.App.CHANNEL_ID;
 

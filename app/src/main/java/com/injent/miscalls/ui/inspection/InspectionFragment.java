@@ -95,8 +95,6 @@ public class InspectionFragment extends Fragment {
         items.add(new AdditionalField(R.string.heartTones, Field.ABDOMEN, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.heartTonesTypes, obj.getHeartTones()));
         items.add(new AdditionalField(R.string.abdomen, Field.ABDOMEN, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.abdomenTypes, obj.getAbdomen()));
         items.add(new AdditionalField(R.string.liver, Field.LIVER, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.liverTypes, obj.getLiver()));
-        items.add(new AdditionalField(R.string.surveys, Field.SURVEYS, ViewType.FIELD_ADDITIONAL_TEXT, R.string.text, registry.getSurveys()));
-        items.add(new AdditionalField(R.string.medicationTherapy, Field.MEDICAL_THERAPY, ViewType.FIELD_ADDITIONAL_TEXT, R.string.text, registry.getMedicalTherapy()));
         items.add(new AdditionalField(R.dimen.space));
 
         adapter.submitList(items);

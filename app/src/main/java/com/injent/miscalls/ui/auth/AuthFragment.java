@@ -36,22 +36,13 @@ public class AuthFragment extends Fragment implements CustomOnBackPressedFragmen
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
     private boolean downloadDb = false;
-    private boolean moveToSettings;
-
-    public AuthFragment() {
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            moveToSettings = getArguments().getBoolean(getString(R.string.keyMoveToSettings));
-        }
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_auth,
                 container, false);
-
         return binding.getRoot();
     }
 
@@ -81,11 +72,11 @@ public class AuthFragment extends Fragment implements CustomOnBackPressedFragmen
     private void setListeners() {
         // Observers
         viewModel.getActiveUser().observe(getViewLifecycleOwner(), user -> {
-            downloadDb = user != null;
-            if (user != null)
+            if (user != null) {
                 successfulAuth();
-            else
+            } else {
                 setupBiometricAuthorization();
+            }
         });
 
         viewModel.getErrorUser().observe(this, throwable -> {
@@ -127,6 +118,7 @@ public class AuthFragment extends Fragment implements CustomOnBackPressedFragmen
     }
 
     private void successfulAuth() {
+        downloadDb = true;
         Toast.makeText(requireContext(), R.string.successfulAuth, Toast.LENGTH_SHORT).show();
         navigateToHome();
     }
@@ -142,10 +134,6 @@ public class AuthFragment extends Fragment implements CustomOnBackPressedFragmen
         Bundle args = new Bundle();
         args.putBoolean(getString(R.string.keyDownloadDb), downloadDb);
         navController.navigate(R.id.homeFragment, args);
-    }
-
-    private void navigateToSettings() {
-        navController.navigate(R.id.settingsFragment);
     }
 
     private void setupBiometricAuthorization() {

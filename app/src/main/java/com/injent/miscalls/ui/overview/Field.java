@@ -21,7 +21,8 @@ public class Field implements ViewType {
     public static final int ABDOMEN = 14;
     public static final int LIVER = 15;
     public static final int SURVEYS = 16;
-    public static final int MEDICAL_THERAPY = 17;
+    public static final int MEDICATION_THERAPY = 17;
+    public static final int RECOMMENDATIONS = 18;
 
     private int nameStringResId;
     private int hintStringResId;

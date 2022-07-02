@@ -28,6 +28,10 @@ public class EditorFragment extends Fragment {
 
     private InfoAdapter adapter;
 
+    public EditorFragment() {
+        // Empty body
+    }
+
     public EditorFragment(ViewModel viewModel) {
         this.viewModel = (OverviewViewModel) viewModel;
     }
@@ -82,6 +86,7 @@ public class EditorFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        adapter = null;
         binding = null;
     }
 }
