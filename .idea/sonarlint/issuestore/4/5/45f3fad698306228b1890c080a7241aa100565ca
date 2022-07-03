@@ -1,8 +1,0 @@
-
-h
-java:S3776>"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(¦äßï
-d
-java:S1874F"IRemove this use of "getExternalStoragePublicDirectory"; it is deprecated.(¶ºàüúÿÿÿÿ
-\	java:S899R"BDo something with the "boolean" value returned by "createNewFile".(Ğ’Íùÿÿÿÿ
-`
-java:S1874w"CRemove this use of "getExternalStorageDirectory"; it is deprecated.(€®Û·8î¦Êşš0

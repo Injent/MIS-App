@@ -127,8 +127,6 @@ Dapp/src/main/java/com/injent/miscalls/ui/mkb10/HandBookFragment.java,4\f\4fe86
 Mapp/src/main/java/com/injent/miscalls/domain/repositories/CallRepository.java,5\0\505415cfac2e9eb3190d472d4453a9d1c034c987
 u
 Eapp/src/main/java/com/injent/miscalls/ui/mkb10/HandBookViewModel.java,7\5\755861ce2e1e70b24bb6b8d774fcb3414271dae1
-|
-Lapp/src/main/java/com/injent/miscalls/domain/repositories/PdfRepository.java,4\5\45f3fad698306228b1890c080a7241aa100565ca
 i
 9app/src/main/java/com/injent/miscalls/network/MisAPI.java,0\e\0e8dd29c91f7f7ba6e28a08fc0fded91ddf534b9
 P
@@ -151,12 +149,6 @@ p
 @app/src/main/java/com/injent/miscalls/ui/main/MainViewModel.java,a\e\ae7942489aa8f115e3f4106fc9faab5c508bba8d
 o
 ?app/src/main/java/com/injent/miscalls/ui/test/TestFragment.java,f\0\f0ba23712ea33ad498099edabd1f2aacf78267c3
-y
-Iapp/src/main/java/com/injent/miscalls/ui/pdfviewer/PdfViewerFragment.java,a\a\aab6d4a654df34bcbe1f89c7bae2f3b2b82e744c
-x
-Happ/src/main/java/com/injent/miscalls/ui/overview/OverviewViewModel.java,5\4\5451829a03db5875a2d3de6fb1b98c0699dd534c
-o
-?app/src/main/java/com/injent/miscalls/ui/main/MainActivity.java,4\4\4402c0fad085130b3f25d8a92515614735f45455
 p
 @app/src/main/java/com/injent/miscalls/ui/test/TestViewModel.java,8\7\87bb1fddd5d026076ec942a851fe3e47d392dd40
 A

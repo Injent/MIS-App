@@ -102,7 +102,7 @@ public class PdfRepository {
                         outputStream.write(bytes);
                         outputStream.close();
 
-                        listener.onSuccess(docFolder);
+                        listener.onSuccess(docFolder + "/" + fileName + ".pdf");
                     } catch (IOException e) {
                         error.setValue(e);
                         e.printStackTrace();

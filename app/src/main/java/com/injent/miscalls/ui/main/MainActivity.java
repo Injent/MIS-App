@@ -3,6 +3,7 @@ package com.injent.miscalls.ui.main;
 import static com.injent.miscalls.data.UserDataManager.MODE_REGULAR_UPDATE;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -115,16 +116,20 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("QueryPermissionsNeeded")
     public void openExplorer(String path) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        Intent intent;
 
-        } else {
-            Uri selectedUri = Uri.parse(path);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(selectedUri, "resource/folder");
+        Uri selectedUri = Uri.parse(path);
+        intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
 
-            if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-                startActivity(intent);
-            }
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+            startActivity(intent);
+        }
+
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getBaseContext(), "Нет подходящего приложения", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -2,6 +2,7 @@ package com.injent.miscalls.ui.pdfviewer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,12 +91,16 @@ public class PdfViewerFragment extends Fragment {
             viewModel.generatePdf(requireContext(), new PdfRepository.PdfFileProcess() {
                 @Override
                 public void onSuccess(String s) {
-                    Snackbar.make(requireView(), R.string.pdfCreated, BaseTransientBottomBar.LENGTH_INDEFINITE)
-                            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
-                            .setTextColor(ContextCompat.getColor(requireContext(), R.color.darkGrayText))
-                            .setActionTextColor(ContextCompat.getColor(requireContext(), R.color.lightBlue))
-                            .setAction(R.string.open, view -> ((MainActivity) requireActivity()).openExplorer(s))
-                            .show();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        Toast.makeText(requireContext(),"Сохранен: " + s, Toast.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(requireView(), R.string.pdfCreated, BaseTransientBottomBar.LENGTH_INDEFINITE)
+                                .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                                .setTextColor(ContextCompat.getColor(requireContext(), R.color.darkGrayText))
+                                .setActionTextColor(ContextCompat.getColor(requireContext(), R.color.lightBlue))
+                                .setAction(R.string.open, view -> ((MainActivity) requireActivity()).openExplorer(s))
+                                .show();
+                    }
                 }
 
                 @Override
