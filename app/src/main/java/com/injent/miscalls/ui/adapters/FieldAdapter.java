@@ -40,12 +40,12 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
 
         @Override
         public boolean areItemsTheSame(@NonNull ViewType oldItem, @NonNull ViewType newItem) {
-            return ((Field) oldItem).getIndex() == ((Field) newItem).getIndex();
+            return false;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull ViewType oldItem, @NonNull ViewType newItem) {
-            return ((Field) oldItem).getIndex() == ((Field) newItem).getIndex();
+            return false;
         }
     };
 
@@ -134,13 +134,15 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             container.setActivated(false);
             editText.setOnFocusChangeListener((view, focused) -> container.setActivated(focused));
             editText.setHint(field.getExtraResId());
-            if (field.getData().isEmpty()) {
+            if (!field.getData().isEmpty()) {
                 editText.setText(field.getData());
-                done.setVisibility(View.INVISIBLE);
+                done.setVisibility(View.VISIBLE);
             } else {
+                done.setVisibility(View.INVISIBLE);
+            }
+            if (!editText.getText().toString().isEmpty()) {
                 done.setVisibility(View.VISIBLE);
             }
-            editText.setText(field.getData());
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

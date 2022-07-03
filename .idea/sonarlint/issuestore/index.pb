@@ -21,8 +21,6 @@ s
 Capp/src/main/java/com/injent/miscalls/network/dto/DiagnosisDto.java,3\2\32aa0c258a38c242d2c9670fab10965b727461e8
 w
 Gapp/src/main/java/com/injent/miscalls/data/database/medcall/GeoDao.java,b\c\bce5a3ecb7c4a2f046c10370efc006eb2b9cc76c
-x
-Happ/src/main/java/com/injent/miscalls/ui/inspection/AdditionalField.java,5\9\595a29eb716c60516aff76aee233f7bdd8c3b11c
 l
 <app/src/main/java/com/injent/miscalls/network/JResponse.java,f\d\fd0c20b7f405ee5b0681d81bc0fbfbb98b7a1816
 {
@@ -49,8 +47,6 @@ u
 Eapp/src/main/java/com/injent/miscalls/ui/adapters/SpinnerAdapter.java,4\f\4f0f9aebd48e39c24b0fa4fa88561907a3927700
 z
 Japp/src/main/java/com/injent/miscalls/data/database/user/Organization.java,b\f\bf5e873c8166651ebc7d34fa03119575dc16e363
-u
-Eapp/src/main/java/com/injent/miscalls/data/database/user/UserDao.java,5\1\512ad19af7db44ed8265aebca014d140ebdd8a18
 s
 Capp/src/main/java/com/injent/miscalls/ui/settings/ButtonLayout.java,4\7\47aa3f886bc9b1f9af49379480db6e96bb93936c
 y
@@ -132,8 +128,6 @@ i
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 o
-?app/src/main/java/com/injent/miscalls/ui/auth/AuthFragment.java,e\8\e87204be13888f86aaba3c93bb561ec1cf11433b
-o
 ?app/src/main/java/com/injent/miscalls/data/UserDataManager.java,7\b\7b913fb004767aabe062bdc2609afbd110d9d736
 k
 ;app/src/main/java/com/injent/miscalls/domain/AppWorker.java,b\d\bdee37c3b92920a5f78763c7eeec98eab2f93c5b
@@ -143,8 +137,6 @@ v
 Fapp/src/main/java/com/injent/miscalls/domain/ForegroundServiceApp.java,2\8\287aae79a43b0e75ce2c8bcb751a0bc229414dfd
 ~
 Napp/src/main/java/com/injent/miscalls/ui/dialogs/PdfPreviewDialogFragment.java,3\1\31b9861bbadc74b8e3b46f1822c715ae82640397
-}
-Mapp/src/main/java/com/injent/miscalls/domain/repositories/AuthRepository.java,7\f\7f93104cdee1bf7806dfde5cde0ef20a8757a3e9
 p
 @app/src/main/java/com/injent/miscalls/ui/main/MainViewModel.java,a\e\ae7942489aa8f115e3f4106fc9faab5c508bba8d
 o
@@ -157,7 +149,21 @@ A
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-@
-app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 h
 8app/src/main/java/com/injent/miscalls/util/ViewType.java,c\1\c198307f16b7255b7154eb777d300753f17745f8
+}
+Mapp/src/main/java/com/injent/miscalls/data/database/registry/Objectively.java,a\8\a8d4b5bc6bef080bfdf53d0a32193868983934ad
+z
+Japp/src/main/java/com/injent/miscalls/data/database/registry/Registry.java,a\d\ad0de135ec19e39316ae2ae191eba4d454e36909
+r
+Bapp/src/main/java/com/injent/miscalls/data/database/user/User.java,2\0\206bc1dfa4e95a9a25cfc380d6864e8086acc0df
+w
+Gapp/src/main/java/com/injent/miscalls/ui/settings/SettingsFragment.java,6\e\6e7b029ffbcf5fad83485aabf513f355b31481c1
+t
+Dapp/src/main/java/com/injent/miscalls/data/database/AppDatabase.java,d\e\dee09797650fa37cb46171e2cdcce75c63cea10b
+l
+<app/src/main/java/com/injent/miscalls/ui/overview/Field.java,e\3\e3b8d92fbfa4ed26fede7d60d962d524d5775912
+z
+Japp/src/main/java/com/injent/miscalls/ui/callstuff/CallStuffViewModel.java,0\2\02d32eece17cd102f8be85705f08bd2f20205d34
+{
+Kapp/src/main/java/com/injent/miscalls/ui/inspection/InspectionFragment.java,5\d\5d5c9db697e364d85a8de5e16f6b1d5cb2520e36
