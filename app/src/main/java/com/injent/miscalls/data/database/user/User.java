@@ -60,6 +60,7 @@ public class User {
     private String workingPosition;
     @Ignore
     private Token token;
+    @ColumnInfo(name = "token_id")
     private int tokenId;
     @ColumnInfo(name = "authed")
     private boolean authed;

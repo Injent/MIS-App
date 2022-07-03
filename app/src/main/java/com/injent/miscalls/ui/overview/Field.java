@@ -23,6 +23,7 @@ public class Field implements ViewType {
     public static final int SURVEYS = 16;
     public static final int MEDICATION_THERAPY = 17;
     public static final int RECOMMENDATIONS = 18;
+    public static final int HEART_TONES = 19;
 
     private int nameStringResId;
     private int hintStringResId;

@@ -71,7 +71,7 @@ public class InspectionFragment extends Fragment {
         }
 
         adapter = new FieldAdapter((index, value) -> viewModel.setObjectivelyData(index, value));
-                binding.fieldsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.fieldsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.fieldsRecyclerView.setItemAnimator(null);
         binding.fieldsRecyclerView.setAdapter(adapter);
 
@@ -91,8 +91,8 @@ public class InspectionFragment extends Fragment {
         items.add(new AdditionalField(R.string.arterialPressure, Field.ARTERIAL_PRESSURE, ViewType.FIELD_ADDITIONAL_DOUBLE_DECIMAL, obj.getArterialPressure()));
         items.add(new AdditionalField(R.string.pulse, Field.PULSE, ViewType.FIELD_ADDITIONAL_DECIMAL, obj.getPulse()));
         items.add(new AdditionalField(R.string.pensioner,Field.PENSIONER,ViewType.FIELD_ADDITIONAL_CHECKBOX, String.valueOf(obj.isPensioner())));
-        items.add(new AdditionalField(R.string.sick,Field.SICK,ViewType.FIELD_ADDITIONAL_CHECKBOX, String.valueOf(obj.getSick())));
-        items.add(new AdditionalField(R.string.heartTones, Field.ABDOMEN, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.heartTonesTypes, obj.getHeartTones()));
+        items.add(new AdditionalField(R.string.sick,Field.SICK, ViewType.FIELD_ADDITIONAL_CHECKBOX, String.valueOf(obj.getSick())));
+        items.add(new AdditionalField(R.string.heartTones, Field.HEART_TONES, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.heartTonesTypes, obj.getHeartTones()));
         items.add(new AdditionalField(R.string.abdomen, Field.ABDOMEN, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.abdomenTypes, obj.getAbdomen()));
         items.add(new AdditionalField(R.string.liver, Field.LIVER, ViewType.FIELD_ADDITIONAL_SPINNER, R.array.liverTypes, obj.getLiver()));
         items.add(new AdditionalField(R.dimen.space));

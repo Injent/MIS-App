@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import androidx.annotation.NonNull;
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -66,6 +67,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE user ADD COLUMN update_time INTEGER");
             database.execSQL("ALTER TABLE registry ADD COLUMN medical_therapy TEXT");
         }
     };
@@ -106,9 +108,9 @@ public abstract class AppDatabase extends RoomDatabase {
         final SupportFactory factory = new SupportFactory(passphraseBytes);
 
         instance = Room.databaseBuilder(context, AppDatabase.class, AppDatabase.DB_NAME)
-                .openHelperFactory(factory)
                 .addCallback(new RoomPreloadCallback(context))
-                .fallbackToDestructiveMigration()
+                .addMigrations(MIGRATION_1_2)
+                .openHelperFactory(factory)
                 .build();
 
         userDao = instance.userDao();

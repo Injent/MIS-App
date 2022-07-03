@@ -29,7 +29,7 @@ import java.util.List;
 
 public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder> {
 
-    private OnEditTextListener listener;
+    private final OnEditTextListener listener;
 
     public FieldAdapter(OnEditTextListener listener) {
         super(diffCallback);
@@ -40,23 +40,18 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
 
         @Override
         public boolean areItemsTheSame(@NonNull ViewType oldItem, @NonNull ViewType newItem) {
-            return oldItem.equals(newItem);
+            return ((Field) oldItem).getIndex() == ((Field) newItem).getIndex();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull ViewType oldItem, @NonNull ViewType newItem) {
-            return oldItem.getViewType() == newItem.getViewType();
+            return ((Field) oldItem).getIndex() == ((Field) newItem).getIndex();
         }
     };
 
     @Override
     public int getItemViewType(int position) {
         return getItem(position).getViewType();
-    }
-
-    @Override
-    public void submitList(@Nullable List<ViewType> list) {
-        super.submitList(list);
     }
 
     @NonNull
@@ -131,6 +126,7 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
         public void setDefaultAdditionalFieldData(ViewType layout) {
             TextView textView = itemView.findViewById(R.id.fieldAddName);
             EditText editText = itemView.findViewById(R.id.fieldAddEditField);
+            ImageView done = itemView.findViewById(R.id.fieldDone);
 
             AdditionalField field = (AdditionalField) layout;
             textView.setText(field.getNameResId());
@@ -138,6 +134,12 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             container.setActivated(false);
             editText.setOnFocusChangeListener((view, focused) -> container.setActivated(focused));
             editText.setHint(field.getExtraResId());
+            if (field.getData().isEmpty()) {
+                editText.setText(field.getData());
+                done.setVisibility(View.INVISIBLE);
+            } else {
+                done.setVisibility(View.VISIBLE);
+            }
             editText.setText(field.getData());
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -178,6 +180,7 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             newFilters[editFilters.length] = new InputFilter.LengthFilter(maxTextLength);
             editText1.setFilters(newFilters);
             editText2.setFilters(newFilters);
+
             if (!field.getData().equals("")) {
                 String[] format = field.getData().split("/");
                 editText1.setText(format[0]);
@@ -268,14 +271,9 @@ public class FieldAdapter extends ListAdapter<ViewType, FieldAdapter.ViewHolder>
             TextView name = itemView.findViewById(R.id.fieldCheckBoxText);
             CheckBox checkBox = itemView.findViewById(R.id.fieldCheckBox);
             name.setText(field.getNameResId());
+            checkBox.setChecked(Boolean.parseBoolean(field.getData()));
 
-            if (field.getIndex() == Field.PENSIONER) {
-                checkBox.setChecked(Boolean.parseBoolean(field.getData()));
-            }
-
-            checkBox.setOnCheckedChangeListener((compoundButton, checked) -> {
-                listener.onEdit(field.getIndex(), String.valueOf(checked));
-            });
+            checkBox.setOnCheckedChangeListener((compoundButton, checked) -> listener.onEdit(field.getIndex(), String.valueOf(checked)));
         }
     }
 }

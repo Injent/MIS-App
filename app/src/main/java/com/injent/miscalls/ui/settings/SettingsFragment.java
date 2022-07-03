@@ -90,15 +90,6 @@ public class SettingsFragment extends Fragment {
                 App.getUserDataManager().setData(R.string.keyAnonCall, state).write();
             }
         }));
-        list.add(new ButtonLayout(R.drawable.ic_folder, R.color.icFolder, R.string.openDocFolder, R.string.open,
-                view -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-
-                    } else {
-                        final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + File.separator + getString(R.string.app_name);
-                        ((MainActivity) requireContext()).openExplorer(path);
-                    }
-                }));
         settingAdapter.submitList(list);
     }
 

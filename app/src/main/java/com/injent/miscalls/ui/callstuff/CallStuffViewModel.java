@@ -40,7 +40,6 @@ public class CallStuffViewModel extends ViewModel {
     private MutableLiveData<Diagnosis> selectedDiagnosis;
     private MutableLiveData<Throwable> successOperation = new MutableLiveData<>();
     private LiveData<String> html;
-    private MutableLiveData<List<AdditionalField>> additionalFields = new MutableLiveData<>();
 
     public void init() {
         registryRepository = new RegistryRepository();
@@ -183,10 +182,6 @@ public class CallStuffViewModel extends ViewModel {
         return false;
     }
 
-    public void searchDiagnosis(String s, int limit) {
-        diagnosisRepository.searchNotParentDiagnoses(s, limit);
-    }
-
     public void setObjectivelyData(int index, String s) {
         if (currentRegistry.getValue() == null) {
             successOperation.postValue(new NullPointerException());
@@ -235,21 +230,12 @@ public class CallStuffViewModel extends ViewModel {
             break;
             case Field.RECOMMENDATIONS: currentRegistry.getValue().setRecommendation(s);
             break;
+            case Field.HEART_TONES: currentRegistry.getValue().getObjectively().setHeartTones(s);
+            break;
             default: throw new IllegalStateException("Invalid field index: " + index);
         }
 
         currentRegistry.getValue().setObjectively(obj);
-    }
-
-    public LiveData<List<AdditionalField>> getAdditionalFieldsLiveData() {
-        return additionalFields;
-    }
-
-    public void loadFieldsList() {
-        registryRepository.configureAdditionalFields(throwable -> {
-            successOperation.postValue(throwable);
-            return null;
-        }, list -> additionalFields.postValue(list));
     }
 
     public Geo getGeo() {
@@ -280,7 +266,6 @@ public class CallStuffViewModel extends ViewModel {
         html = null;
         selectedDiagnosis = null;
         action = new MutableLiveData<>();
-        additionalFields = null;
 
         diagnosisRepository.clear();
         callRepository.clear();
